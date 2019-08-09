@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html ng-app="CafeApp">
+
+<head>
+    <title ng-controller="TitleController as title">{{ title.pageTitle() }}</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="../scripts/angular.min.js"></script>
+    <script src="../scripts/cafe-app.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../styles/base.css" />
+    <link rel="stylesheet" type="text/css" href="../styles/style.css" />
+</head>
+
+<body>
+
+    <header ng-controller="HomeScreenHeaderController as header">
+        <div class="header-pad wrapper">
+            <div class="title">
+                <strong>
+                    {{ header.title }}
+                </strong>
+            </div>
+            <!-- div title ends -->
+
+            <div class="menu-list">
+                <div class="menu-item">
+                    <a href="login.html" ng-click="header.login();">
+                        <img ng-src="../images/login.svg" />
+                    </a>
+                    <!-- a ends -->
+
+                </div>
+                <!-- div menu-item ends -->
+
+            </div>
+            <!-- div menu-list ends -->
+
+        </div>
+        <!-- div header-pad, wrapper ends -->
+
+    </header>
+    <!-- header ends -->
+
+    <div class="container">
+        <div class="container-pad wrapper">
+
+        </div>
+        <!-- div container-pad, wrapper ends -->
+        
+    </div>
+    <!-- div container ends -->
+
+</body>
+
+</html>
