@@ -1,0 +1,6 @@
+/** Login View CSS **/
+.login-view {
+	display: flex;
+	flex-flow: column;
+	margin: 0px auto;
+}

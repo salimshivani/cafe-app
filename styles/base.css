@@ -79,6 +79,7 @@ header, footer, nav, menu, section, aside, details, summary {
 /*end */
 
 html, body {
+	font-family: 'Arial';
     height: 100%;
     width: 100%;
 }
@@ -89,6 +90,13 @@ body {
 
 body.with-footer {
     padding-bottom: 50px;
+}
+
+button {
+	border-radius: 25px;
+	font-size: 16px;
+	margin: 0px auto;
+	padding: 8px;
 }
 
 header {
@@ -109,12 +117,35 @@ footer {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+	padding: 6px;
     position: fixed;
     width: 100%;
     z-index: 999;
 }
 
-.header-pad {
+/*
+form {
+	display: flex;
+}
+*/
+
+.container {
+	display: flex;
+}
+
+.form-field {
+/*	align-items: center;*/
+	display: flex;
+	flex-flow: column;
+	justify-items: center;
+	margin: 0px auto;
+}
+
+.form-field label {
+	font-size: 14px;
+}
+
+.container-pad, .header-pad, .footer-pad {
 	padding: 6px;
 }
 

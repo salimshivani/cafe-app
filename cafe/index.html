@@ -14,43 +14,59 @@
 </head>
 
 <body>
+	
+	<form method="post">
 
-    <header ng-controller="HomeScreenHeaderController as header">
-        <div class="header-pad wrapper">
-            <div class="title">
-                <strong>
-                    {{ header.title }}
-                </strong>
-            </div>
-            <!-- div title ends -->
+		<header ng-controller="HomeScreenHeaderController as header">
+			<div class="header-pad wrapper">
+				<div class="title">
+					<strong>
+						{{ header.title }}
+					</strong>
+				</div>
+				<!-- div title ends -->
 
-            <div class="menu-list">
-                <div class="menu-item">
-                    <a href="login.html" ng-click="header.login();">
-                        <img ng-src="../images/login.svg" />
-                    </a>
-                    <!-- a ends -->
+				<div class="menu-list">
+					<div class="menu-item" ng-if="mobileNumber === ''">
+						<a href="" ng-click="header.login();">
+							<img ng-src="../images/login.svg" alt="{{ header.user }}" title="{{ header.user }}" />
+						</a>
+						<!-- a ends -->
 
-                </div>
-                <!-- div menu-item ends -->
+					</div>
+					<!-- div menu-item ends -->
 
-            </div>
-            <!-- div menu-list ends -->
+				</div>
+				<!-- div menu-list ends -->
 
-        </div>
-        <!-- div header-pad, wrapper ends -->
+			</div>
+			<!-- div header-pad, wrapper ends -->
 
-    </header>
-    <!-- header ends -->
+		</header>
+		<!-- header ends -->
 
-    <div class="container">
-        <div class="container-pad wrapper">
+		<div class="container">
+			<div class="container-pad wrapper">
 
-        </div>
-        <!-- div container-pad, wrapper ends -->
-        
-    </div>
-    <!-- div container ends -->
+				<div class="home" ng-controller="HomeScreenController"></div>
+				<!-- div home ends -->
+				
+			</div>
+			<!-- div container-pad, wrapper ends -->
+
+		</div>
+		<!-- div container ends -->
+		
+		<footer ng-controller="FooterController as footer" ng-if="footer.isVisible">
+			<div class="footer-pad wrapper">
+				
+			</div>
+			<!-- div footer-pad, wrapper ends -->
+			
+		</footer>
+		<!-- footer ends -->
+		
+	</form>
 
 </body>
 

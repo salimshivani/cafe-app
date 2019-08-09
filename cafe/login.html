@@ -38,6 +38,42 @@
     </header>
     <!-- header ends -->
 
+	<form method="post">
+		
+		<div class="container">
+			<div class="container-pad wrapper">
+				<div class="login-view" ng-controller="LoginScreenController as login">
+					
+					<div class="form-field">
+						<label>Mobile</label>
+						<input type="text" ng-model="mobileNumber" maxlength="10" min="10" />
+					</div>
+					<!-- div form-field -->
+					
+					<div class="form-field">
+						<button ng-click="login.login()">Login</button>
+					</div>
+					<!-- div form-field -->
+					
+				</div>
+				<!-- div login-view ends -->
+			</div>
+			<!-- div container-pad, wrapper ends -->
+
+		</div>
+		<!-- div container ends -->
+	
+	</form>
+	<!-- form ends -->
+	
+	<footer ng-controller="FooterController as footer" ng-if="footer.isVisible">
+		<div class="footer-pad wrapper">
+		</div>
+		<!-- div footer-pad, wrapper ends -->
+
+	</footer>
+	<!-- footer ends -->
+
 </body>
 
 </html>
