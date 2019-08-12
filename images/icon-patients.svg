@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 16" width="20" height="16">
+	<defs>
+		<clipPath clipPathUnits="userSpaceOnUse" id="cp1">
+			<path d="M-33 -119L327 -119L327 521L-33 521Z" />
+		</clipPath>
+		<image width="20" height="16" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAABvUlEQVQ4T61UwXEaQRCchgdPk4HIwHIExhEIIth58TUZGEdg/OU1SwLCEQhFACGgDPCTB9euvtqjziewSlXe19XsdE9Pz+zB3jjuPqqq6kFpvV7vV0Qc/gVB+9Ld783s2IBERnJnZhsAIPkA4FP7Xvh2kZrQ3YckH81sVArsc85Td1+Q/Jxz/qJ4SukJwHNELNx9Q/JjyT8AmEbEsSGcq7qAhXwH4LuZHVSIpAsIIARUYZLfitpjSumxFFq+IpzNZh9Op9NehBER7j4xs3lRsoyIjbs7yR+DwWC0Wq1+F+Xy90I4lE9qryj5GRFzeXg+n+/aPvf7/Rd55u5Lkl9L/rOZTS4tX5uau49Jahj79j3JewACb6/hoMl2BnLJA1Ar7WyClCUzU1ftI5umIlzIZNnVAUrBVhPtxBdVVU3W67VW7HI0dTPbN4TapS7wJqGZjSNi3C1U+1kU/nfCWy3vr3gYxaKuwqVeWT2Uqqo0zbucc72XKSWSfAEg43fNS3H3raZcWn0VBzBuFlsr8tQmBFA/t/fEtUoNoVZnm3OuVyGldFS1QngrLoVNR3V+ROz/+tvcWPChXkDzE3nr+w+HSVQwPLNkTwAAAABJRU5ErkJggg=="/>
+	</defs>
+	<style>
+		tspan { white-space:pre }
+	</style>
+	<g id="Home Screen" clip-path="url(#cp1)">
+		<g id="MenuLanding">
+			<g id="Group">
+				<g id="MenuLandingIconHome">
+					<use id="np_people_650990_666363" href="#img1" transform="matrix(1,0,0,1,0,0)"/>
+				</g>
+			</g>
+		</g>
+	</g>
+</svg>

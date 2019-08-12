@@ -117,7 +117,7 @@ footer {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-	  padding: 6px;
+	  padding: 3px 6px;
     position: fixed;
     width: 100%;
     z-index: 999;
@@ -128,6 +128,12 @@ form {
 	display: flex;
 }
 */
+
+footer button {
+  background: #4f7400;
+  color: #ffffff;
+
+}
 
 input {
 	border: 1px solid #81A300;
@@ -143,12 +149,17 @@ input {
 /*	align-items: center;*/
   box-sizing: border-box;
   display: flex;
+  flex: 1;
 	flex-flow: column;
 	justify-items: center;
-	margin: 0px auto 6px;
+	margin: 0px 6px;
 }
 
 .form-field:last-child {
+  margin-bottom: 0px;
+}
+
+footer .form-field {
   margin-bottom: 0px;
 }
 
@@ -168,35 +179,45 @@ input {
 	padding: 6px;
 }
 
-.menu-list {
+header .ic-back {
+  align-self: center;
+	display: flex;
+	padding: 0px 15px 0px 5px;
+}
+
+header .ic-back a {
+  display: flex;
+}
+
+header .menu {
     display: flex;
     align-items: center;
 }
 
-.menu-item {
+header .menu .ic-menu {
     display: flex;
     justify-content: space-between;
     padding: 0px 5px;
 }
 
-.menu-item:first-child {
+header .menu .ic-menu:first-child {
     padding-left: 0px;
 }
 
-.menu-item:last-child {
+header .menu .ic-menu:last-child {
     padding-right: 0px;
 }
 
-.menu-item a {
+header .menu .ic-menu a {
     display: flex;
 }
 
-.menu-item a img {
+header .menu .ic-menu a img {
     height: 20px;
     width: 20px;
 }
 
-.title {
+header .title {
     align-items: center;
 	/* color: #4e4d4d; */
 	display: flex;

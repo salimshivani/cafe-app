@@ -21,13 +21,13 @@
     	    <div class="header-pad wrapper">
     	        <div class="title">
     	            <strong>
-    	                {{ header.pageTitle }}
+    	                {{ header.title }}
     	            </strong>
     	        </div>
     	        <!-- div title ends -->
 
-    	        <div class="menu-list">
-    	            <div class="menu-item">
+    	        <div class="menu">
+    	            <div class="ic-menu">
     	            </div>
     	            <!-- div menu-item ends -->
 
@@ -45,8 +45,7 @@
 				<div class="login-view" ng-controller="LoginScreenController as login">
 					
 					<div class="form-field">
-						<label for="mobile-number">Mobile</label>
-						<input type="text" id="mobile-number" ng-model="mobileNumber" maxlength="10" min="10" />
+						<input type="tel" id="mobile-number" ng-model="mobileNumber" maxlength="10" min="10" placeholder="Mobile Number" />
 					</div>
 					<!-- div form-field -->
 					

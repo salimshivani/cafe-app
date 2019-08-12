@@ -19,6 +19,13 @@
 
     	<header ng-controller="SignUpScreenHeaderController as header">
     	    <div class="header-pad wrapper">
+				<div class="ic-back">
+					<a href="login.html">
+						<img src="../images/icon-back.svg" height="20px" width="20px" />
+					</a>
+				</div>
+				<!-- div ic-back ends -->
+						
     	        <div class="title">
     	            <strong>
     	                {{ header.title }}
@@ -26,8 +33,8 @@
     	        </div>
     	        <!-- div title ends -->
 
-    	        <div class="menu-list">
-    	            <div class="menu-item">
+    	        <div class="menu">
+    	            <div class="ic-menu">
     	            </div>
     	            <!-- div menu-item ends -->
 
@@ -67,11 +74,6 @@
 						<input type="password" placeholder="Confirm Password" />
 					</div>
 					<!-- div form-field -->
-
-					<div class="form-field">
-						<button class="btn-sign-up" ng-click="signup.signup()">Sign Up</button>
-					</div>
-					<!-- div form-field ends -->
 					
 				</div>
 				<!-- div login-view ends -->
@@ -84,6 +86,11 @@
 	
 		<footer ng-controller="FooterController as footer" ng-if="!isVisible">
 			<div class="footer-pad wrapper">
+				<div class="form-field">
+					<button class="btn-sign-up" ng-click="signup.signup()">Sign Up</button>
+				</div>
+				<!-- div form-field ends -->
+				
 			</div>
 			<!-- div footer-pad, wrapper ends -->
 

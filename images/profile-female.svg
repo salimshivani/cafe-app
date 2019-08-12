@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41" width="41" height="41">
+	<defs>
+		<clipPath clipPathUnits="userSpaceOnUse" id="cp1">
+			<path d="M-22 -215L338 -215L338 425L-22 425Z" />
+		</clipPath>
+		<image width="41" height="41" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACkAAAApCAYAAACoYAD2AAAFSUlEQVRYR72YzW8bRRTA38x+xOuP2h7vgfCpKgHEAWhBopUI9AISV07pn8AFTkilf0FBQkLixB/AAS6IExICCZIS1PbShkhIbYP4SEIQtcd2bK+96919aNa7qe1sPONNxEr2wX7z3m/f17wZAhmfRqOxioS8AwDPAkAFAKwpVX0AaAHAXYL4Wa1W+zKjKSDzLOScr4QAnwLA8wCgA+LkchKrS//dB4AtCvAeY+yneewqQTabzacCxO8BYBljAJIAKVqbWretEfJGtVr9U2W5FLLO+TUAuAKIRPhtXrhpCAEbGSWRuo9sxq7KQGdC1jm/L7wXhXVOz8kMj+ncthl7epZ8KmSj0XgCCbmJAItC2Um9dxxAlAKECM/uE8QLtVptJ002FbLO+d+AuDiP9wghm2MGLER8RurNRGAEu28z9qgSpAgxAixLk3WUn5tWLtexcrmVlNxrdx3ntud5LwHAGRmwSFAKcKfG2Plp2QmWuEg+iJJbkoOapm1Uzpx5VWY8CMPd9sGBI/PsmM0Pp4vpEDJuM7+LKpaFWaP0VqVcfkUG+DCa2OatlrA126OjsKNGyNnx9nQIWed8GxCXZIAAcMAqFSSElFUhhZw3HN7pdLvnpGtGoL/ZjC0nshFkvJNcVwmzruvr5VLpdamxFAHeat1TDTsFeC3ZmSLIBue3Q8RzsjwUsqVicdM0jBezQPZ6vfWB50lfUDiLEnJYRBFknfMhIuoqkLVqNQtftEYUUavdflymII6obzNmRJtTPM18IVsY/39Qq1al7WSWrkazqWgKgCBeFtMTqXP+IyBeUiiYqC+ySiVTqBOyRrO5BwCPSUlHBfS1zdjbAnIfEB/5vyB5q7WJiPIXHUH+YzO2KCAdQLRUIE3TXCsVCpekXpgh0O501n3flxZPPID0bcbyAhJVWs9JKzvh7g8GG06/L92pkinJZoxEkIqeOXHRzFPhCdNckCdp4tNOUGnqRyBVwl0pl/c0SuVVqRAWx3G+67vumzNF41kz8aS0cFQnHgW+SARRYeAYQXZtxkpKLeg0vZi8iLTKp1rQzGZ+mrk47ul4ixS7V/oONoL81mbsLdm2mGksUw17p9db8zzv2L57uC3OGjDylrVh5XLynqZKNSV3XG4eGTBiyBuIeGF6CsqZ5nqhUJDvDhkhxbJGs7kLABOTUQx502bsYjQFiS/J0LtraNofmqYFhmmKO5+Jx9D1s4SQYycjbzgcP0U+XIs46DrOAiJOTOtJOzwy9Mbe/BUQn1PZw8cpZ3lbWhxpERgdAidOjZkOYoluldFN5F2709kKguDIsfcIo+wgFntT3PtIj7SiuRfzeVvXdXHtp/SIg1i318sfd8ZROtImlsSpEQGWUi4H9kzTvF/M58/Pe1Icf4ter7c28DxxATCRx8qXA4myB5w/IIh2dE9DyD0rl/s37ZZCyYUpQlEKHBzcDcJwdHYfhXnHZuzJNJ2ptymc83IIsAUArFouFyilWXlmrus6zo2B614kADsUYIUx9pcyZCLY7nS2gyBYKhUKoOv6qYL6vg+dXk8MG9dr1erMXiy9l+o6zjXXda+YhkHylgUn9WoYhuD0++JGI9QN4/1ysfiJ7O2lkEKB67ovDDzvK9/3l3ILC7BgmqBpmkz3xP9BEIDreTBwXdQN45apaauWZZ3OdfS4JcdxVoZh+HHg+y+Li33TMEB8xCO21CQlRChFSxGfoe8LrwkRn1L6s07pu8Vi8Zd53lDJk2kKHcdZDYLgcoi4EoZhLgjD4ricRmmXUNrVKP2BEvJ5oVD4Zh6wcdnMkFkNZln3H7pvuEjEwdr3AAAAAElFTkSuQmCC"/>
+	</defs>
+	<style>
+		tspan { white-space:pre }
+	</style>
+	<g id="Patient List" clip-path="url(#cp1)">
+		<g id="Group 2">
+			<g id="detail_info">
+				<use id="user/female" href="#img1" transform="matrix(1,0,0,1,0,0)"/>
+			</g>
+		</g>
+	</g>
+</svg>

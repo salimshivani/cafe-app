@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 23" width="22" height="23">
+	<defs>
+		<clipPath clipPathUnits="userSpaceOnUse" id="cp1">
+			<path d="M-323 -47L37 -47L37 593L-323 593Z" />
+		</clipPath>
+	</defs>
+	<style>
+		tspan { white-space:pre }
+		.shp0 { fill: #a5a4a4 } 
+	</style>
+	<g id="Patient List" clip-path="url(#cp1)">
+		<g id="np_add_961411_666363">
+			<path id="Path" class="shp0" d="M22 12.81L11.81 12.81L11.81 23L10.19 23L10.19 12.81L0 12.81L0 11.19L10.19 11.19L10.19 1L11.81 1L11.81 11.19L22 11.19L22 12.81Z" />
+		</g>
+	</g>
+</svg>

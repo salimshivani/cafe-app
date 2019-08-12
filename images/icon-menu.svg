@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 21" width="5" height="21">
+	<defs>
+		<clipPath clipPathUnits="userSpaceOnUse" id="cp1">
+			<path d="M-340 -45L20 -45L20 595L-340 595Z" />
+		</clipPath>
+		<image width="5" height="21" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAVCAYAAACOuSR+AAAAyElEQVQoU5WRwQ3CMAxFvxvBlY7ABrABZQIYIUhp1SNswArcEKhVRmAD2IAyAWUDzkiJkaP0guih/2T9WPb7DgFAnudzcm4Fosepqi5Uaj31St0BpNLAzBsqjck881UMEQEH0lqnY6VaABMxE6IlSREfssS55mhtG8xfDTRl5ohopphfYWZc8uw4w/a/nDGRdAaFRFJINzOvPXNzrms7EKk3kaBZa9/xUkBhzA3MCwBt4lwPZ/gK7+XyHeguIBXG7AFkYG4/zm2/sztdUTeC3JIAAAAASUVORK5CYII="/>
+	</defs>
+	<style>
+		tspan { white-space:pre }
+	</style>
+	<g id="Home Screen" clip-path="url(#cp1)">
+		<use id="np_dots_395569_666363" href="#img1" transform="matrix(1,0,0,1,0,0)"/>
+	</g>
+</svg>

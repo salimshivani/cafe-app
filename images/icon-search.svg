@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22" width="22" height="22">
+	<defs>
+		<clipPath clipPathUnits="userSpaceOnUse" id="cp1">
+			<path d="M-289 -49L71 -49L71 591L-289 591Z" />
+		</clipPath>
+	</defs>
+	<style>
+		tspan { white-space:pre }
+		.shp0 { fill: #a5a4a4 } 
+	</style>
+	<g id="Patient List" clip-path="url(#cp1)">
+		<g id="np_search_1166289_666363">
+			<path id="Shape" fill-rule="evenodd" class="shp0" d="M8.74 0C13.56 0 17.48 3.92 17.48 8.74C17.48 10.82 16.75 12.74 15.52 14.25L21.43 20.16C21.79 20.52 21.79 21.08 21.43 21.43C21.08 21.79 20.51 21.79 20.15 21.43L14.24 15.52C12.74 16.74 10.82 17.48 8.74 17.48C3.92 17.48 0 13.56 0 8.74C0 3.92 3.92 0 8.74 0L8.74 0ZM1.81 8.74C1.81 12.58 4.9 15.67 8.74 15.67C12.58 15.67 15.67 12.58 15.67 8.74C15.67 4.9 12.58 1.81 8.74 1.81C4.9 1.81 1.81 4.9 1.81 8.74Z" />
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 13" width="10" height="13">
+	<defs>
+		<clipPath clipPathUnits="userSpaceOnUse" id="cp1">
+			<path d="M-332 -543L28 -543L28 97L-332 97Z" />
+		</clipPath>
+		<image width="10" height="13" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAANCAYAAACQN/8FAAAA2klEQVQoU4XRvWoCQRQF4DPjFil9g7xCnsgsDAQMpLAMdlaCRRASWHZnl6lMa+EDCKKVxWppkzyChUVgd+aEFbdQ92fa+93LnXOF7/vdB897+svz1BhzRM0TL0oNAPQAfFHKbRRFaZUtoAHwfC4KMQG5CeN4fouvIQACS5C649w6MOa3bLiDl0Kx6wjATzm9DpaDZgTWmbWzNlg0pCSnrZDkd+bcaxM8AAjCOP44B3IVz2UzQS6slEOt9b7u1yeQn2GSvDfluHNCvGmtV5WXUUo9SqCfWTtuuvU/ZqZn99A2+VkAAAAASUVORK5CYII="/>
+	</defs>
+	<style>
+		tspan { white-space:pre }
+	</style>
+	<g id="Nutrient General Info" clip-path="url(#cp1)">
+		<g id="Group">
+			<use id="np_down_2375699_666363 copy" href="#img1" transform="matrix(1,0,0,1,0,0)"/>
+		</g>
+	</g>
+</svg>

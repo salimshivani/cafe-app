@@ -4,14 +4,19 @@
     var cafeApp = angular.module('CafeApp', []);
 
     cafeApp
-        .controller('TitleController', TitleController)
+        .controller('TitleController', TitleController);
+    cafeApp
         .controller('HomeScreenHeaderController', HomeScreenHeaderController)
-        .controller('HomeScreenController', HomeScreenController)
+        .controller('HomeScreenController', HomeScreenController);
+    cafeApp
         .controller('LoginScreenHeaderController', LoginScreenHeaderController)
-        .controller('LoginScreenController', LoginScreenController)
+        .controller('LoginScreenController', LoginScreenController);
+    cafeApp
         .controller('SignUpScreenHeaderController', SignUpScreenHeaderController)
         .controller('SignUpScreenController', SignUpScreenController)
-		.controller('FooterController', FooterController)
+    cafeApp
+        .controller('FooterController', FooterController);
+    cafeApp
         .factory('PageTitleService', PageTitleService);
 	
 	var email = '', mobileNumber = '', name = '';
@@ -53,9 +58,9 @@
         $scope.isFooterVisible = isFooterVisible;
 
         header.title = PageTitleService.title(pageTitle + " - ");//.split(" - ")[0];
-        if (header.title.split(" - ").size > 0) {
+        // if (header.title.split(" - ").size > 0) {
             header.title = header.title.split(" - ")[0];
-        }
+        // }
     }
 
     function LoginScreenController() {
@@ -97,7 +102,6 @@
                     return pageTitle.title;
                 } else if (title.includes(" - ")) {
                     pageTitle.title = title.concat(pageTitle.title);
-                    console.log("pageTitle", pageTitle.title);
                     return pageTitle.title;
                 } else {
                     pageTitle.title = title;

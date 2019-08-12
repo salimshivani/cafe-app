@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 13" width="8" height="13">
+	<defs>
+		<clipPath clipPathUnits="userSpaceOnUse" id="cp1">
+			<path d="M-326 -119L34 -119L34 521L-326 521Z" />
+		</clipPath>
+	</defs>
+	<style>
+		tspan { white-space:pre }
+		.shp0 { fill: #909a63 } 
+	</style>
+	<g id="Home Screen" clip-path="url(#cp1)">
+		<g id="MenuLanding">
+			<g id="Group">
+				<g id="ic_chevron_right">
+					<g id="Icon 24px">
+						<path id="Shape" class="shp0" d="M2 1L0.59 2.41L5.17 7L0.59 11.59L2 13L8 7L2 1Z" />
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</svg>
