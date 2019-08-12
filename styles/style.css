@@ -4,3 +4,20 @@
 	flex-flow: column;
 	margin: 0px auto;
 }
+
+.form-field .btn-login {
+	display: flex;
+	padding: 8px 65px;
+}
+
+.form-field .btn-register {
+	display: flex;
+	padding: 8px 25px;
+}
+
+/** Sign Up View CSS **/
+.sign-up-view {
+	display: flex;
+	flex-flow: column;
+	margin: 0px auto;
+}

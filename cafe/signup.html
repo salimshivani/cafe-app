@@ -17,11 +17,11 @@
 
 	<form method="post">
 
-    	<header ng-controller="LoginScreenHeaderController as header">
+    	<header ng-controller="SignUpScreenHeaderController as header">
     	    <div class="header-pad wrapper">
     	        <div class="title">
     	            <strong>
-    	                {{ header.pageTitle }}
+    	                {{ header.title }}
     	            </strong>
     	        </div>
     	        <!-- div title ends -->
@@ -42,13 +42,36 @@
 		
 		<div class="container">
 			<div class="container-pad wrapper">
-				<div class="login-view" ng-controller="LoginScreenController as login">
-					
+				<div class="sign-up-view" ng-controller="SignUpScreenController as signup">
 					<div class="form-field">
-						<label for="mobile-number">Mobile</label>
-						<input type="text" id="mobile-number" ng-model="mobileNumber" maxlength="10" min="10" />
+						<input type="text" name="name" placeholder="Full Name" />
 					</div>
 					<!-- div form-field -->
+
+					<div class="form-field">
+						<input type="email" name="email" placeholder="Email Address" />
+					</div>
+					<!-- div form-field -->
+					
+					<div class="form-field">
+						<input type="tel" name="mobile" placeholder="Mobile Number" />
+					</div>
+					<!-- div form-field -->
+					
+					<div class="form-field">
+						<input type="password" placeholder="Password" />
+					</div>
+					<!-- div form-field -->
+					
+					<div class="form-field">
+						<input type="password" placeholder="Confirm Password" />
+					</div>
+					<!-- div form-field -->
+
+					<div class="form-field">
+						<button class="btn-sign-up" ng-click="signup.signup()">Sign Up</button>
+					</div>
+					<!-- div form-field ends -->
 					
 				</div>
 				<!-- div login-view ends -->
@@ -61,16 +84,6 @@
 	
 		<footer ng-controller="FooterController as footer" ng-if="!isVisible">
 			<div class="footer-pad wrapper">
-				<div class="form-field">
-					<button ng-click="login.login()">Login</button>
-				</div>
-				<!-- div form-field ends -->
-				
-				<div class="form-field">
-					<button ng-click="login.signup()">Sign Up</button>
-				</div>
-				<!-- div form-field ends -->
-				
 			</div>
 			<!-- div footer-pad, wrapper ends -->
 

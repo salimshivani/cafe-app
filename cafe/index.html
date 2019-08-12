@@ -15,7 +15,7 @@
 
 <body>
 	
-	<form method="post">
+	<!-- <form method="post"> -->
 
 		<header ng-controller="HomeScreenHeaderController as header">
 			<div class="header-pad wrapper">
@@ -27,8 +27,8 @@
 				<!-- div title ends -->
 
 				<div class="menu-list">
-					<div class="menu-item" ng-if="mobileNumber === ''">
-						<a href="" ng-click="header.login();">
+					<div class="menu-item"><!-- ng-if="mobileNumber.length !== 10"> -->
+						<a href="login.html" ng-click="header.login();">
 							<img ng-src="../images/login.svg" alt="{{ header.user }}" title="{{ header.user }}" />
 						</a>
 						<!-- a ends -->
@@ -66,7 +66,7 @@
 		</footer>
 		<!-- footer ends -->
 		
-	</form>
+	<!-- </form> -->
 
 </body>
 
