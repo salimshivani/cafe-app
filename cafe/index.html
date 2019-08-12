@@ -2,7 +2,8 @@
 <html ng-app="CafeApp">
 
 <head>
-    <title ng-controller="TitleController as title">{{ title.pageTitle() }}</title>
+    <title ng-controller="TitleController as title" ng-bind-template="{{ title.pageTitle() }}">
+	</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -20,8 +21,7 @@
 		<header ng-controller="HomeScreenHeaderController as header">
 			<div class="header-pad wrapper">
 				<div class="title">
-					<strong>
-						{{ header.title }}
+					<strong ng-bind-template="{{ header.title }}">
 					</strong>
 				</div>
 				<!-- div title ends -->
