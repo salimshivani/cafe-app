@@ -6,7 +6,8 @@
 	</defs>
 	<style>
 		tspan { white-space:pre }
-		.shp0 { fill: #909a63 } 
+<!--		.shp0 { fill: #909a63 } -->
+		.shp0 { fill: #999 } 
 	</style>
 	<g id="Home Screen" clip-path="url(#cp1)">
 		<g id="MenuLanding">

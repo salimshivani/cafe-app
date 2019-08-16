@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html ng-app="CafeApp">
+
+<head>
+    <title ng-controller="TitleController as title" ng-bind-template="{{ title.pageTitle() }}">
+	</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+<!--    <script src="../../scripts/angular.min.js"></script>-->
+	<!-- AngularJS -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
+    <script src="https://code.angularjs.org/1.7.8/angular-route.min.js"></script>
+
+	<!-- Firebase -->
+<!--	<script src="https://www.gstatic.com/firebasejs/3.6.6/firebase.js"></script>-->
+
+	<!-- AngularFire -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angularFire/2.3.0/angularfire.min.js"></script>
+	
+    <script src="../../scripts/cafe-app.js"></script>
+<!--    <script src="./signup.js"></script>-->
+<!--    <script src="../home/home.js"></script>-->
+
+    <link rel="stylesheet" type="text/css" href="../../styles/base.css" />
+    <link rel="stylesheet" type="text/css" href="../../styles/style.css" />
+</head>
+
+<body class="with-footer" ng-controller="SignUpScreenController as signUpScreen">
+
+	<form method="post">
+
+    	<header ng-controller="SignUpScreenHeaderController as header">
+    	    <div class="header-pad wrapper">
+				<div class="ic-back">
+					<a href="../login/login.html">
+						<img src="../../images/icon-back.svg" height="20px" width="20px" />
+					</a>
+				</div>
+				<!-- div ic-back ends -->
+						
+    	        <div class="title">
+    	            <strong ng-bind-template="{{ header.title }}">
+    	            </strong>
+    	        </div>
+    	        <!-- div title ends -->
+
+    	        <div class="menu">
+    	            <div class="ic-menu">
+    	            </div>
+    	            <!-- div menu-item ends -->
+
+    	        </div>
+    	        <!-- div menu-list ends -->
+
+    	    </div>
+    	    <!-- div header-pad, wrapper ends -->
+
+    	</header>
+    	<!-- header ends -->
+		
+		<div class="container">
+			<div class="container-pad wrapper">
+				<div class="sign-up-view">
+					<div class="form-field">
+						<input type="text" id="name" ng-model="signUpScreen.name" name="name" placeholder="Full Name" ng-required />
+					</div>
+					<!-- div form-field -->
+
+					<div class="form-field">
+						<input type="email" id="email" ng-model="signUpScreen.email" name="email" placeholder="Email Address" ng-required />
+					</div>
+					<!-- div form-field -->
+					
+					<div class="form-field">
+						<input type="tel" id="mobile" ng-model="signUpScreen.mobile" name="mobile" placeholder="Mobile Number" ng-required />
+					</div>
+					<!-- div form-field -->
+					
+					<div class="form-field">
+						<input type="password" id="password" ng-model="signUpScreen.password" name="password" placeholder="Password" ng-required />
+					</div>
+					<!-- div form-field -->
+					
+					<div class="form-field">
+						<input type="password" id="con-password" ng-model="signUpScreen.conPassword" name="con-password" placeholder="Confirm Password" ng-required />
+					</div>
+					<!-- div form-field -->
+					
+				</div>
+				<!-- div login-view ends -->
+
+			</div>
+			<!-- div container-pad, wrapper ends -->
+
+		</div>
+		<!-- div container ends -->
+
+		<footer ng-controller="FooterController as footer" ng-if="signUpScreen.isFooterVisible">
+			<div class="footer-pad wrapper">
+				<div class="form-field">
+					<button class="btn-sign-up" ng-click="signUpScreen.signUp()">Sign Up</button>
+				</div>
+				<!-- div form-field ends -->
+				
+			</div>
+			<!-- div footer-pad, wrapper ends -->
+
+		</footer>
+		<!-- footer ends -->
+
+	</form>
+	<!-- form ends -->
+	
+	<!-- The core Firebase JS SDK is always required and must be listed first -->
+	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-auth.js"></script>
+
+	<!-- TODO: Add SDKs for Firebase products that you want to use
+		https://firebase.google.com/docs/web/setup#config-web-app -->
+
+<!--
+	<script>
+  		// Your web app's Firebase configuration
+  		var firebaseConfig = {
+    		apiKey: "AIzaSyBDsD4wl8GTHCVPL_IJ8tbiBhKVuTVCfDI",
+    		authDomain: "cafe-app-52993.firebaseapp.com",
+    		databaseURL: "https://cafe-app-52993.firebaseio.com",
+    		projectId: "cafe-app-52993",
+    		storageBucket: "",
+    		messagingSenderId: "257963047060",
+    		appId: "1:257963047060:web:a2c7416276ba0730"
+		};
+  
+		// Initialize Firebase
+  		firebase.initializeApp(firebaseConfig);
+	</script>
+-->
+	
+</body>
+
+</html>

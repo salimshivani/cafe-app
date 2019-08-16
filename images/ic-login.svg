@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
+	<defs>
+		<image width="20" height="20" id="login" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAAAXNSR0IB2cksfwAAALpQTFRFR3BM////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////cehS9gAAAD50Uk5TAAZXptj0VlPd/9xSA4z+2YsCLi+K/VDeVTCk2vLz8dfvlyQLWPD4dQx2VJOU2wX6Rkj7T4ABb/mIczEQdImHSOLaAAAA00lEQVR4nGVQ1xKCQAwMTQ0qp6KICGIvKNgb6v//llzuEGbcl2w2ZTMB4FBUTTcMXaso8EO1hhJmXUqNJk8txiweW20SSdM7ADbjrEuznPVsTm3qdTIPkxrFJmrtK6CSASuJ6IJG0aLxAY2jJ4vIMnUwFFwHX16Yn5TBhwD/MMrHywiF0XiiTmez6XyyEEYVxOVqnX9hvVkiRvz4LZSwwzgBqOP+UGjHE555bOHpIl4D19sdH8Ta3czwmb5e6TtE/Mg6OHF+TXwuNiWuFwZB6EUJpV/WtRJ00vivvwAAAABJRU5ErkJggg=="/>
+	</defs>
+	<style>
+		tspan { white-space:pre }
+	</style>
+	<use id="login" href="#login" x="0" y="0" />
+</svg>

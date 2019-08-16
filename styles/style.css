@@ -1,11 +1,13 @@
 /** Login View CSS **/
-.login-view {
+.container .login-view {
+	align-self: center;
 	display: flex;
 	flex: 1;
 	flex-flow: column;
 	margin: 0px auto;
 }
 
+/*
 .form-field .btn-login {
 	display: flex;
 	padding: 8px 65px;
@@ -15,11 +17,73 @@
 	display: flex;
 	padding: 8px 25px;
 }
+*/
 
 /** Sign Up View CSS **/
-.sign-up-view {
+.container .sign-up-view {
 	display: flex;
 	flex: 1;
 	flex-flow: column;
 	margin: 0px auto;
+}
+
+/** Home Screen / Dashboard View CSS **/
+.container .db-view {
+	display: flex;
+	flex: 1;
+	margin: 0px auto;
+	padding: 4px;
+}
+
+.container .db-view .db-list {
+	display: flex;
+	flex: 1;
+	flex-flow: column wrap;
+}
+
+.container .db-list .db-item {
+	align-items: center;
+	border: 1px solid #999;
+	border-radius: 6px;
+	display: flex;
+/*	flex: 1;*/
+	justify-content: space-between;
+	margin-bottom: 12px;
+	padding: 6px;
+}
+
+.container .db-list .db-item:last-child {
+	margin-bottom: 0px;
+}
+
+.container .db-item .item-img {
+	display: flex;
+/*	flex: 1;*/
+	margin-right: 12px;
+}
+
+.container .db-item .item-img img {
+	height: 40px;
+	width: 40px;
+}
+
+.container .db-item .item-title {
+	color: #999;
+	display: flex;
+	flex: 1;
+}
+
+.container .db-item .item-action {
+	display: flex;
+	padding: 4px;
+}
+
+.container .db-item .item-action a {
+	display: flex;
+}
+
+.container .db-item .item-action a img {
+	display: flex;
+	height: 15px;
+	width: 15px;
 }

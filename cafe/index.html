@@ -7,8 +7,22 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script src="../scripts/angular.min.js"></script>
+<!--    <script src="../scripts/angular.min.js"></script>-->
+	
+	<!-- AngularJS -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
+    <script src="https://code.angularjs.org/1.7.8/angular-route.min.js"></script>
+
+	<!-- Firebase -->
+<!--	<script src="https://www.gstatic.com/firebasejs/3.6.6/firebase.js"></script>-->
+
+	<!-- AngularFire -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angularFire/2.3.0/angularfire.min.js"></script>
+	
     <script src="../scripts/cafe-app.js"></script>
+<!--    <script src="login/login.js"></script>-->
+<!--    <script src="home/home.js"></script>-->
+<!--    <script src="signup/signup.js"></script>-->
 
     <link rel="stylesheet" type="text/css" href="../styles/base.css" />
     <link rel="stylesheet" type="text/css" href="../styles/style.css" />
@@ -16,57 +30,80 @@
 
 <body>
 	
-	<!-- <form method="post"> -->
+	<header ng-controller="AppHeaderController as header">
+		<div class="header-pad wrapper">
+			<div class="title">
+				<strong ng-bind-template="{{ header.title }}">
+				</strong>
+			</div>
+			<!-- div title ends -->
 
-		<header ng-controller="HomeScreenHeaderController as header">
-			<div class="header-pad wrapper">
-				<div class="title">
-					<strong ng-bind-template="{{ header.title }}">
-					</strong>
-				</div>
-				<!-- div title ends -->
-
-				<div class="menu">
-					<div class="ic-menu"><!-- ng-if="mobileNumber.length !== 10"> -->
-						<a href="login.html" ng-click="header.login();">
-							<img ng-src="../images/login.svg" alt="{{ header.user }}" title="{{ header.user }}" />
-						</a>
-						<!-- a ends -->
-
-					</div>
-					<!-- div menu-item ends -->
+			<div class="menu">
+				<div class="ic-menu" ng-if="header.user === undefined || header.user === null">
+					<a href="" ng-click="header.login();">
+						<img ng-src="../images/ic-login.svg" alt="{{ login }}" title="{{ login }}" />
+					</a>
+					<!-- a ends -->
 
 				</div>
-				<!-- div menu-list ends -->
+				<!-- div ic-menu ends -->
+					
+				<div class="ic-menu" ng-if="header.user === undefined || header.user === null">
+					<a href="" ng-click="header.signUp();">
+						<img ng-src="../images/ic-sign-up.svg" alt="{{ signUp }}" title="{{ signUp }}" />
+					</a>
+					<!-- a ends -->
+
+				</div>
+				<!-- div ic-menu ends -->
+
+				<div class="ic-menu" ng-if="header.user !== undefined || header.user !== null">
+					<a href="" ng-click="header.logout();">
+						<img ng-src="../images/ic-login.svg" alt="{{ header.user.email }}" title="{{ header.user.name }}" />
+					</a>
+					<!-- a ends -->
+
+				</div>
+				<!-- div ic-menu ends -->
 
 			</div>
-			<!-- div header-pad, wrapper ends -->
-
-		</header>
-		<!-- header ends -->
-
-		<div class="container">
-			<div class="container-pad wrapper">
-
-				<div class="home" ng-controller="HomeScreenController"></div>
-				<!-- div home ends -->
-				
-			</div>
-			<!-- div container-pad, wrapper ends -->
+			<!-- div menu ends -->
 
 		</div>
-		<!-- div container ends -->
-		
-		<footer ng-controller="FooterController as footer" ng-if="footer.isVisible">
-			<div class="footer-pad wrapper">
+		<!-- div header-pad, wrapper ends -->
+
+	</header>
+	<!-- header ends -->
+
+	<div class="container" ng-controller="AppController as app">
+		<div class="container-pad wrapper">
+
+			<div ng-view></div>
+			<!-- div ng-view ends -->
 				
-			</div>
-			<!-- div footer-pad, wrapper ends -->
-			
-		</footer>
-		<!-- footer ends -->
+		</div>
+		<!-- div container-pad, wrapper ends -->
+
+	</div>
+	<!-- div container ends -->
 		
-	<!-- </form> -->
+	<footer ng-controller="FooterController as footer" ng-if="!footer.isFooterVisible">
+		<div class="footer-pad wrapper">
+			
+		</div>
+		<!-- div footer-pad, wrapper ends -->
+		
+	</footer>
+	<!-- footer ends -->
+
+	<!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+	<!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-app.js"></script>
+
+	<!-- Add Firebase products that you want to use -->
+	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-firestore.js"></script>
 
 </body>
 
