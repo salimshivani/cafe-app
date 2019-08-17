@@ -23,7 +23,7 @@ fieldset, dd, button, form {
   padding: 0;
   border: none; }
 
-ul, ul li, ol, ol li, dl, p, input, input[type="checkbox"], input[type="radio"] {
+ul, ul li, ol, ol li, dl, p, input, input[type="checkbox"], input[type="radio"], input[type="range"] {
   margin: 0;
   padding: 0; }
 
@@ -135,7 +135,8 @@ footer button {
 
 }
 
-input {
+input, select {
+	background: transparent;
 	border: 1px solid #81A300;
 	margin: 4px 0px;
 	padding: 8px 10px;
@@ -146,6 +147,10 @@ input {
 	display: flex;
 	height: 100%;
 	width: 100%;
+}
+
+.error {
+	color: #ff0000;
 }
 
 .form-field {
@@ -167,10 +172,6 @@ footer .form-field {
 	flex: 1;
 }
 
-.error {
-	color: #ff0000;
-}
-
 .form-field button {
   display: flex;
   flex: 1;
@@ -178,6 +179,41 @@ footer .form-field {
   margin: 0px auto;
   padding: 8px 40px;
 }
+
+.form-field .quantity-counter {
+	align-items: center;
+	display: flex;
+/*	flex: 1;*/
+}
+
+.form-field .quantity-counter input {
+	flex: 1;
+	margin-right: 4px;
+}
+
+.form-field .quantity-counter button {
+	background: transparent;
+	border: 1px solid #81A300;
+	border-radius: 2px;
+	flex: 0;
+	justify-content: center;
+	margin: 0px 4px;
+	padding: 8px 6px 7px;
+}
+
+.form-field .quantity-counter button:first-child {
+	margin-left: 0px;
+}
+
+.form-field .quantity-counter button:last-child {
+	margin-right: 0px;
+}
+
+/*
+.form-field  > input + .quantity-counter {
+	display: flex;
+}
+*/
 
 .form-field label, .form-field span {
 	font-size: 12px;

@@ -46,7 +46,6 @@
 	border: 1px solid #999;
 	border-radius: 6px;
 	display: flex;
-/*	flex: 1;*/
 	justify-content: space-between;
 	margin-bottom: 12px;
 	padding: 6px;
@@ -58,7 +57,6 @@
 
 .container .db-item .item-img {
 	display: flex;
-/*	flex: 1;*/
 	margin-right: 12px;
 }
 
@@ -86,4 +84,17 @@
 	display: flex;
 	height: 15px;
 	width: 15px;
+}
+
+/** Place Order View CSS **/
+.container .place-order-view {
+	display: flex;
+	flex: 1;
+	margin: 0px auto;
+	padding: 4px;
+}
+
+footer .form-field span {
+	display: flex;
+/*	padding: 6px;*/
 }

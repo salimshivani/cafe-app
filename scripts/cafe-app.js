@@ -6,20 +6,24 @@
     cafeApp.controller('TitleController', TitleController);
 	
 	cafeApp
+		.controller('AppHeaderController', AppHeaderController)
+		.controller('AppController', AppController);
+
+	cafeApp
         .controller('LoginScreenHeaderController', LoginScreenHeaderController)
         .controller('LoginScreenController', LoginScreenController);
 	
     cafeApp
         .controller('SignUpScreenHeaderController', SignUpScreenHeaderController)
         .controller('SignUpScreenController', SignUpScreenController);
-	
-	cafeApp
-		.controller('AppHeaderController', AppHeaderController)
-		.controller('AppController', AppController);
-	
+
     cafeApp
         .controller('HomeScreenHeaderController', HomeScreenHeaderController)
         .controller('HomeScreenController', HomeScreenController);
+	
+	cafeApp
+		.controller('PlaceOrderHeaderController', PlaceOrderHeaderController)
+		.controller('PlaceOrderScreenController', PlaceOrderScreenController);
 	
     cafeApp.controller('FooterController', FooterController);
 	
@@ -79,10 +83,7 @@
 			signUp = 'Sign Up';
 
         header.title = PageTitleService.getTitle(pageTitle);
-		
 		header.user = LoginService.getUser();
-//        isFooterVisible = false;
-//        $scope.isFooterVisible = isFooterVisible;
 
 		if (header.user.uid !== undefined && mobileNumber.length !== '') {
 			window.location = './home/home.html';
@@ -92,8 +93,7 @@
         };
 		
 		header.signUp = function () {
-			
-		}
+		};
 		
 		header.logout = LoginService.logoutUser;
     }
@@ -111,66 +111,10 @@
 		}
 	}
 
-    HomeScreenHeaderController.$inject = ['$scope', 'PageTitleService', 'LoginService'];
-    function HomeScreenHeaderController($scope, PageTitleService, LoginService) {
-        var header = this,
-			pageTitle = "Cafe App",
-			login = 'Login',
-			signUp = 'Sign Up';
-
-        header.title = PageTitleService.getTitle(pageTitle);
-		
-		header.user = LoginService.getUser();
-//        isFooterVisible = false;
-//        $scope.isFooterVisible = isFooterVisible;
-
-		if (header.user.uid !== undefined && mobileNumber.length !== '') {
-			
-		}
-		
-        header.login = function () {
-        };
-		
-		header.signUp = function () {
-			
-		}
-		
-		header.logout = LoginService.logoutUser;
-
-		// if (mobileNumber !== '' && mobileNumber.length === 10) {
-		// }
-        // header.login = function () {
-        // };
-    }
-
-	HomeScreenController.$inject = ['$firebaseAuth', 'URL', 'LoginService'];
-    function HomeScreenController($firebaseAuth, URL, LoginService) {
-        var homeScreen = this;
-		
-		homeScreen.addItems = 'Add Items';
-		homeScreen.menu = 'View Menu';
-		homeScreen.activeOrders = 'Active Orders';
-		homeScreen.placeOrder = 'Place Order';
-//		homeScreen.placeOrderURL = 'https://www.freepik.com/free-icon/tea_880412.htm';
-		
-		homeScreen.user = LoginService.getUser();
-		if (homeScreen.user.uid !== undefined && homeScreen.user.uid !== null && homeScreen.user.uid !== '') {
-			console.log(homeScreen.user);
-			isFooterVisible = false;
-//        	$scope.isFooterVisible = isFooterVisible;
-		} else {
-			// Redirect to Login
-			window.location = '../login/login.html';
-		}
-    }
-
     LoginScreenHeaderController.$inject = ['$scope', 'PageTitleService'];
     function LoginScreenHeaderController($scope, PageTitleService) {
         var header = this;
         var pageTitle = "Login";
-
-//        isFooterVisible = true;
-//        $scope.isFooterVisible = isFooterVisible;
 
         header.title = PageTitleService.getTitle(pageTitle + " - ");
 		header.title = header.title.split(" - ")[0];
@@ -281,7 +225,7 @@
 					localStorage.removeItem('phone');
 					localStorage.removeItem('uid');
 					localStorage.clear();
-					window.location = './login/login.html';
+					window.location = '../login/login.html';
 					console.log('Logged out');
 				})
 			}
@@ -348,14 +292,129 @@
 				});
 		}
     }
-    
+
+    HomeScreenHeaderController.$inject = ['$scope', 'PageTitleService', 'LoginService'];
+    function HomeScreenHeaderController($scope, PageTitleService, LoginService) {
+        var header = this,
+			pageTitle = "Cafe App",
+			login = 'Login',
+			signUp = 'Sign Up';
+
+        header.title = PageTitleService.getTitle(pageTitle);
+		header.user = LoginService.getUser();
+
+		if (header.user.uid !== undefined && mobileNumber.length !== '') {
+			
+		}
+		
+        header.login = function () {
+        };
+		
+		header.signUp = function () {
+		};
+		
+		header.logout = LoginService.logoutUser;
+
+		// if (mobileNumber !== '' && mobileNumber.length === 10) {
+		// }
+        // header.login = function () {
+        // };
+    }
+
+	HomeScreenController.$inject = ['$firebaseAuth', 'URL', 'LoginService'];
+    function HomeScreenController($firebaseAuth, URL, LoginService) {
+        var homeScreen = this;
+		
+		homeScreen.addItems = 'Add Items';
+		homeScreen.menu = 'View Menu';
+		homeScreen.activeOrders = 'Active Orders';
+		homeScreen.placeOrder = 'Place Order';
+		
+		homeScreen.user = LoginService.getUser();
+		if (homeScreen.user.uid !== undefined && homeScreen.user.uid !== null && homeScreen.user.uid !== '') {
+			console.log(homeScreen.user);
+			isFooterVisible = false;
+			
+			homeScreen.ePlaceOrder = function () {
+				window.location = '../place-order/place-order.html';
+			};
+		} else {
+			// Redirect to Login
+			window.location = '../login/login.html';
+		}
+    }
+
+    PlaceOrderHeaderController.$inject = ['PageTitleService', 'LoginService'];
+	function PlaceOrderHeaderController(PageTitleService, LoginService) {
+		var header = this,
+			pageTitle = "Place Order";
+
+        header.title = PageTitleService.getTitle(pageTitle + " - ");
+		header.title = header.title.split(" - ")[0];
+		header.user = LoginService.getUser();
+	}
+	
+	PlaceOrderScreenController.$inject = ['$firebaseAuth', 'URL', 'LoginService'];
+	function PlaceOrderScreenController($firebaseAuth, URL, LoginService) {
+		var placeOrderScreen = this;
+		
+		isFooterVisible = true;
+		
+		placeOrderScreen.customers = ['Salim', 'Karan', 'Divyesh'];
+		placeOrderScreen.customerName = placeOrderScreen.customers[0];
+		
+		placeOrderScreen.menuItems = [
+			{
+				id: 1,
+				name: 'Tea',
+				price: 25
+			},
+			{
+				id: 2,
+				name: 'Coffee',
+				price: 35.54
+			},
+			{
+				id: 3,
+				name: 'Nutella Cold Coffee',
+				price: 70
+			}];
+		placeOrderScreen.itemName = placeOrderScreen.menuItems[0];
+		placeOrderScreen.quantity = 0;
+		placeOrderScreen.errorQty = false;
+		placeOrderScreen.amount = 0;
+		
+		placeOrderScreen.changeCustomer = function ($index) {
+			placeOrderScreen.customerName = placeOrderScreen.customers[index];
+		};
+			console.log(placeOrderScreen.customerName);
+		
+		placeOrderScreen.increase = function () {
+			placeOrderScreen.quantity++;
+			placeOrderScreen.errorQty = false;
+			placeOrderScreen.amount = placeOrderScreen.quantity * placeOrderScreen.itemName.price;
+		};
+		
+		placeOrderScreen.decrease = function () {
+			if (placeOrderScreen.quantity > 0) {
+				placeOrderScreen.quantity--;
+				placeOrderScreen.amount = placeOrderScreen.quantity * placeOrderScreen.itemName.price;
+			} else {
+				placeOrderScreen.errorQty = true;
+				placeOrderScreen.errorMsg = 'Item already removed!!!';
+			}
+		};
+		
+		placeOrderScreen.ePlaceOrder = function () {};
+	}
+
     FooterController.$inject = ['$scope']
 	function FooterController ($scope) {
 		var footer = this;
         
         $scope.isFooterVisible = isFooterVisible;
-		console.log($scope.isFooterVisible);
-		footer.isFooterVisible = $scope.isFooterVisible;
+		footer.isFooterVisible = isFooterVisible;
+		console.log(footer.isFooterVisible);
 	}
 
     function PageTitleService() {
