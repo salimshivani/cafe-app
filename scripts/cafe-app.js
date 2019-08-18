@@ -3,6 +3,22 @@
     
     var cafeApp = angular.module('CafeApp', ['firebase']);
 
+	cafeApp
+		.config(function () {
+			var firebaseObj = {
+				apiKey: "AIzaSyBDsD4wl8GTHCVPL_IJ8tbiBhKVuTVCfDI",
+				authDomain: "cafe-app-52993.firebaseio.com",
+				databaseURL: 'https://cafe-app-52993.firebaseio.com',
+				projectId: "cafe-app-52993",
+				storageBucket: "",
+				messagingSenderId: "257963047060",
+				appId: "1:257963047060:web:a2c7416276ba0730"
+			};
+
+			firebase.initializeApp(firebaseObj);
+//			const dbRootRef = firebase.database().ref();
+		});
+	
     cafeApp.controller('TitleController', TitleController);
 	
 	cafeApp
@@ -23,13 +39,14 @@
 	
 	cafeApp
 		.controller('PlaceOrderHeaderController', PlaceOrderHeaderController)
-		.controller('PlaceOrderScreenController', PlaceOrderScreenController);
+		.controller('PlaceOrderController', PlaceOrderController);
 	
     cafeApp.controller('FooterController', FooterController);
 	
-    cafeApp.factory('PageTitleService', PageTitleService);
-	
-	cafeApp.service('LoginService', LoginService);
+    cafeApp
+		.factory('PageTitleService', PageTitleService)
+		.factory('LoginService', LoginService)
+		.factory('OrderService', OrderService);
 	
 	cafeApp.constant('URL', 'https://cafe-app-52993.firebaseio.com');
 	
@@ -48,21 +65,6 @@
 //					redirectTo: '../index.html'
 //				});
 //		}]);
-	
-	cafeApp
-		.config(function () {
-			var firebaseObj = {
-				apiKey: "AIzaSyBDsD4wl8GTHCVPL_IJ8tbiBhKVuTVCfDI",
-				authDomain: "cafe-app-52993.firebaseio.com",
-				databaseURL: URL,
-				projectId: "cafe-app-52993",
-				storageBucket: "",
-				messagingSenderId: "257963047060",
-				appId: "1:257963047060:web:a2c7416276ba0730"
-			};
-
-			firebase.initializeApp(firebaseObj);
-		});
 	
 	var email = '', mobileNumber = '', name = '', password = '', conPassword;
 	
@@ -126,7 +128,7 @@
 
 		loginScreen.login = function () {
 			
-//			 Auth Logic will be here			
+//			Auth Logic will be here			
 			firebase
 				.auth()
 				.signInWithEmailAndPassword(loginScreen.email, loginScreen.password)
@@ -174,7 +176,6 @@
 	
 	LoginService.$inject = ['$location', '$firebaseAuth'];
 	function LoginService($location, $firebaseAuth) {
-		var LoginService = this;
 		var email = '', name = '', phone = '', uid = '';
 		var auth = $firebaseAuth();
 
@@ -182,8 +183,8 @@
 			getUser: function () {
 				console.log('chekcing vars!!!');
 				if (localStorage.getItem('uid') === null ||
-					localStorage.getItem('uid') === undefined ||
-					localStorage.getItem('uid') === '') {
+						localStorage.getItem('uid') === undefined ||
+						localStorage.getItem('uid') === '') {
 					
 					console.log('empty store!!!');
 					return {};
@@ -214,20 +215,20 @@
 			},
 			logoutUser: function () {
 				auth
-				.$signOut()
-				.then(function () {
-					email = '';
-					name = '';
-					phone = '';
-					uid = '';
-					localStorage.removeItem('email');
-					localStorage.removeItem('name');
-					localStorage.removeItem('phone');
-					localStorage.removeItem('uid');
-					localStorage.clear();
-					window.location = '../login/login.html';
-					console.log('Logged out');
-				})
+					.$signOut()
+					.then(function () {
+						email = '';
+						name = '';
+						phone = '';
+						uid = '';
+						localStorage.removeItem('email');
+						localStorage.removeItem('name');
+						localStorage.removeItem('phone');
+						localStorage.removeItem('uid');
+						localStorage.clear();
+						window.location = '../login/login.html';
+						console.log('Logged out');
+					});
 			}
 		};
 	}
@@ -261,19 +262,18 @@
 					.then(function (success) {
 						window.location = '../login/login.html';
 					})
-					.catch(function(error) {
-					// Handle Errors here.
-					var errorCode = error.code;
-					var errorMessage = error.message;
-					// [START_EXCLUDE]
-					if (errorCode == 'auth/weak-password') {
-						alert('The password is too weak.');
-					} else {
-						alert(errorMessage);
-					}
-					console.log(error);
-					// [END_EXCLUDE]
-				});
+					.catch(function (error) {
+						// Handle Errors here.
+						var errorCode = error.code, errorMessage = error.message;
+						// [START_EXCLUDE]
+						if (errorCode === 'auth/weak-password') {
+							alert('The password is too weak.');
+						} else {
+							alert(errorMessage);
+						}
+						console.log(error);
+						// [END_EXCLUDE]
+					});
 			}
 		};
 
@@ -289,8 +289,9 @@
 				},
 				function (error) {
 					console.log("error:", error.msg);
-				});
-		}
+				}
+			);
+		};
     }
 
     HomeScreenHeaderController.$inject = ['$scope', 'PageTitleService', 'LoginService'];
@@ -338,6 +339,10 @@
 			homeScreen.ePlaceOrder = function () {
 				window.location = '../place-order/place-order.html';
 			};
+			
+			homeScreen.eActiveOrders = function () {
+				window.location = '../active-order/active-order.html';
+			};
 		} else {
 			// Redirect to Login
 			window.location = '../login/login.html';
@@ -354,16 +359,16 @@
 		header.user = LoginService.getUser();
 	}
 	
-	PlaceOrderScreenController.$inject = ['$firebaseAuth', 'URL', 'LoginService'];
-	function PlaceOrderScreenController($firebaseAuth, URL, LoginService) {
-		var placeOrderScreen = this;
+	PlaceOrderController.$inject = ['$firebaseArray', 'URL', 'OrderService', 'LoginService'];
+	function PlaceOrderController($firebaseArray, URL, OrderService, LoginService) {
+		var placeOrder = this;
 		
 		isFooterVisible = true;
 		
-		placeOrderScreen.customers = ['Salim', 'Karan', 'Divyesh'];
-		placeOrderScreen.customerName = placeOrderScreen.customers[0];
+		placeOrder.customers = ['Salim', 'Karan', 'Divyesh'];
+		placeOrder.customerName = placeOrder.customers[0];
 		
-		placeOrderScreen.menuItems = [
+		placeOrder.menuItems = [
 			{
 				id: 1,
 				name: 'Tea',
@@ -379,33 +384,83 @@
 				name: 'Nutella Cold Coffee',
 				price: 70
 			}];
-		placeOrderScreen.itemName = placeOrderScreen.menuItems[0];
-		placeOrderScreen.quantity = 0;
-		placeOrderScreen.errorQty = false;
-		placeOrderScreen.amount = 0;
+		placeOrder.itemName = placeOrder.menuItems[0];
+		placeOrder.quantity = 0;
+		placeOrder.errorQty = false;
+		placeOrder.amount = 0;
 		
-		placeOrderScreen.changeCustomer = function ($index) {
-			placeOrderScreen.customerName = placeOrderScreen.customers[index];
-		};
-			console.log(placeOrderScreen.customerName);
-		
-		placeOrderScreen.increase = function () {
-			placeOrderScreen.quantity++;
-			placeOrderScreen.errorQty = false;
-			placeOrderScreen.amount = placeOrderScreen.quantity * placeOrderScreen.itemName.price;
+		placeOrder.user = LoginService.getUser();
+		placeOrder.uid = placeOrder.user.uid;
+
+		placeOrder.increase = function () {
+			placeOrder.quantity++;
+			placeOrder.errorQty = false;
+			placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;
 		};
 		
-		placeOrderScreen.decrease = function () {
-			if (placeOrderScreen.quantity > 0) {
-				placeOrderScreen.quantity--;
-				placeOrderScreen.amount = placeOrderScreen.quantity * placeOrderScreen.itemName.price;
+		placeOrder.decrease = function () {
+			if (placeOrder.quantity > 0) {
+				placeOrder.quantity--;
+				placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;
 			} else {
-				placeOrderScreen.errorQty = true;
-				placeOrderScreen.errorMsg = 'Item already removed!!!';
+				placeOrder.errorQty = true;
+				placeOrder.errorMsg = 'Item already removed!!!';
 			}
 		};
 		
-		placeOrderScreen.ePlaceOrder = function () {};
+		placeOrder.ePlaceOrder = function () {
+			var timeStamp = new Date().getTime();
+			
+			var orderRef = firebase.database().ref().child("Orders");
+			var orderUidRef = orderRef.child(placeOrder.uid);
+
+			var orderDetails = {
+				date: timeStamp,
+				amount: placeOrder.amount,
+				item: placeOrder.itemName.name,
+				price: placeOrder.itemName.price,
+				qty: placeOrder.quantity
+			};
+
+			placeOrder.orderObj = $firebaseArray(orderUidRef);
+
+			console.log(orderDetails);
+			placeOrder.orderObj.$add(orderDetails)
+			.then(function (success) {
+				alert('Order Placed Successfully.');
+				placeOrder.customerName = placeOrder.customers[0];
+				placeOrder.itemName = placeOrder.menuItems[0];
+				placeOrder.errorQty = false;
+				placeOrder.quantity = 0;
+				placeOrder.amount = 0;
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+		};
+	}
+	
+	OrderService.$inject = ['$firebaseObject'];
+	function OrderService($firebaseObject) {
+		var orders = this;
+		
+		return {
+			getOrders: function (uid) {
+				
+			},
+			placeOrder: function(uid, timeStamp, amount, item, price, qty) {
+				console.log("dbRef", dbRef);
+				console.log("userRef", userRef);
+				console.log("order", orderDetails);
+				
+				userRef.child(orderDetails);
+
+				orders.dbSync.$bindTo(orders, "Orders");
+				console.log("dbsync: ", orders.dbSync);
+				
+				return orders.dbSync;
+			}
+		};
 	}
 
     FooterController.$inject = ['$scope']

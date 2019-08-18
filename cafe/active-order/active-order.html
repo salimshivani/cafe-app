@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html ng-app="CafeApp">
+
+<head>
+    <title ng-controller="TitleController as title" ng-bind-template="{{ title.pageTitle() }}">
+	</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+    <!-- AngularJS -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
+    <script src="https://code.angularjs.org/1.7.8/angular-route.min.js"></script>
+
+	<!-- The core Firebase JS SDK is always required and must be listed first -->
+	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-database.js"></script>
+	
+	<!-- AngularFIre -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angularFire/2.3.0/angularfire.min.js"></script>
+
+    <script src="../../scripts/cafe-app.js"></script>
+<!--    <script src="view-order.js"></script>-->
+
+    <link rel="stylesheet" type="text/css" href="../../styles/base.css" />
+    <link rel="stylesheet" type="text/css" href="../../styles/style.css" />
+</head>
+
+<body class="with-footer" ng-controller="ViewOrderController as viewOrder">
+		
+	<header ng-controller="PlaceOrderHeaderController as header">
+        <div class="header-pad wrapper">
+			<div class="ic-back">
+				<a href="../home/home.html">
+					<img src="../../images/ic-back.svg" height="20px" width="20px" />
+				</a>
+			</div>
+			<!-- div ic-back ends -->
+				
+   	        <div class="title">
+   	            <strong ng-bind-template="{{ header.title }}">
+   	            </strong>
+   	        </div>
+   	        <!-- div title ends -->
+
+   	    </div>
+   	    <!-- div header-pad, wrapper ends -->
+
+   	</header>
+   	<!-- header ends -->
+		
+	<div class="container">
+		<div class="container-pad wrapper">
+			<div class="sign-up-view">
+				
+			</div>
+			<!-- div login-view ends -->
+
+		</div>
+		<!-- div container-pad, wrapper ends -->
+
+	</div>
+	<!-- div container ends -->
+
+	<footer ng-controller="FooterController as footer" ng-if="!footer.isFooterVisible">
+		<div class="footer-pad wrapper">
+			<div class="form-field">
+				<button ng-click="placeOrder.ePlaceOrder">Place Order</button>
+			</div>
+			<!-- div form-field ends -->
+				
+		</div>
+		<!-- div footer-pad, wrapper ends -->
+
+	</footer>
+	<!-- footer ends -->
+
+</body>
+</html>

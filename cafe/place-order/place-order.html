@@ -14,6 +14,7 @@
 	<!-- The core Firebase JS SDK is always required and must be listed first -->
 	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-database.js"></script>
 	
 	<!-- AngularFIre -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angularFire/2.3.0/angularfire.min.js"></script>
@@ -25,7 +26,7 @@
     <link rel="stylesheet" type="text/css" href="../../styles/style.css" />
 </head>
 
-<body class="with-footer" ng-controller="PlaceOrderScreenController as placeOrderScreen">
+<body class="with-footer" ng-controller="PlaceOrderController as placeOrder">
 	
 	<form method="post">
 		
@@ -70,9 +71,9 @@
 				<div class="sign-up-view">
 					<div class="form-field">
 						<label>Customer Name</label>
-						<select ng-options="item for item in placeOrderScreen.customers" 
-								ng-model="placeOrderScreen.customerName">
-<!--							<option ng-repeat="item in placeOrderScreen.customers" ng-click="placeOrderScreen.changeCustomer($index);" ng-model="placeOrderScreen.customerName">{{ item }}</option>-->
+						<select ng-options="item for item in placeOrder.customers" 
+								ng-model="placeOrder.customerName">
+<!--							<option ng-repeat="item in placeOrder.customers" ng-click="placeOrder.changeCustomer($index);" ng-model="placeOrder.customerName">{{ item }}</option>-->
 						</select>
 					</div>
 					<!-- div form-field -->
@@ -80,32 +81,32 @@
 					<div class="form-field">
 						<label>Item</label>
 						<select 
-								ng-options="item as item.name for item in placeOrderScreen.menuItems" 
-								ng-model="placeOrderScreen.itemName">
+								ng-options="item as item.name for item in placeOrder.menuItems" 
+								ng-model="placeOrder.itemName">
 						</select>
-<!--							<option ng-repeat="item in placeOrderScreen.menuItems" ng-click="placeOrderScreen.changeItem($index);" ng-model="placeOrderScreen.itemName">{{ item }}</option>-->
+<!--							<option ng-repeat="item in placeOrder.menuItems" ng-click="placeOrder.changeItem($index);" ng-model="placeOrder.itemName">{{ item }}</option>-->
 					</div>
 					<!-- div form-field -->
 
 					<div class="form-field">
 						<div class="quantity-counter">
-							<input type="number" id="quantity" ng-model="placeOrderScreen.quantity" name="quantity" placeholder="Quantity" ng-required />
+							<input type="number" id="quantity" ng-model="placeOrder.quantity" name="quantity" placeholder="Quantity" ng-required />
 
-							<button ng-click="placeOrderScreen.increase();">+</button>
-							<button ng-click="placeOrderScreen.decrease();">-</button>
+							<button ng-click="placeOrder.increase();">+</button>
+							<button ng-click="placeOrder.decrease();">-</button>
 							
 						</div>
-						<span ng-if="placeOrderScreen.errorQty">{{ placeOrderScreen.errorMsg }}</span>
+						<span ng-if="placeOrder.errorQty">{{ placeOrder.errorMsg }}</span>
 					</div>
 					<!-- div form-field -->
 					
 					<div class="form-field">
-						<input type="text" id="instructions" ng-model="placeOrderScreen.instructions" name="instructions" placeholder="Optional Instructions" />
+						<input type="text" id="instructions" ng-model="placeOrder.instructions" name="instructions" placeholder="Optional Instructions" />
 					</div>
 					<!-- div form-field -->
 					
 					<div class="form-field">
-						<input type="text" id="amount" ng-model="placeOrderScreen.amount" name="amount" placeholder="Amount" ng-disabled="true" ng-required />
+						<input type="text" id="amount" ng-model="placeOrder.amount" name="amount" placeholder="Amount" ng-disabled="true" ng-required />
 					</div>
 					<!-- div form-field -->
 					
@@ -128,7 +129,7 @@
 		<footer ng-controller="FooterController as footer" ng-if="!footer.isFooterVisible">
 			<div class="footer-pad wrapper">
 				<div class="form-field">
-					<button ng-click="placeOrderScreen.ePlaceOrder();">Place Order</button>
+					<button ng-click="placeOrder.ePlaceOrder();">Place Order</button>
 				</div>
 				<!-- div form-field ends -->
 				
