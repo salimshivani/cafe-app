@@ -59,7 +59,7 @@
 		.factory('PageTitleService', PageTitleService)
 		.factory('SignUpService', SignUpService)
 		.factory('LoginService', LoginService)
-		.factory('UserService', UserService)
+//		.factory('UsersService', UsersService)
 		.factory('ItemService', ItemService)
 		.factory('OrderService', OrderService);
 	
@@ -124,7 +124,7 @@
 			console.log(app.user);
 		} else {
 			// Redirect to Login
-			window.location = './login/login.html';
+			window.location = '../cafe/login/login.html';
 		}
 	}
 
@@ -164,6 +164,10 @@
 					loginScreen.phone = $firebaseAuth().$getAuth().phoneNumber;
 					loginScreen.role = 'user-role';
 					loginScreen.uid = $firebaseAuth().$getAuth().uid;
+
+
+//					var userType = UsersService.getUserType(loginScreen.uid);
+//					console.log(userType);
 
 					LoginService.setUser(loginScreen.email,
 										 loginScreen.name,
@@ -252,6 +256,36 @@
 						window.location = '../login/login.html';
 						console.log('Logged out');
 					});
+			}
+		};
+	}
+	
+	UsersService.$inject = ['$firebaseAuth', '$firebaseArray'];
+	function UsersService($firebaseAuth, $firebaseArray) {
+		var users = this;
+		var usersRef = firebase.database().ref().child("Users");
+
+		return {
+			getUserType: function () {
+				users.usersArray = $firebaseArray(usersRef);
+				users.users = [];
+				
+				usersRef.on('child_added', function (snapshot) {
+					users.UId = snapshot.key;
+					var usersUIdRef = usersRef.child(users.UId);
+					
+					viewItems.itemName = snapshot.val().itemName;
+					viewItems.price = snapshot.val().price;
+
+					var item = {
+						itemKey: snapshot.key,
+						availibilty: viewItems.availibilty,
+						itemName: viewItems.itemName,
+						price: viewItems.price
+					};
+
+					viewItems.items.push(item);
+				});
 			}
 		};
 	}
