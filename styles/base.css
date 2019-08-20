@@ -155,8 +155,9 @@ input, select {
 	width: 100%;
 }
 
-.error {
+.form-field .error {
 	color: #ff0000;
+	font-size: 11px;
 }
 
 .form-field {
@@ -166,7 +167,7 @@ input, select {
 /*	flex: 1;*/
 	flex-flow: column;
 	justify-items: center;
-	margin: 0px 6px;
+	margin: 0px 6px 6px;
 }
 
 .form-field:last-child {

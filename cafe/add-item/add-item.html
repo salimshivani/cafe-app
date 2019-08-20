@@ -70,54 +70,32 @@
 			<div class="container-pad wrapper">
 				<div class="add-item-view">
 					<div class="form-field">
-						<label>Customer Name</label>
-						<select ng-options="item for item in addItem.items" 
-								ng-model="addItem.itemName">
-						</select>
+						<label>Item Name</label>
+						<input type="text" id="item-name" ng-model="addItem.itemName" name="item-name" autofocus="" placeholder="Item Name" ng-required="true" />
+						<span class="error" ng-if="addItem.itemName === ''">{{ addItem.errorMsg }}</span>
 					</div>
-					<!-- div form-field -->
-					
-<!--
-					<div class="form-field">
-						<label>Item</label>
-						<select ng-options="item as item.name for item in placeOrder.menuItems" 
-								ng-model="placeOrder.itemName">
-						</select>
-					</div>
-					 div form-field 
--->
+					<!-- div form-field ends -->
 
-<!--
 					<div class="form-field">
-						<label>Quantity</label>
-						<div class="quantity-counter">
-							<input type="number" id="quantity" ng-model="placeOrder.quantity" name="quantity" ng-disabled="true" ng-required />
+						<div class="flex">
+							<div class="form-field">
+								<label>Price</label>
+								<input type="number" id="price" ng-model="addItem.price" name="price" placeholder="Price" ng-required="true" />
+<!--								<span class="error" ng-if="addItem.price === 0">{{ addItem.errorMsg }}</span>-->
+							</div>
+							<!-- div form-field ends -->
 
-							<button ng-click="placeOrder.increase();">+</button>
-							<button ng-click="placeOrder.decrease();">-</button>
-							 quantity counter buttons end 
-							
+							<div class="form-field">
+								<label for="availibilty">Available</label>
+								<input type="checkbox" id="availibilty" ng-model="addItem.availibilty" name="availibilty" />
+							</div>
+							<!-- div form-field ends -->
+
 						</div>
-						
-						<span class="error" ng-if="placeOrder.errorMsg.length > 0">{{ placeOrder.errorMsg }}</span>
-						<span class="error">{{ placeOrder.required }}</span>
+						<!-- div flex ends -->
+
 					</div>
-					 div form-field 
--->
-					
-<!--
-					<div class="form-field">
-						<label>Optional Instructions</label>
-						<input type="text" id="instructions" ng-model="placeOrder.instructions" name="instructions" />
-					</div>
-					 div form-field 
--->
-					
-					<div class="form-field">
-						<label>Price</label>
-						<input type="text" id="price" ng-model="addItem.price" name="addItem" ng-required />
-					</div>
-					<!-- div form-field -->
+					<!-- div form-field ends -->
 
 				</div>
 				<!-- div login-view ends -->
@@ -128,10 +106,10 @@
 		</div>
 		<!-- div container ends -->
 
-		<footer ng-controller="FooterController as footer" ng-if="!footer.isFooterVisible">
+		<footer ng-controller="FooterController as footer" ng-if="addItem.isFooterVisible">
 			<div class="footer-pad wrapper">
 				<div class="form-field">
-					<button ng-click="placeOrder.ePlaceOrder();">
+					<button ng-click="addItem.eAddItem();">
 						Place Order
 					</button>
 				</div>
