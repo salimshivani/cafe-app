@@ -85,7 +85,7 @@ html, body {
 }
 
 body {
-    padding-top: 50px;
+/*    padding-top: 50px;*/
 }
 
 body.with-footer {
@@ -106,7 +106,7 @@ header {
     flex-flow: wrap;
     justify-content: space-between;
     padding: 6px;
-    position: fixed;
+    position: sticky;
     top: 0;
     width: 100%;
     z-index: 1;
@@ -117,10 +117,15 @@ footer {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-	  padding: 3px 6px;
-    position: fixed;
+	padding: 3px 6px;
+    position: sticky;
     width: 100%;
     z-index: 999;
+}
+
+footer.footer-filled {
+	background: #81A300;
+	color: #ffffff;
 }
 
 form {
@@ -146,6 +151,7 @@ input, select {
 /*	background: #eee;*/
 	display: flex;
 	height: 100%;
+	overflow: scroll;
 	width: 100%;
 }
 
@@ -173,10 +179,10 @@ footer .form-field {
 }
 
 .form-field button {
-  display: flex;
+/*  display: flex;*/
   flex: 1;
   font-size: 14px;
-  margin: 0px auto;
+  margin: 0px;
   padding: 8px 40px;
 }
 

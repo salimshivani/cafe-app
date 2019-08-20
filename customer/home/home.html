@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="CafeApp">
+<html ng-app="CustomerApp">
 	
 <head>
 	<title ng-controller="TitleController as title" ng-bind-template="{{ title.pageTitle() }}"></title>
@@ -18,12 +18,12 @@
 	<!-- AngularFire -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angularFire/2.3.0/angularfire.min.js"></script>
 	
-    <script src="../../scripts/cafe-app.js"></script>
+    <script src="../../scripts/customer-app.js"></script>
 <!--    <script src="./signup.js"></script>-->
 <!--    <script src="../home/home.js"></script>-->
 
     <link rel="stylesheet" type="text/css" href="../../styles/base.css" />
-    <link rel="stylesheet" type="text/css" href="../../styles/style-cafe.css" />
+    <link rel="stylesheet" type="text/css" href="../../styles/style-customer.css" />
 </head>
 	
 	<body>
@@ -77,30 +77,6 @@
 				<div class="db-view">
 					<div class="db-list">
 						
-						<!-- Add Items -->
-						<div class="db-item">
-							<div class="item-img">
-								<img ng-src="images/add-items.svg" alt="{{ homeScreen.addItems }}" title="{{ homeScreen.addItems }}" />
-							</div>
-							<!-- div item-img ends -->
-							
-							<div class="item-title">
-								<span>{{ homeScreen.addItems }}</span>
-							</div>
-							<!-- div item-title ends -->
-							
-							<div class="item-action">
-								<a href="" ng-click="homeScreen.addItem();">
-									<img ng-src="../../images/ic-action.svg" alt="{{ homeScreen.addItems }}" title="{{ homeScreen.addItems }}" />
-								</a>
-								<!-- Add Item -->
-								
-							</div>
-							<!-- div item-action ends -->
-							
-						</div>
-						<!-- div db-item ends -->
-						
 						<!-- View Menu -->
 						<div class="db-item">
 							<div class="item-img">
@@ -152,18 +128,18 @@
 						<!-- Active Orders -->
 						<div class="db-item">
 							<div class="item-img">
-								<img ng-src="images/active-orders.svg" alt="{{ homeScreen.activeOrders }}" title="{{ homeScreen.activeOrders }}" />
+								<img ng-src="images/view-orders.svg" alt="{{ homeScreen.viewOrders }}" title="{{ homeScreen.viewOrders }}" />
 							</div>
 							<!-- div item-img ends -->
 							
 							<div class="item-title">
-								<span>{{ homeScreen.activeOrders }}</span>
+								<span>{{ homeScreen.viewOrders }}</span>
 							</div>
 							<!-- div item-title ends -->
 							
 							<div class="item-action">
-								<a href="" ng-click="homeScreen.eActiveOrders();">
-									<img ng-src="../../images/ic-action.svg" alt="{{ homeScreen.activeOrders }}" title="{{ homeScreen.activeOrders }}" />
+								<a href="" ng-click="homeScreen.eViewOrders();">
+									<img ng-src="../../images/ic-action.svg" alt="{{ homeScreen.viewOrders }}" title="{{ homeScreen.viewOrders }}" />
 								</a>
 								<!-- Add Item -->
 								

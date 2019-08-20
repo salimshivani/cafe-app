@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="CafeApp">
+<html ng-app="CustomerApp">
 
 <head>
     <title ng-controller="TitleController as title" ng-bind-template="{{ title.pageTitle() }}">
@@ -19,11 +19,11 @@
 	<!-- AngularFIre -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angularFire/2.3.0/angularfire.min.js"></script>
 
-    <script src="../../scripts/cafe-app.js"></script>
+    <script src="../../scripts/customer-app.js"></script>
 <!--    <script src="place-order.js"></script>-->
 
     <link rel="stylesheet" type="text/css" href="../../styles/base.css" />
-    <link rel="stylesheet" type="text/css" href="../../styles/style-cafe.css" />
+    <link rel="stylesheet" type="text/css" href="../../styles/style-customer.css" />
 </head>
 
 <body class="with-footer" ng-controller="PlaceOrderController as placeOrder">
@@ -45,21 +45,6 @@
     	        </div>
     	        <!-- div title ends -->
 
-<!--
-				<div class="menu">
-					<div class="ic-menu"> ng-if="mobileNumber.length !== 10"> 
-						<a href="../signup/signup.html" ng-click="header.signup();">
-							<img ng-src="../../images/ic-sign-up.svg" alt="{{ header.signUp }}" title="{{ header.signUp }}" />
-						</a>
-						 a ends 
-
-					</div>
-					 div ic-menu ends 
-
-				</div>
--->
-				<!-- div menu ends -->
-
     	    </div>
     	    <!-- div header-pad, wrapper ends -->
 
@@ -69,14 +54,7 @@
 		<div class="container">
 			<div class="container-pad wrapper">
 				<div class="sign-up-view">
-					<div class="form-field">
-						<label>Customer Name</label>
-						<select ng-options="item for item in placeOrder.customers" 
-								ng-model="placeOrder.customerName">
-						</select>
-					</div>
-					<!-- div form-field -->
-					
+
 					<div class="form-field">
 						<label>Item</label>
 						<select ng-options="item as item.name for item in placeOrder.menuItems" 

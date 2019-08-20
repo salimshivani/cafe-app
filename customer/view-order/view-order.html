@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="CafeApp">
+<html ng-app="CustomerApp">
 
 <head>
     <title ng-controller="TitleController as title" ng-bind-template="{{ title.pageTitle() }}">
@@ -19,16 +19,16 @@
 	<!-- AngularFIre -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angularFire/2.3.0/angularfire.min.js"></script>
 
-    <script src="../../scripts/cafe-app.js"></script>
+    <script src="../../scripts/customer-app.js"></script>
 <!--    <script src="view-order.js"></script>-->
 
     <link rel="stylesheet" type="text/css" href="../../styles/base.css" />
-    <link rel="stylesheet" type="text/css" href="../../styles/style-cafe.css" />
+    <link rel="stylesheet" type="text/css" href="../../styles/style-customer.css" />
 </head>
 
-<body ng-controller="ActiveOrdersController as activeOrders">
+<body class="with-footer" ng-controller="ViewOrdersController as viewOrders">
 		
-	<header ng-controller="ActiveOrdersHeaderController as header">
+	<header ng-controller="ViewOrdersHeaderController as header">
         <div class="header-pad wrapper">
 			<div class="ic-back">
 				<a href="../home/home.html">
@@ -53,27 +53,24 @@
 		<div class="container-pad wrapper">
 			<div class="view-orders">
 				<div class="order-list">
-					<div class="order-item" ng-repeat="item in activeOrders.orders">
-<!--					<h3>{{ activeOrders.orderList }}</h3>-->
-<!--					<strong>{{ activeOrders.orderList().itemName x activeOrders.orderList().qty }}</strong>-->
+					<div class="order-item" ng-repeat="item in viewOrders.orders">
 						<div class="item-img">
 							<img ng-src="../../images/img-coffee.svg" />
 						</div>
 						<!-- div item-img ends -->
-
+						
+<!--					<h4>{{ viewOrders.customerName }}</h4>-->
 						<div class="item-details">
-							<h4>{{ viewOrders.customerName }}</h4>
 							<span>{{ item.date | date: 'dd-MM-yyyy' }}</span>
 							<span>{{ item.itemName + " x " + item.qty }}</span>
 						</div>
 						<!-- div item-details ends -->
-
+							
 <!--					<span>Quantity: {{ viewOrders.qty }}</span>-->
 						<div class="item-amount">
 							<span>&#8377; {{ item.amt | number:2 }}</span>
 						</div>
 						<!-- div item-amount ends -->
-
 					</div>
 					<!-- div order-item ends -->
 					
@@ -81,7 +78,7 @@
 				<!-- div order-list ends -->
 				
 			</div>
-			<!-- div login-view ends -->
+			<!-- div view-orders ends -->
 
 		</div>
 		<!-- div container-pad, wrapper ends -->
@@ -89,13 +86,12 @@
 	</div>
 	<!-- div container ends -->
 
-	<footer ng-controller="FooterController as footer" ng-if="activeOrders.isFooterVisible">
+	<footer class="footer-filled" ng-controller="FooterController as footer" ng-if="viewOrders.isFooterVisible">
 		<div class="footer-pad wrapper">
-<!--
-			<div class="form-field">
-				<button ng-click="activeOrders.ePlaceOrder">Place Order</button>
+			<div class="item-amount">
+<!--				<button ng-click="placeOrder.ePlaceOrder">Place Order</button>-->
+				<strong>Total Amount: &#8377; {{ viewOrders.totalAmount | number:2 }}</strong>
 			</div>
--->
 			<!-- div form-field ends -->
 				
 		</div>

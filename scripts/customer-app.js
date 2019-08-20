@@ -1,9 +1,9 @@
 (function () {
     'use strict';
     
-    var cafeApp = angular.module('CafeApp', ['firebase']);
+    var customerApp = angular.module('CustomerApp', ['firebase']);
 
-	cafeApp
+	customerApp
 		.config(function () {
 			var firebaseObj = {
 				apiKey: "AIzaSyBDsD4wl8GTHCVPL_IJ8tbiBhKVuTVCfDI",
@@ -16,46 +16,45 @@
 			};
 
 			firebase.initializeApp(firebaseObj);
-//			const dbRootRef = firebase.database().ref();
 		});
 	
-    cafeApp.controller('TitleController', TitleController);
+    customerApp.controller('TitleController', TitleController);
 	
-	cafeApp
+	customerApp
 		.controller('AppHeaderController', AppHeaderController)
 		.controller('AppController', AppController);
 
-	cafeApp
+	customerApp
         .controller('LoginScreenHeaderController', LoginScreenHeaderController)
         .controller('LoginScreenController', LoginScreenController);
 	
-    cafeApp
+    customerApp
         .controller('SignUpScreenHeaderController', SignUpScreenHeaderController)
         .controller('SignUpScreenController', SignUpScreenController);
 
-    cafeApp
+    customerApp
         .controller('HomeScreenHeaderController', HomeScreenHeaderController)
         .controller('HomeScreenController', HomeScreenController);
 	
-	cafeApp
+	customerApp
 		.controller('PlaceOrderHeaderController', PlaceOrderHeaderController)
 		.controller('PlaceOrderController', PlaceOrderController);
 	
-	cafeApp
-		.controller('ActiveOrdersHeaderController', ActiveOrdersHeaderController)
-		.controller('ActiveOrdersController', ActiveOrdersController);
+	customerApp
+		.controller('ViewOrdersHeaderController', ViewOrdersHeaderController)
+		.controller('ViewOrdersController', ViewOrdersController);
 	
-    cafeApp.controller('FooterController', FooterController);
+    customerApp.controller('FooterController', FooterController);
 	
-    cafeApp
+    customerApp
 		.factory('PageTitleService', PageTitleService)
 		.factory('SignUpService', SignUpService)
 		.factory('LoginService', LoginService)
 		.factory('OrderService', OrderService);
 	
-	cafeApp.constant('URL', 'https://cafe-app-52993.firebaseio.com');
+	customerApp.constant('URL', 'https://cafe-app-52993.firebaseio.com');
 	
-//	cafeApp
+//	customerApp
 //		.config(['$routeProvider', function ($routeProvider) {
 //			$routeProvider
 //				.when('/home', {
@@ -302,7 +301,7 @@
 							email: email,
 							mobile: mobile,
 							name: name,
-							role: 'admin'
+							role: 'user'
 						};
 						signUp.userObj = $firebaseArray(userUidRef);
 						signUp.userObj
@@ -368,7 +367,7 @@
 		
 		homeScreen.addItems = 'Add Items';
 		homeScreen.menu = 'View Menu';
-		homeScreen.activeOrders = 'Active Orders';
+		homeScreen.viewOrders = 'View Orders';
 		homeScreen.placeOrder = 'Place Order';
 		
 		homeScreen.user = LoginService.getUser();
@@ -379,8 +378,8 @@
 				window.location = '../place-order/place-order.html';
 			};
 			
-			homeScreen.eActiveOrders = function () {
-				window.location = '../active-order/active-order.html';
+			homeScreen.eViewOrders = function () {
+				window.location = '../view-order/view-order.html';
 			};
 		} else {
 			// Redirect to Login
@@ -403,9 +402,6 @@
 		var placeOrder = this;
 		
 		isFooterVisible = true;
-		
-		placeOrder.customers = ['Salim', 'Karan', 'Divyesh'];
-		placeOrder.customerName = placeOrder.customers[0];
 		
 		placeOrder.menuItems = [
 			{
@@ -473,7 +469,6 @@
 					.then(function (success) {
 						alert('Order Placed Successfully.');
 						placeOrder.amount = 0;
-						placeOrder.customerName = placeOrder.customers[0];
 						placeOrder.errorQty = false;
 						placeOrder.itemName = placeOrder.menuItems[0];
 						placeOrder.quantity = 0;
@@ -485,202 +480,143 @@
 		};
 	}
 	
-    ActiveOrdersHeaderController.$inject = ['PageTitleService', 'LoginService'];
-	function ActiveOrdersHeaderController(PageTitleService, LoginService) {
+	ViewOrdersHeaderController.$inject = ['PageTitleService', 'LoginService'];
+	function ViewOrdersHeaderController(PageTitleService, LoginService) {
 		var header = this,
-			pageTitle = "Active Orders";
+			pageTitle = "View Orders";
 
         header.title = PageTitleService.getTitle(pageTitle + " - ");
 		header.title = header.title.split(" - ")[0];
 		header.user = LoginService.getUser();
 	}
 	
-	ActiveOrdersController.$inject = ['OrderService'];
-	function ActiveOrdersController(OrderService) {
-		var activeOrders = this;
-		var usersOrderRef = firebase.database().ref().child("Orders");
+	ViewOrdersController.$inject = ['$firebaseArray', 'OrderService', 'LoginService'];
+	function ViewOrdersController($firebaseArray, OrderService, LoginService) {
+		var viewOrders = this;
+		var orderRef = firebase.database().ref().child("Orders");
+		var orderUidRef = orderRef.child(LoginService.getUser().uid);
 
-		/*orderRef.on('value', snap => {
-			JSON.stringify(snap.val(), null, 3);
-			console.log(snap);
-			console.log(snap.val());
-		});*/
-		
-		activeOrders.ordersArray = OrderService.users(usersOrderRef);
-		activeOrders.orders = [];
+		viewOrders.amt = 0;
+		viewOrders.date = '';
+		viewOrders.itemName = '';
+		viewOrders.qty = 0;
+		viewOrders.totalAmount = 0;
 
-//		console.log(activeOrders.ordersArray);
+		viewOrders.ordersArray = OrderService.activeOrders(orderUidRef);
+		viewOrders.orders = [];
 
-		usersOrderRef.on('child_added', function (snapshot) {
-			activeOrders.user = snapshot.key;
-//			console.log(snapshot);
-			
-			var orderRef = usersOrderRef.child(activeOrders.user);
-			
-			orderRef.on('child_added', function (snapshot) {
-				activeOrders.orderKey = snapshot.key;
-//				console.log("order child added", snapshot);
+//		console.log(viewOrders.orders);
 
-				activeOrders.amt = snapshot.val().amount;
-				activeOrders.date = snapshot.val().date;
-				activeOrders.itemName = snapshot.val().item;
-				activeOrders.qty = snapshot.val().qty;
+		orderUidRef.on('child_added', function (snapshot) {
+			viewOrders.orderKey = snapshot.key;
 
-				var order = {
-					user: activeOrders.user,
-					orderKey: activeOrders.orderKey,
-					amt: activeOrders.amt,
-					date: activeOrders.date,
-					itemName: activeOrders.itemName,
-					qty: activeOrders.qty
-				};
+			viewOrders.amt = snapshot.val().amount;
+			viewOrders.date = snapshot.val().date;
+			viewOrders.itemName = snapshot.val().item;
+			viewOrders.qty = snapshot.val().qty;
 
-				activeOrders.totalAmount += order.amt;
-				activeOrders.orders.push(order);
-			});
+			var order = {
+				orderKey: viewOrders.orderKey,
+				amt: viewOrders.amt,
+				date: viewOrders.date,
+				itemName: viewOrders.itemName,
+				qty: viewOrders.qty
+			};
+
+			viewOrders.totalAmount += order.amt;
+			viewOrders.orders.push(order);
 		});
 
-		usersOrderRef.on('child_changed', function (snapshot) {
-			activeOrders.user = snapshot.key;
-//			console.log(snapshot);
+		orderUidRef.on('child_changed', function (snapshot) {
+			viewOrders.orderKey = snapshot.key;
+//			console.log(snapshot.key);
 
-			var orderRef = usersOrderRef.child(activeOrders.user);
-			var index = -1;
+			viewOrders.amt = snapshot.val().amount;
+			viewOrders.date = snapshot.val().date;
+			viewOrders.itemName = snapshot.val().item;
+			viewOrders.qty = snapshot.val().qty;
+			console.log(snapshot.val());
 
-			orderRef.on('child_changed', function (snapshot) {
-				activeOrders.orderKey = snapshot.key;
-//				console.log(snapshot);
+			var order = {
+				orderKey: viewOrders.orderKey,
+				amt: viewOrders.amt,
+				date: viewOrders.date,
+				itemName: viewOrders.itemName,
+				qty: viewOrders.qty
+			};
 
-				activeOrders.amt = snapshot.val().amount;
-				activeOrders.date = snapshot.val().date;
-				activeOrders.itemName = snapshot.val().item;
-				activeOrders.qty = snapshot.val().qty;
-//				console.log(snapshot.val());
+			var index = viewOrders.orders.findIndex(x => x.orderKey === viewOrders.orderKey);
+			viewOrders.totalAmount -= viewOrders.orders[index].amt;
+			viewOrders.orders[index] = order;
 
-				var order = {
-					user: activeOrders.user,
-					orderKey: activeOrders.orderKey,
-					amt: activeOrders.amt,
-					date: activeOrders.date,
-					itemName: activeOrders.itemName,
-					qty: activeOrders.qty
-				};
-
-				index = activeOrders.orders.findIndex(x => x.orderKey === activeOrders.orderKey);
-//				console.log(activeOrders.orders);
-//				console.log(index);
-				activeOrders.orders[index] = order;
-			});
-			
-			orderRef.on('child_removed', function (snapshot) {
-				activeOrders.orderKey = snapshot.key;
-//				console.log(JSON.stringify(snapshot.val(), null, 3));
-//				console.log(snapshot);
-
-				activeOrders.amt = snapshot.val().amount;
-				activeOrders.date = snapshot.val().date;
-				activeOrders.itemName = snapshot.val().item;
-				activeOrders.qty = snapshot.val().qty;
-
-				var order = {
-					orderKey: activeOrders.orderKey,
-					amt: activeOrders.amt,
-					date: activeOrders.date,
-					itemName: activeOrders.itemName,
-					qty: activeOrders.qty
-				};
-
-				index = activeOrders.orders.findIndex(x => x.orderKey === activeOrders.orderKey);
-//				console.log(activeOrders.orders);
-//				console.log(index);
-				activeOrders.orders.splice(index, 1);
-			});
-
-			/*if (isChanged) {
-				console.log("isChanged: ", isChanged);
-				activeOrders.ordersArray
-					.$save(index)
-					.then(function (success) {
-						console.log("success result: ", success);
-					}).catch(function (error) {
-						console.log(error);
-					});
-			}
-			
-			if (isRemoved) {
-				console.log("isRemoved: ", isRemoved);
-				activeOrders.ordersArray
-					.$remove(index)
-					.then(function (success) {
-						console.log("success result: ", success);
-					}).catch(function (error) {
-						console.log(error);
-					});
-			}*/
+			viewOrders.ordersArray
+				.$save(index)
+				.then(function (success) {
+					console.log("success result: ", success);
+					viewOrders.totalAmount += viewOrders.amt;
+				}).catch(function (error) {
+					console.log(error);
+				});
 		});
 
-		/*usersOrderRef.on('child_removed', function (snapshot) {
-			activeOrders.user = snapshot.key;
+		orderUidRef.on('child_removed', function (snapshot) {
 //			console.log(JSON.stringify(snapshot.val(), null, 3));
-//			console.log(snapshot);
+			console.log(snapshot);
 
-			var orderRef = usersOrderRef.child(activeOrders.user);
-			var index = -1;
+			viewOrders.orderKey = snapshot.key;
 
-			orderRef.on('child_removed', function (snapshot) {
-				activeOrders.orderKey = snapshot.key;
-//				console.log(JSON.stringify(snapshot.val(), null, 3));
-				console.log(snapshot);
+			viewOrders.amt = snapshot.val().amount;
+			viewOrders.date = snapshot.val().date;
+			viewOrders.itemName = snapshot.val().item;
+			viewOrders.qty = snapshot.val().qty;
 
-				activeOrders.amt = snapshot.val().amount;
-				activeOrders.date = snapshot.val().date;
-				activeOrders.itemName = snapshot.val().item;
-				activeOrders.qty = snapshot.val().qty;
+			var order = {
+				orderKey: viewOrders.orderKey,
+				amt: viewOrders.amt,
+				date: viewOrders.date,
+				itemName: viewOrders.itemName,
+				qty: viewOrders.qty
+			};
+			
+			var index = viewOrders.orders.findIndex(x => x.orderKey === viewOrders.orderKey);
+			viewOrders.orders[index] = order;
 
-				var order = {
-					orderKey: activeOrders.orderKey,
-					amt: activeOrders.amt,
-					date: activeOrders.date,
-					itemName: activeOrders.itemName,
-					qty: activeOrders.qty
-				};
-
-				index = activeOrders.orders.findIndex(x => x.orderKey === activeOrders.orderKey);
-				activeOrders.orders[index] = order;
-			});
-
-			activeOrders.ordersArray
+			viewOrders.ordersArray
 				.$remove(index)
 				.then(function (success) {
 					console.log("success result: ", success);
+					viewOrders.totalAmount -= viewOrders.amt;
 				}).catch(function (error) {
 					console.log(error);
 				});
 
-			activeOrders.orders.splice(index, 1);
-		});*/
-
-		activeOrders.isFooterVisible = false;
+			viewOrders.orders.splice(index, 1);
+		});
+		
+		viewOrders.isFooterVisible = true;
 	}
-	
+
 	OrderService.$inject = ['$firebaseArray'];
 	function OrderService($firebaseArray) {
 		var orders = this;
 		
+		orders.amt = 0;
+		orders.date = '';
+		orders.itemName = '';
+		orders.qty = 0;
+//		orders.totalAmount = 0;
+		orders.list = [];
+
 		return {
-			users: function (userOrderRef) {
-				return $firebaseArray(userOrderRef);
-			},
-			activeOrders: function(orderRef) {
-				return $firebaseArray(orderRef);
+			activeOrders: function(orderUidRef) {
+				return $firebaseArray(orderUidRef);
 			},
 			//, amount, item, instructions, price, qty
 			placeOrder: function(uid) {
 				var orderRef = firebase.database().ref().child("Orders");
 				var orderUidRef = orderRef.child(uid);
 
-				orders.orderObj = $firebaseArray(orderUidRef);
-				return orders.orderObj;
+				return $firebaseArray(orderUidRef);
 			}
 		};
 	}
