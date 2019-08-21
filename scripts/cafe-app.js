@@ -59,10 +59,10 @@
 		.factory('PageTitleService', PageTitleService)
 		.factory('SignUpService', SignUpService)
 		.factory('LoginService', LoginService)
-//		.factory('UsersService', UsersService)
+		.factory('UsersService', UsersService)
 		.factory('ItemService', ItemService)
 		.factory('OrderService', OrderService);
-	
+
 	cafeApp.constant('URL', 'https://cafe-app-52993.firebaseio.com');
 	
 /*	cafeApp
@@ -137,8 +137,8 @@
 		header.title = header.title.split(" - ")[0];
     }
 
-	LoginScreenController.$inject = ['$rootScope', '$firebaseAuth', 'URL', 'LoginService'];
-    function LoginScreenController($rootScope, $firebaseAuth, URL, LoginService) {
+	LoginScreenController.$inject = ['$rootScope', 'URL', 'UsersService', 'LoginService'];
+    function LoginScreenController($rootScope, URL, UsersService, LoginService) {
         var loginScreen = this;
 
 		loginScreen.login = function () {
@@ -148,36 +148,31 @@
 				.auth()
 				.signInWithEmailAndPassword(loginScreen.email, loginScreen.password)
 				.then(function (firebaseUser) {
+					loginScreen.uid = firebaseUser.user.uid;
 
-					loginScreen.user = {
-						email: $firebaseAuth().$getAuth().email,
-						name: $firebaseAuth().$getAuth().displayName,
-						phone: $firebaseAuth().$getAuth().phoneNumber,
-						uid: $firebaseAuth().$getAuth().uid
-					};
-				
-//				console.log(firebaseUser);
-//				console.log($firebaseAuth().$getAuth());
+					var userDetails = UsersService.getUserDetails(loginScreen.uid);
 
-					loginScreen.email = $firebaseAuth().$getAuth().email;
-					loginScreen.name = $firebaseAuth().$getAuth().displayName;
-					loginScreen.phone = $firebaseAuth().$getAuth().phoneNumber;
-					loginScreen.role = 'user-role';
-					loginScreen.uid = $firebaseAuth().$getAuth().uid;
+					userDetails.$ref().on('child_added', function (snapshot) {
+//						console.log(firebaseUser);
+//						console.log(snapshot.val());
 
+						if (snapshot.val().role === 'admin') {
+							loginScreen.email = snapshot.val().email;
+							loginScreen.name = snapshot.val().name;
+							loginScreen.phone = snapshot.val().mobile;
+							loginScreen.role = snapshot.val().role;
 
-//					var userType = UsersService.getUserType(loginScreen.uid);
-//					console.log(userType);
+							LoginService.setUser(loginScreen.email,
+												 loginScreen.name,
+												 loginScreen.phone,
+												 loginScreen.role,
+												 loginScreen.uid);
 
-					LoginService.setUser(loginScreen.email,
-										 loginScreen.name,
-										 loginScreen.phone,
-										 loginScreen.role,
-										 loginScreen.uid);
-//					console.log(LoginService.getUser());
-
-					window.location = '../home/home.html';
-//					window.location = '../index.html';
+							window.location = '../home/home.html';
+						} else {
+							alert('Incorrect username or password.');
+						}
+					});
 				})
 				.catch(
 					function (error) {
@@ -242,6 +237,9 @@
 				auth
 					.$signOut()
 					.then(function () {
+						localStorage.removeItem('customers');
+						localStorage.removeItem('items');
+
 						email = '';
 						name = '';
 						phone = '';
@@ -260,31 +258,75 @@
 		};
 	}
 	
-	UsersService.$inject = ['$firebaseAuth', '$firebaseArray'];
-	function UsersService($firebaseAuth, $firebaseArray) {
-		var users = this;
-		var usersRef = firebase.database().ref().child("Users");
+	UsersService.$inject = ['$firebaseArray'];
+	function UsersService($firebaseArray) {
+		var user = this;
 
+		var customers = [];
+		
 		return {
-			getUserType: function () {
-				users.usersArray = $firebaseArray(usersRef);
-				users.users = [];
-				
+			getUserDetails: function (uid) {
+				var usersRef = firebase.database().ref().child("Users"),
+					userUIdRef = usersRef.child(uid);
+
+				return $firebaseArray(userUIdRef);
+			},
+			getCustomers: function () {
+				var usersRef = firebase.database().ref().child("Users");
+				var customerArray = $firebaseArray(usersRef);
+
 				usersRef.on('child_added', function (snapshot) {
-					users.UId = snapshot.key;
-					var usersUIdRef = usersRef.child(users.UId);
-					
-					viewItems.itemName = snapshot.val().itemName;
-					viewItems.price = snapshot.val().price;
+					var customerId = '', customerName = '';
+//						console.log('snap', snapshot);
+//						console.log('snap key', snapshot.key);
+//						console.log('snap val()', snapshot.val());
 
-					var item = {
-						itemKey: snapshot.key,
-						availibilty: viewItems.availibilty,
-						itemName: viewItems.itemName,
-						price: viewItems.price
+					customerId = snapshot.key;
+
+					usersRef.child(snapshot.key).on('child_added', function (snapshot) {
+//							console.log('child snap', snapshot);
+//							console.log('snap key', snapshot.key);
+//							console.log('child snap val()', snapshot.val());
+
+							customerName = snapshot.val().name;
+						});
+
+					var customer = {
+						uid: customerId,
+						name: customerName
 					};
+//						console.log(customer.uid);
+					customers.push(customer);
 
-					viewItems.items.push(item);
+					localStorage.setItem('customers', JSON.stringify(customers));
+				});
+				
+				usersRef.on('child_changed', function (snapshot) {
+					var customerId = '', customerName = '';
+//						console.log('snap', snapshot);
+//						console.log('snap key', snapshot.key);
+//						console.log('snap val()', snapshot.val());
+
+					customerId = snapshot.key;
+
+					usersRef.child(snapshot.key).on('child_changed', function (snapshot) {
+//							console.log('child snap', snapshot);
+//							console.log('snap key', snapshot.key);
+//							console.log('child snap val()', snapshot.val());
+
+							customerName = snapshot.val().name;
+						});
+
+					var customer = {
+						uid: customerId,
+						name: customerName
+					};
+					console.log(customer);
+						var index = customers.findIndex(x => x.uid === customers.customerId);
+					console.log(index);
+//						customers.push(customer);
+
+//						localStorage.setItem('customers', JSON.stringify(customers));
 				});
 			}
 		};
@@ -417,10 +459,16 @@
         // };
     }
 
-	HomeScreenController.$inject = ['$firebaseAuth', 'URL', 'LoginService'];
-    function HomeScreenController($firebaseAuth, URL, LoginService) {
+	HomeScreenController.$inject = ['$firebaseAuth', 'UsersService', 'ItemService', 'LoginService'];
+    function HomeScreenController($firebaseAuth, UsersService, ItemService, LoginService) {
         var homeScreen = this;
 		
+		localStorage.removeItem('customers');
+		UsersService.getCustomers();
+		
+		localStorage.removeItem('items');
+		ItemService.getAllItems();
+
 		homeScreen.addItems = 'Add Items';
 		homeScreen.menu = 'View Menu';
 		homeScreen.activeOrders = 'Active Orders';
@@ -544,7 +592,7 @@
 				.child(item.itemKey)
 				.update(updatedItemValues)
 				.then(function (success) {
-					console.log("Item updated successfully...");
+					alert("Item updated successfully...");
 				}).catch(function (error) {
 					console.log(error);
 				});
@@ -603,8 +651,63 @@
 	function ItemService($firebaseArray) {
 		var orders = this;
 //		var itemRef = firebase.database().ref().child("Items");
+		var items = [];
 
 		return {
+			getAllItems: function () {
+				var itemRef = firebase.database().ref().child("Items");
+
+				itemRef.on('child_added', function (snapshot) {
+					var itemId = '', itemName = '', price = 0, availibilty = false;
+
+//					console.log('snap', snapshot);
+//					console.log('snap key', snapshot.key);
+					console.log('snap val()', snapshot.val());
+
+					itemId = snapshot.key;
+					availibilty = snapshot.val().availibilty;
+					itemName = snapshot.val().itemName;
+					price = snapshot.val().price;
+
+					var item = {
+						key: itemId,
+						availibilty: availibilty,
+						itemName: itemName,
+						price: price
+					};
+					items.push(item);
+
+					localStorage.setItem('items', JSON.stringify(items));
+//					console.log(items);
+				});
+				
+				/*itemRef.on('child_changed', function (snapshot) {
+					var customerId = '', customerName = '';
+//						console.log('snap', snapshot);
+//						console.log('snap key', snapshot.key);
+//						console.log('snap val()', snapshot.val());
+
+					customerId = snapshot.key;
+
+					itemRef.child(snapshot.key).on('child_changed', function (snapshot) {
+//							console.log('child snap', snapshot);
+//							console.log('snap key', snapshot.key);
+//							console.log('child snap val()', snapshot.val());
+
+							customerName = snapshot.val().name;
+						});
+
+					var customer = {
+						uid: customerId,
+						name: customerName
+					};
+//					console.log(customer);
+					var index = customers.findIndex(x => x.uid === customers.customerId);
+//						customers.push(customer);
+
+//						localStorage.setItem('customers', JSON.stringify(customers));
+				});*/
+			},
 			getItems: function(itemRef) {
 				return $firebaseArray(itemRef);
 			},
@@ -624,16 +727,17 @@
 		header.user = LoginService.getUser();
 	}
 	
-	PlaceOrderController.$inject = ['$firebaseArray', 'URL', 'OrderService', 'LoginService'];
-	function PlaceOrderController($firebaseArray, URL, OrderService, LoginService) {
+	PlaceOrderController.$inject = ['$firebaseArray', 'URL', 'OrderService'];
+	function PlaceOrderController($firebaseArray, URL, OrderService) {
 		var placeOrder = this;
 		
-		isFooterVisible = true;
-		
-		placeOrder.customers = ['Salim', 'Karan', 'Divyesh'];
+		placeOrder.customers = JSON.parse(localStorage.getItem('customers'));
+//		console.log(placeOrder.customers);
+
 		placeOrder.customerName = placeOrder.customers[0];
-		
-		placeOrder.menuItems = [
+//		console.log(placeOrder.customerName);
+
+		/*placeOrder.menuItems = [
 			{
 				id: 1,
 				name: 'Tea',
@@ -648,16 +752,21 @@
 				id: 3,
 				name: 'Nutella Cold Coffee',
 				price: 70
-			}];
+			}];*/
+		placeOrder.menuItems = JSON.parse(localStorage.getItem('items'));
+		console.log(placeOrder.menuItems);
+
 		placeOrder.itemName = placeOrder.menuItems[0];
-		
-		placeOrder.amount = 0;
+		console.log(placeOrder.itemName);
+
 		placeOrder.errorMsg = '';
 		placeOrder.instructions = '';
-		placeOrder.quantity = 0;
+		placeOrder.quantity = 1;
+		placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;
+
+//		placeOrder.user = LoginService.getUser();
 		
-		placeOrder.user = LoginService.getUser();
-		placeOrder.uid = placeOrder.user.uid;
+		placeOrder.uid = placeOrder.customerName.uid;
 
 		placeOrder.increase = function () {
 			placeOrder.required = '';
@@ -709,6 +818,8 @@
 					});
 			}
 		};
+
+		placeOrder.isFooterVisible = true;
 	}
 	
     ActiveOrdersHeaderController.$inject = ['PageTitleService', 'LoginService'];

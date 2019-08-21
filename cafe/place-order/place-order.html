@@ -71,7 +71,7 @@
 				<div class="sign-up-view">
 					<div class="form-field">
 						<label>Customer Name</label>
-						<select ng-options="item for item in placeOrder.customers" 
+						<select ng-options="customer as customer.name for customer in placeOrder.customers" 
 								ng-model="placeOrder.customerName">
 						</select>
 					</div>
@@ -79,7 +79,7 @@
 					
 					<div class="form-field">
 						<label>Item</label>
-						<select ng-options="item as item.name for item in placeOrder.menuItems" 
+						<select ng-options="item as item.itemName for item in placeOrder.menuItems" 
 								ng-model="placeOrder.itemName">
 						</select>
 					</div>
@@ -122,7 +122,7 @@
 		</div>
 		<!-- div container ends -->
 
-		<footer ng-controller="FooterController as footer" ng-if="!footer.isFooterVisible">
+		<footer ng-controller="FooterController as footer" ng-if="placeOrder.isFooterVisible">
 			<div class="footer-pad wrapper">
 				<div class="form-field">
 					<button ng-click="placeOrder.ePlaceOrder();">
