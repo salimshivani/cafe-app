@@ -68,7 +68,7 @@
 		
 		<div class="container">
 			<div class="container-pad wrapper">
-				<div class="sign-up-view">
+				<div class="place-order-view">
 					<div class="form-field">
 						<label>Customer Name</label>
 						<select ng-options="customer as customer.name for customer in placeOrder.customers" 
@@ -90,11 +90,12 @@
 						<div class="quantity-counter">
 							<input type="number" id="quantity" ng-model="placeOrder.quantity" name="quantity" ng-disabled="true" ng-required />
 
-							<button ng-click="placeOrder.increase();">+</button>
-							<button ng-click="placeOrder.decrease();">-</button>
+							<button ng-disabled="placeOrder.btnDisabled" ng-click="placeOrder.increase();">+</button>
+							<button ng-disabled="placeOrder.btnDisabled" ng-click="placeOrder.decrease();">-</button>
 							<!-- quantity counter buttons end -->
-							
+
 						</div>
+						<!-- div quantity-counter ends -->
 						
 						<span class="error" ng-if="placeOrder.errorMsg.length > 0">{{ placeOrder.errorMsg }}</span>
 						<span class="error">{{ placeOrder.required }}</span>
@@ -125,7 +126,7 @@
 		<footer ng-controller="FooterController as footer" ng-if="placeOrder.isFooterVisible">
 			<div class="footer-pad wrapper">
 				<div class="form-field">
-					<button ng-click="placeOrder.ePlaceOrder();">
+					<button ng-disabled="placeOrder.btnDisabled" ng-click="placeOrder.ePlaceOrder();">
 						Place Order
 					</button>
 				</div>

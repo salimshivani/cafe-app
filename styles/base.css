@@ -187,41 +187,6 @@ footer .form-field {
   padding: 8px 40px;
 }
 
-.form-field .quantity-counter {
-	align-items: center;
-	display: flex;
-/*	flex: 1;*/
-}
-
-.form-field .quantity-counter input {
-	flex: 1;
-	margin-right: 4px;
-}
-
-.form-field .quantity-counter button {
-	background: transparent;
-	border: 1px solid #81A300;
-	border-radius: 2px;
-	flex: 0;
-	justify-content: center;
-	margin: 0px 4px;
-	padding: 8px 6px 7px;
-}
-
-.form-field .quantity-counter button:first-child {
-	margin-left: 0px;
-}
-
-.form-field .quantity-counter button:last-child {
-	margin-right: 0px;
-}
-
-/*
-.form-field  > input + .quantity-counter {
-	display: flex;
-}
-*/
-
 .form-field label, .form-field span {
 	font-size: 12px;
 }
