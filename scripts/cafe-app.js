@@ -107,8 +107,13 @@
 		var app = this;
 		
 		app.user = LoginService.getUser();
-		if (app.user.uid !== undefined && app.user.uid !== null && app.user.uid !== '') {
-			console.log(app.user);
+		if (app.user !== null) {
+			if (app.user.uid !== null && app.user.uid !== undefined && app.user.uid !== '') {
+				console.log(app.user);
+			} else {
+				// Redirect to Login
+				window.location = '../cafe/login/login.html';
+			}
 		} else {
 			// Redirect to Login
 			window.location = '../cafe/login/login.html';
