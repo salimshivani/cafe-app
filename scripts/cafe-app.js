@@ -108,8 +108,12 @@
 		
 		app.user = LoginService.getUser();
 		if (app.user !== null) {
-			if (app.user.uid !== null && app.user.uid !== undefined && app.user.uid !== '') {
+			if (app.user.uid !== null 
+				&& app.user.uid !== undefined 
+				&& app.user.uid !== '' 
+				&& app.user.role === 'admin') {
 				console.log(app.user);
+				window.location = '../cafe/home/home.html';
 			} else {
 				// Redirect to Login
 				window.location = '../cafe/login/login.html';

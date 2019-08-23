@@ -95,19 +95,6 @@
 			signUp = 'Sign Up';
 
         header.title = PageTitleService.getTitle(pageTitle);
-		header.user = LoginService.getUser();
-
-		if (header.user.uid !== undefined && mobileNumber.length !== '') {
-			window.location = './home/home.html';
-		}
-		
-        header.login = function () {
-        };
-		
-		header.signUp = function () {
-		};
-		
-		header.logout = LoginService.logoutUser;
     }
 	
 	AppController.$inject = ['$firebaseAuth', 'URL', 'LoginService'];
@@ -115,11 +102,20 @@
 		var app = this;
 		
 		app.user = LoginService.getUser();
-		if (app.user.uid !== undefined && app.user.uid !== null && app.user.uid !== '') {
-			console.log(app.user);
+		if (app.user !== null) {
+			if (app.user.uid !== null 
+				&& app.user.uid !== undefined 
+				&& app.user.uid !== '' 
+				&& app.user.role === 'admin') {
+				console.log(app.user);
+				window.location = '../customer/home/home.html';
+			} else {
+				// Redirect to Login
+				window.location = '../customer/login/login.html';
+			}
 		} else {
 			// Redirect to Login
-			window.location = './login/login.html';
+			window.location = '../customer/login/login.html';
 		}
 	}
 
