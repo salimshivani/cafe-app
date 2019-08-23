@@ -80,6 +80,7 @@
 					<div class="form-field">
 						<label>Item</label>
 						<select ng-options="item as item.itemName for item in placeOrder.menuItems" 
+								ng-change="placeOrder.updateAmount(placeOrder.itemName);" 
 								ng-model="placeOrder.itemName">
 						</select>
 					</div>

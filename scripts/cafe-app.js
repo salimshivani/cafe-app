@@ -407,7 +407,7 @@
 		homeScreen.placeOrder = 'Place Order';
 		
 		homeScreen.user = LoginService.getUser();
-		if (homeScreen.user.uid !== undefined && homeScreen.user.uid !== null && homeScreen.user.uid !== '') {
+		if (homeScreen.user.uid !== undefined || homeScreen.user.uid !== null || homeScreen.user.uid !== '') {
 			homeScreen.eAddItem = function () {
 				window.location = '../add-item/add-item.html';
 			};
@@ -448,7 +448,7 @@
 
 		addItem.itemName = '';
 		addItem.price = 0;
-		addItem.availibilty = true;
+		addItem.availability = true;
 		
 		addItem.errorMsg = 'Required';
 		
@@ -456,7 +456,7 @@
 
 		addItem.eAddItem = function () {
 			var item = {
-				availibilty: addItem.availibilty,
+				availability: addItem.availability,
 				itemName: addItem.itemName,
 				price: addItem.price
 			};
@@ -466,7 +466,7 @@
 				.$add(item)
 				.then(function (success) {
 					alert('Item Saved Successfully.');
-					addItem.availibilty = false;
+					addItem.availability = false;
 					addItem.itemName = '';
 					addItem.price = 0;
 				})
@@ -501,7 +501,7 @@
 			console.log('1');
 		});*/
 		
-		viewItems.availibilty = false;
+		viewItems.availability = false;
 		viewItems.itemName = '';
 		viewItems.price = 0;
 
@@ -512,7 +512,7 @@
 //			viewItems.itemKey = item.itemKey;
 
 			var updatedItemValues = {
-				availibilty: item.availibilty,
+				availability: item.availability,
 				itemName: item.itemName,
 				price: item.price
 			};
@@ -535,13 +535,13 @@
 //			viewItems.itemKey = snapshot.key;
 			console.log('2');
 
-			viewItems.availibilty = snapshot.val().availibilty;
+			viewItems.availability = snapshot.val().availability;
 			viewItems.itemName = snapshot.val().itemName;
 			viewItems.price = snapshot.val().price;
 
 			var item = {
 				itemKey: snapshot.key,
-				availibilty: viewItems.availibilty,
+				availability: viewItems.availability,
 				itemName: viewItems.itemName,
 				price: viewItems.price
 			};
@@ -553,13 +553,13 @@
 //			viewItems.itemKey = snapshot.key;
 			console.log('3');
 
-			viewItems.availibilty = snapshot.val().availibilty;
+			viewItems.availability = snapshot.val().availability;
 			viewItems.itemName = snapshot.val().itemName;
 			viewItems.price = snapshot.val().price;
 
 			var item = {
 				itemKey: snapshot.key,
-				availibilty: viewItems.availibilty,
+				availability: viewItems.availability,
 				itemName: viewItems.itemName,
 				price: viewItems.price
 			};
@@ -571,7 +571,7 @@
 		itemRef.on('child_removed', function (snapshot) {
 //			viewItems.itemKey = snapshot.key;
 
-			viewItems.availibilty = snapshot.val().availibilty;
+			viewItems.availability = snapshot.val().availability;
 			viewItems.itemName = snapshot.val().itemName;
 			viewItems.price = snapshot.val().price;
 
@@ -593,16 +593,16 @@
 				var itemRef = firebase.database().ref().child("Items");
 
 				itemRef.on('child_added', function (snapshot) {
-					var itemId = '', itemName = '', price = 0, availibilty = false;
+					var itemId = '', itemName = '', price = 0, availability = false;
 
 					itemId = snapshot.key;
-					availibilty = snapshot.val().availibilty;
+					availability = snapshot.val().availability;
 					itemName = snapshot.val().itemName;
 					price = snapshot.val().price;
 
 					var item = {
 						key: itemId,
-						availibilty: availibilty,
+						availability: availability,
 						itemName: itemName,
 						price: price
 					};
@@ -610,16 +610,16 @@
 				});
 				
 				itemRef.on('child_changed', function (snapshot) {
-					var itemId = '', itemName = '', price = 0, availibilty = false;
+					var itemId = '', itemName = '', price = 0, availability = false;
 
 					itemId = snapshot.key;
-					availibilty = snapshot.val().availibilty;
+					availability = snapshot.val().availability;
 					itemName = snapshot.val().itemName;
 					price = snapshot.val().price;
 
 					var item = {
 						key: itemId,
-						availibilty: availibilty,
+						availability: availability,
 						itemName: itemName,
 						price: price
 					};
@@ -651,90 +651,107 @@
 	function PlaceOrderController($firebaseArray, URL, OrderService) {
 		var placeOrder = this;
 
+		var usersRef = firebase.database().ref().child("Users"),//.orderByChild("name"), 
+			itemRef = firebase.database().ref().child("Items").orderByChild("availability").equalTo(true);
+
 		placeOrder.customers = [];
-		placeOrder.menuItems = [];
+
+		placeOrder.menuItems = $firebaseArray(itemRef);
+		placeOrder.menuItems
+			.$loaded()
+			.then(function (success) {
+//				console.log(success);
+				placeOrder.itemName = success[0];
+				placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;
+				placeOrder.btnDisabled = false;
+			}).catch(function (error) {
+				console.log(error);
+			});
 
 		placeOrder.errorMsg = '';
 		placeOrder.instructions = '';
-		placeOrder.quantity = 0;
+		placeOrder.quantity = 1;
 		placeOrder.required = '';
 		placeOrder.amount = 0;
 
 		placeOrder.btnDisabled = true;
 
-		var usersRef = firebase.database().ref().child("Users");
-		usersRef.on('value', function (snapshot) {
-			placeOrder.customerName = placeOrder.customers[0];
-		});
-		
 		usersRef.on('child_added', function (snapshot) {
-			var customerId = '', customerName = '';
-
-			customerId = snapshot.key;
-
-			usersRef.child(snapshot.key).on('child_added', function (snapshot) {
-				customerName = snapshot.val().name;
-			});
-
-			var customer = {
-				uid: customerId,
-				name: customerName
-			};
-			placeOrder.customers.push(customer);
+			var custRef = usersRef.child(snapshot.key).orderByChild("name");
+			placeOrder.customerArray = $firebaseArray(custRef);
+			placeOrder.customerArray
+				.$loaded()
+				.then(function (data) {
+					if (data[0].role === 'customer') {
+						data[0].uid = snapshot.key;
+						placeOrder.customers.push(data[0]);
+						placeOrder.customerName = placeOrder.customers[0];
+					}
+				});
 		});
 
 		usersRef.on('child_changed', function (snapshot) {
-			var customerId = '', customerName = '';
+			var custRef = usersRef.child(snapshot.key);
 
-			customerId = snapshot.key;
+			placeOrder.customerArray = $firebaseArray(custRef);
+			placeOrder.customerArray.$loaded()
+				.then(function (data) {
+//					console.log(data);
+//					console.log(data[0]);
+//					console.log(data[0].$id);
 
-			usersRef.child(snapshot.key).on('child_changed', function (snapshot) {
-				/*console.log('child snap', snapshot);
-				console.log('snap key', snapshot.key);
-				console.log('child snap val()', snapshot.val());*/
+					var index = placeOrder.customers.findIndex(x => x.$id === data[0].$id);
 
-				customerName = snapshot.val().name;
-			});
+					if (data[0].role !== 'admin') {
 
-			var customer = {
-				uid: customerId,
-				name: customerName
-			};
+						if (index === -1) {
+							data[0].uid = snapshot.key;
+							placeOrder.customers.push(data[0]);
+							placeOrder.customerName = placeOrder.customers[0];							
+						} else if (index > 0) {
+							placeOrder.customers[index] = data[0];
+							placeOrder.customerName = placeOrder.customers[0];							
+						}
 
-			var index = customers.findIndex(x => x.uid === customers.customerId);
-			placeOrder.customers[index] = customer;
+					} else {
+						if (index > -1) {
+							console.log('aIndex: ', index);
+							placeOrder.customers.splice(index, 1);
+							placeOrder.customerName = placeOrder.customers[0];							
+						}
+					}
+				});
 		});
 
-		var itemRef = firebase.database().ref().child("Items");
-		itemRef.on('value', function (snapshot) {
+		/*itemRef.on('value', function (snapshot) {
 			placeOrder.itemName = placeOrder.menuItems[0];
 			placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;
 			placeOrder.btnDisabled = false;
-		});
+		});*/
 
-		itemRef.on('child_added', function (snapshot) {
-			if (snapshot.val().availibilty) {
+		/*itemRef.on('child_added', function (snapshot) {
+			if (snapshot.val().availability) {
 				var item = {
 					key: snapshot.key,
-					availibilty: snapshot.val().availibilty,
+					availability: snapshot.val().availability,
 					itemName: snapshot.val().itemName,
 					price: snapshot.val().price
 				};
 				placeOrder.menuItems.push(item);
 			}
 
-			/*placeOrder.itemName = placeOrder.menuItems[0];
+			placeOrder.itemName = placeOrder.menuItems[0];
 			console.log(placeOrder.itemName);
 
-			placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;*/
-		});
+			placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;
+		});*/
 
 		itemRef.on('child_changed', function (snapshot) {
 			var index = placeOrder.menuItems.findIndex(x => x.key === snapshot.key);
-			if (snapshot.val().availibilty) {
+			if (snapshot.val().availability) {
 				var item = {
 					key: snapshot.key,
-					availibilty: snapshot.val().availibilty,
+					availability: snapshot.val().availability,
 					itemName: snapshot.val().itemName,
 					price: snapshot.val().price
 				};
@@ -743,11 +760,15 @@
 			} else {
 				placeOrder.menuItems.splice(index, 1);
 			}
-			/*placeOrder.itemName = placeOrder.menuItems[0];
+			placeOrder.itemName = placeOrder.menuItems[0];
 			console.log(placeOrder.itemName);
 
-			placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;*/
+			placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;
 		});
+		
+		placeOrder.updateAmount = function () {
+			placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;
+		};
 
 		placeOrder.increase = function () {
 			placeOrder.required = '';
@@ -791,12 +812,12 @@
 					.$add(orderDetails)
 					.then(function (success) {
 						alert('Order Placed Successfully.');
-						placeOrder.amount = 0;
 						placeOrder.customerName = placeOrder.customers[0];
 						placeOrder.errorQty = false;
 						placeOrder.instructions = '';
 						placeOrder.itemName = placeOrder.menuItems[0];
-						placeOrder.quantity = 0;
+						placeOrder.quantity = 1;
+						placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;
 					})
 					.catch(function (error) {
 						console.log(error);
@@ -820,31 +841,34 @@
 	ActiveOrdersController.$inject = ['OrderService'];
 	function ActiveOrdersController(OrderService) {
 		var activeOrders = this;
-		var usersOrderRef = firebase.database().ref().child("Orders").orderByChild("status").equalTo("Pending");
+		var usersOrderRef = firebase.database().ref()
+									.child("Orders")
+									.orderByChild("status")
+									.equalTo("Pending");
 
 		activeOrders.ordersArray = OrderService.users(usersOrderRef);
-		activeOrders.orders = [];
+		/*activeOrders.orders = [];
 		activeOrders.ordersArray.$loaded()
 			.then(function (data) {
 				activeOrders.orders = data;
 			console.log(data);
-		});
+		});*/
 
-//		usersOrderRef.on('child_added', function (snapshot) {
-////				console.log("order child added", snapshot);
-//
-//			var order = {
-//				orderKey: snapshot.key,
-//				amount: snapshot.val().amount,
-//				customer: snapshot.val().customer,
-//				date: snapshot.val().date,
-//				item: snapshot.val().item,
-//				qty: snapshot.val().qty
-//			};
-//
-//			activeOrders.totalAmount += order.amt;
-//			activeOrders.orders.push(order);
-//		});
+		/*usersOrderRef.on('child_added', function (snapshot) {
+//				console.log("order child added", snapshot);
+
+			var order = {
+				orderKey: snapshot.key,
+				amount: snapshot.val().amount,
+				customer: snapshot.val().customer,
+				date: snapshot.val().date,
+				item: snapshot.val().item,
+				qty: snapshot.val().qty
+			};
+
+			activeOrders.totalAmount += order.amt;
+			activeOrders.orders.push(order);
+		});*/
 
 		/*usersOrderRef.on('child_changed', function (snapshot) {
 			activeOrders.user = snapshot.key;
