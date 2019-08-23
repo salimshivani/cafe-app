@@ -35,7 +35,11 @@
     customerApp
         .controller('HomeScreenHeaderController', HomeScreenHeaderController)
         .controller('HomeScreenController', HomeScreenController);
-	
+
+	customerApp
+		.controller('ViewItemsHeaderController', ViewItemsHeaderController)
+		.controller('ViewItemsController', ViewItemsController);
+
 	customerApp
 		.controller('PlaceOrderHeaderController', PlaceOrderHeaderController)
 		.controller('PlaceOrderController', PlaceOrderController);
@@ -51,6 +55,7 @@
 		.factory('SignUpService', SignUpService)
 		.factory('LoginService', LoginService)
 		.factory('UsersService', UsersService)
+		.factory('ItemService', ItemService)
 		.factory('OrderService', OrderService);
 	
 	customerApp.constant('URL', 'https://cafe-app-52993.firebaseio.com');
@@ -425,6 +430,95 @@
 			window.location = '../login/login.html';
 		}
     }
+
+	ViewItemsHeaderController.$inject = ['PageTitleService'];
+	function ViewItemsHeaderController(PageTitleService) {
+		var header = this,
+			pageTitle = "View Items";
+
+        header.title = PageTitleService.getTitle(pageTitle + " - ");
+		header.title = header.title.split(" - ")[0];
+	}
+
+	ViewItemsController.$inject = ['ItemService'];
+	function ViewItemsController(ItemService) {
+		var viewItems = this;
+		var itemRef = firebase.database().ref().child("Items").orderByChild("availability").equalTo(true);
+		var index = -1;
+
+		viewItems.availability = false;
+		viewItems.itemName = '';
+		viewItems.price = 0;
+
+		viewItems.items = [];
+		viewItems.itemsArray = ItemService.getItems(itemRef);
+
+		itemRef.on('child_added', function (snapshot) {
+//			viewItems.itemKey = snapshot.key;
+			console.log('2');
+
+			viewItems.availability = snapshot.val().availability;
+			viewItems.itemName = snapshot.val().itemName;
+			viewItems.price = snapshot.val().price;
+
+			var item = {
+				itemKey: snapshot.key,
+				availability: viewItems.availability,
+				itemName: viewItems.itemName,
+				price: viewItems.price
+			};
+
+			viewItems.items.push(item);
+		});
+
+		itemRef.on('child_changed', function (snapshot) {
+//			viewItems.itemKey = snapshot.key;
+			console.log('3');
+
+			viewItems.availability = snapshot.val().availability;
+			viewItems.itemName = snapshot.val().itemName;
+			viewItems.price = snapshot.val().price;
+
+			var item = {
+				itemKey: snapshot.key,
+				availability: viewItems.availability,
+				itemName: viewItems.itemName,
+				price: viewItems.price
+			};
+
+			index = viewItems.items.findIndex(x => x.itemKey === snapshot.key);
+			viewItems.items[index] = item;
+		});
+
+		itemRef.on('child_removed', function (snapshot) {
+//			viewItems.itemKey = snapshot.key;
+
+			viewItems.availability = snapshot.val().availability;
+			viewItems.itemName = snapshot.val().itemName;
+			viewItems.price = snapshot.val().price;
+
+			index = viewItems.items.findIndex(x => x.itemKey === snapshot.key);
+			viewItems.items.splice(index, 1);
+		});
+
+		viewItems.isFooterVisible = false;
+	}
+
+	ItemService.$inject = ['$firebaseArray'];
+	function ItemService($firebaseArray) {
+		var orders = this;
+//		var itemRef = firebase.database().ref().child("Items");
+		var items = [];
+
+		return {
+			getItems: function(itemRef) {
+				return $firebaseArray(itemRef);
+			},
+			addItem: function(itemRef) {
+				return $firebaseArray(itemRef);
+			}
+		};
+	}
 
     PlaceOrderHeaderController.$inject = ['PageTitleService'];
 	function PlaceOrderHeaderController(PageTitleService) {
