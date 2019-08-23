@@ -486,6 +486,9 @@
         header.title = PageTitleService.getTitle(pageTitle + " - ");
 		header.title = header.title.split(" - ")[0];
 		header.user = LoginService.getUser();
+		if (header.user.role === 'customer') {
+			header.user.logoutUser();
+		}
 	}
 	
 	ViewItemsController.$inject = ['ItemService'];

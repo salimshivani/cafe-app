@@ -1,6 +1,15 @@
 {
   "rules": {
-    ".read": "auth != false",
-    ".write": "auth != false"
+    ".read": "auth != null",
+    ".write": "auth != null",
+    "Items": {
+      ".indexOn": ["availability", "name", "price"]
+    },
+    "Orders": {
+      ".indexOn": ["amount", "customer", "date", "item", "status"]
+    },
+    "Users": {
+      ".indexOn": ["name", "role"]
+    }
   }
 }
