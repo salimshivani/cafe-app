@@ -141,8 +141,10 @@
     function LoginScreenController($rootScope, URL, UsersService, LoginService) {
         var loginScreen = this;
 
-		if (LoginService.getUser !== undefined || LoginService.getUser !== null) {
-			window.location = '../home/home.html';
+		if (LoginService.getUser() !== null) {
+			if (LoginService.getUser().role === 'admin') {
+				window.location = '../home/home.html';
+			}
 		}
 
 		loginScreen.login = function () {
@@ -175,22 +177,19 @@
 						}
 					});
 				})
-				.catch(
-					function (error) {
-						// Handle Errors here.
-						var errorCode = error.code;
-						var errorMessage = error.message;
-						
-						// [START_EXCLUDE]
-						if (errorCode === 'auth/wrong-password') {
-							alert('Wrong password.');
-						} else {
-							alert(errorMessage);
-						}
-						console.log(error);
+				.catch(function (error) {
+					// Handle Errors here.
+					var errorCode = error.code;
+					var errorMessage = error.message;
+
+					// [START_EXCLUDE]
+					if (errorCode === 'auth/wrong-password') {
+						alert('Wrong password.');
+					} else {
+						alert(errorMessage);
 					}
-				);
-				
+					console.log(error);
+				});
 		};
     }
 	
@@ -205,7 +204,7 @@
 						localStorage.getItem('uid') === undefined ||
 						localStorage.getItem('uid') === '') {
 					
-					return {};
+					return null;
 				} else {
 					email = localStorage.getItem('email');
 					name = localStorage.getItem('name');
@@ -379,9 +378,8 @@
         header.title = PageTitleService.getTitle(pageTitle);
 		header.user = LoginService.getUser();
 
-		if (header.user.uid !== undefined && mobileNumber.length !== '') {
-			
-		}
+//		if (header.user === null) {
+//		}
 		
         header.login = function () {
         };
@@ -407,24 +405,34 @@
 		homeScreen.placeOrder = 'Place Order';
 		
 		homeScreen.user = LoginService.getUser();
-		if (homeScreen.user.uid !== undefined || homeScreen.user.uid !== null || homeScreen.user.uid !== '') {
-			homeScreen.eAddItem = function () {
-				window.location = '../add-item/add-item.html';
-			};
+		if (homeScreen.user !== null) {
+			if (homeScreen.user.uid !== null 
+				&& homeScreen.user.uid !== undefined 
+				&& homeScreen.user.uid !== ''
+				&& homeScreen.user.role !== null
+				&& homeScreen.user.role !== undefined
+				&& homeScreen.user.role === 'admin') {
 
-			homeScreen.eViewItems = function () {
-				window.location = '../view-items/view-items.html';
-			};
+				homeScreen.eAddItem = function () {
+					window.location = '../add-item/add-item.html';
+				};
 
-			homeScreen.ePlaceOrder = function () {
-				window.location = '../place-order/place-order.html';
-			};
-			
-			homeScreen.eActiveOrders = function () {
-				window.location = '../active-order/active-order.html';
-			};
+				homeScreen.eViewItems = function () {
+					window.location = '../view-items/view-items.html';
+				};
 
-			homeScreen.isFooterVisible = false;
+				homeScreen.ePlaceOrder = function () {
+					window.location = '../place-order/place-order.html';
+				};
+
+				homeScreen.eActiveOrders = function () {
+					window.location = '../active-order/active-order.html';
+				};
+
+				homeScreen.isFooterVisible = false;
+			} else {
+				window.location = '../login/login.html';
+			}
 		} else {
 			// Redirect to Login
 			window.location = '../login/login.html';
@@ -941,15 +949,13 @@
 			activeOrders: function(orderRef) {
 				return $firebaseArray(orderRef);
 			},
-			//, amount, item, instructions, price, qty
 			placeOrder: function(orderRef) {
 				return $firebaseArray(orderRef);
 			}
 		};
 	}
 
-//    FooterController.$inject = ['$scope']
-	function FooterController (/*$scope*/) {
+	function FooterController() {
 		var footer = this;
         
 //        $scope.isFooterVisible = isFooterVisible;

@@ -53,11 +53,12 @@
 		
 		<div class="container">
 			<div class="container-pad wrapper">
-				<div class="sign-up-view">
+				<div class="place-order-view">
 
 					<div class="form-field">
 						<label>Item</label>
-						<select ng-options="item as item.name for item in placeOrder.menuItems" 
+						<select ng-options="item as item.itemName for item in placeOrder.menuItems" 
+								ng-change="placeOrder.updateAmount(placeOrder.itemName);" 
 								ng-model="placeOrder.itemName">
 						</select>
 					</div>
@@ -66,16 +67,17 @@
 					<div class="form-field">
 						<label>Quantity</label>
 						<div class="quantity-counter">
-							<input type="number" id="quantity" ng-model="placeOrder.quantity" name="quantity" ng-disabled="true" ng-required />
+							<input type="number" id="quantity" ng-model="placeOrder.quantity" name="quantity" ng-disabled="true" ng-required="true" />
 
-							<button ng-click="placeOrder.increase();">+</button>
-							<button ng-click="placeOrder.decrease();">-</button>
+							<button ng-disabled="placeOrder.btnDisabled" ng-click="placeOrder.increase();">+</button>
+							<button ng-disabled="placeOrder.btnDisabled" ng-click="placeOrder.decrease();">-</button>
 							<!-- quantity counter buttons end -->
 							
 						</div>
 						
 						<span class="error" ng-if="placeOrder.errorMsg.length > 0">{{ placeOrder.errorMsg }}</span>
 						<span class="error">{{ placeOrder.required }}</span>
+
 					</div>
 					<!-- div form-field -->
 					
@@ -100,10 +102,10 @@
 		</div>
 		<!-- div container ends -->
 
-		<footer ng-controller="FooterController as footer" ng-if="!footer.isFooterVisible">
+		<footer ng-controller="FooterController as footer" ng-if="placeOrder.isFooterVisible">
 			<div class="footer-pad wrapper">
 				<div class="form-field">
-					<button ng-click="placeOrder.ePlaceOrder();">
+					<button ng-disabled="placeOrder.btnDisabled" ng-click="placeOrder.ePlaceOrder();">
 						Place Order
 					</button>
 				</div>

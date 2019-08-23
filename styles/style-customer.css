@@ -90,8 +90,43 @@
 .container .place-order-view {
 	display: flex;
 	flex: 1;
+	flex-flow: column;
 	margin: 0px auto;
 	padding: 4px;
+}
+
+.container .place-order-view .form-field .quantity-counter {
+	align-items: center;
+	display: flex;
+/*	flex: 1;*/
+}
+
+.container .place-order-view .form-field .quantity-counter input {
+	flex: 1;
+	margin-right: 6px;
+}
+
+.container .place-order-view .form-field .quantity-counter /*div#qty*/ {
+	display: flex;
+	justify-content: space-between;
+}
+
+.container .place-order-view .form-field .quantity-counter /*div#qty*/ button {
+	background: transparent;
+	border: 1px solid #81A300;
+	border-radius: 2px;
+	flex: 0;
+	justify-content: center;
+	margin: 0px 3px;
+	padding: 8px 6px 7px;
+}
+
+.container .place-order-view .form-field .quantity-counter /*div#qty*/ button:first-child {
+	margin-left: 0px;
+}
+
+.container .place-order-view .form-field .quantity-counter /*div#qty*/ button:last-child {
+	margin-right: 0px;
 }
 
 footer .form-field span {

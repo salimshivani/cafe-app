@@ -53,22 +53,21 @@
 		<div class="container-pad wrapper">
 			<div class="view-orders">
 				<div class="order-list">
-					<div class="order-item" ng-repeat="item in viewOrders.orders">
+					<div class="order-item" ng-repeat="orders in viewOrders.ordersArray | orderBy : orders.date : true">
 						<div class="item-img">
 							<img ng-src="../../images/img-coffee.svg" />
 						</div>
 						<!-- div item-img ends -->
-						
-<!--					<h4>{{ viewOrders.customerName }}</h4>-->
+
 						<div class="item-details">
-							<span>{{ item.date | date: 'dd-MM-yyyy' }}</span>
-							<span>{{ item.itemName + " x " + item.qty }}</span>
+							<span>{{ orders.date | date: 'dd-MM-yyyy' }}</span>
+							<span>{{ orders.item + " x " + orders.qty }}</span>
 						</div>
 						<!-- div item-details ends -->
 							
 <!--					<span>Quantity: {{ viewOrders.qty }}</span>-->
 						<div class="item-amount">
-							<span>&#8377; {{ item.amt | number:2 }}</span>
+							<span>&#8377; {{ orders.amount | number:2 }}</span>
 						</div>
 						<!-- div item-amount ends -->
 					</div>
