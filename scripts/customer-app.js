@@ -126,7 +126,7 @@
     LoginScreenHeaderController.$inject = ['$scope', 'PageTitleService'];
     function LoginScreenHeaderController($scope, PageTitleService) {
         var header = this;
-        var pageTitle = "Login";
+        var pageTitle = "Customer Login";
 
         header.title = PageTitleService.getTitle(pageTitle + " - ");
 		header.title = header.title.split(" - ")[0];
