@@ -92,27 +92,14 @@
         title.pageTitle = PageTitleService.getTitle;
     }
 	
-	AppHeaderController.$inject = ['$scope', 'PageTitleService', 'LoginService'];
-    function AppHeaderController($scope, PageTitleService, LoginService) {
+	AppHeaderController.$inject = ['PageTitleService'];
+    function AppHeaderController(PageTitleService) {
         var header = this,
 			pageTitle = "Cafe App",
 			login = 'Login',
 			signUp = 'Sign Up';
 
         header.title = PageTitleService.getTitle(pageTitle);
-		header.user = LoginService.getUser();
-
-		if (header.user.uid !== undefined && mobileNumber.length !== '') {
-			window.location = './home/home.html';
-		}
-		
-        header.login = function () {
-        };
-		
-		header.signUp = function () {
-		};
-		
-		header.logout = LoginService.logoutUser;
     }
 	
 	AppController.$inject = ['$firebaseAuth', 'URL', 'LoginService'];
