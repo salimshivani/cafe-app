@@ -45,19 +45,17 @@
     	        </div>
     	        <!-- div title ends -->
 
-<!--
 				<div class="menu">
-					<div class="ic-menu"> ng-if="mobileNumber.length !== 10"> 
-						<a href="../signup/signup.html" ng-click="header.signup();">
-							<img ng-src="../../images/ic-sign-up.svg" alt="{{ header.signUp }}" title="{{ header.signUp }}" />
+					<div class="ic-menu" ng-if="header.user !== undefined || header.user !== null">
+						<a href="" ng-click="header.logout();">
+							<img ng-src="../../images/ic-login.svg" alt="{{ header.user.email }}" title="{{ header.user.email }}" />
 						</a>
-						 a ends 
+						<!-- a ends -->
 
 					</div>
-					 div ic-menu ends 
+					<!-- div menu-item ends -->
 
 				</div>
--->
 				<!-- div menu ends -->
 
     	    </div>
@@ -112,7 +110,7 @@
 					
 					<div class="form-field">
 						<label>Amount</label>
-						<input type="text" id="amount" ng-model="placeOrder.amount" name="amount" ng-disabled="true" ng-required />
+						<input type="number" id="amount" ng-model="placeOrder.amount" name="amount" ng-disabled="true" ng-required="true" />
 					</div>
 					<!-- div form-field -->
 

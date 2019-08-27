@@ -26,9 +26,9 @@
     <link rel="stylesheet" type="text/css" href="../../styles/style-cafe.css" />
 </head>
 
-<body ng-controller="ActiveOrdersController as activeOrders">
+<body ng-controller="OrdersController as orders">
 		
-	<header ng-controller="ActiveOrdersHeaderController as header">
+	<header ng-controller="OrdersHeaderController as header">
         <div class="header-pad wrapper">
 			<div class="ic-back">
 				<a href="../home/home.html">
@@ -52,15 +52,23 @@
 	<div class="container">
 		<div class="container-pad wrapper">
 			<div class="view-orders">
+				<div class="filter">
+					<select ng-options="filter in orders.filter" 
+							ng-model="orders.filter">
+					</select>
+				</div>
+				<!-- div filter ends -->
+
 				<div class="order-list">
-					<div class="order-item" ng-repeat="order in activeOrders.ordersArray | orderBy : 'order.date' : true">
+					<div class="order-item" ng-repeat="order in orders.ordersArray | orderBy : 'order.date' : true">
 						<div class="item-img">
 							<img ng-src="../../images/img-coffee.svg" />
 						</div>
 						<!-- div item-img ends -->
 
 						<div class="item-details">
-<!--							<h4>{{ order.$id }}</h4>-->
+							<h4>{{ orders.customerName(order.customerUId, order.customerKey); }}</h4>
+<!--							<h4>{{ order.customerName }}</h4>-->
 							<span>{{ order.date | date: 'dd-MM-yyyy' }}</span>
 							<span>{{ order.item + " x " + order.qty }}</span>
 						</div>
@@ -68,6 +76,9 @@
 
 						<div class="item-amount">
 							<span>&#8377; {{ order.amount | number:2 }}</span>
+							<input type="checkbox" id="status" name="status" 
+								   ng-model="order.isDelivered" 
+								   ng-change="orders.delivered(order);" />
 						</div>
 						<!-- div item-amount ends -->
 
@@ -85,8 +96,6 @@
 
 	</div>
 	<!-- div container ends -->
-
-	
 
 </body>
 </html>

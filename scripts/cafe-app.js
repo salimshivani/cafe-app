@@ -50,8 +50,8 @@
 		.controller('PlaceOrderController', PlaceOrderController);
 	
 	cafeApp
-		.controller('ActiveOrdersHeaderController', ActiveOrdersHeaderController)
-		.controller('ActiveOrdersController', ActiveOrdersController);
+		.controller('OrdersHeaderController', OrdersHeaderController)
+		.controller('OrdersController', OrdersController);
 	
     cafeApp.controller('FooterController', FooterController);
 	
@@ -374,8 +374,9 @@
         header.title = PageTitleService.getTitle(pageTitle);
 		header.user = LoginService.getUser();
 
-//		if (header.user === null) {
-//		}
+		if (header.user === null) {
+			window.location = '../login/login.html';
+		}
 		
         header.login = function () {
         };
@@ -397,7 +398,7 @@
 
 		homeScreen.addItems = 'Add Items';
 		homeScreen.menu = 'View Menu';
-		homeScreen.activeOrders = 'Active Orders';
+		homeScreen.orders = 'Orders';
 		homeScreen.placeOrder = 'Place Order';
 		
 		homeScreen.user = LoginService.getUser();
@@ -421,8 +422,8 @@
 					window.location = '../place-order/place-order.html';
 				};
 
-				homeScreen.eActiveOrders = function () {
-					window.location = '../active-order/active-order.html';
+				homeScreen.eOrders = function () {
+					window.location = '../orders/orders.html';
 				};
 
 				homeScreen.isFooterVisible = false;
@@ -443,6 +444,9 @@
         header.title = PageTitleService.getTitle(pageTitle + " - ");
 		header.title = header.title.split(" - ")[0];
 		header.user = LoginService.getUser();
+		if (header.user === null) {
+			window.location = '../login/login.html';
+		}
 	}
 	
 	AddItemController.$inject = ['$firebaseArray', 'ItemService', 'LoginService'];
@@ -490,6 +494,9 @@
         header.title = PageTitleService.getTitle(pageTitle + " - ");
 		header.title = header.title.split(" - ")[0];
 		header.user = LoginService.getUser();
+		if (header.user === null) {
+			window.location = '../login/login.html';
+		}
 		if (header.user.role === 'customer') {
 			header.user.logoutUser();
 		}
@@ -539,36 +546,22 @@
 		};
 
 		itemRef.on('child_added', function (snapshot) {
-//			viewItems.itemKey = snapshot.key;
-			console.log('2');
-
-			viewItems.availability = snapshot.val().availability;
-			viewItems.itemName = snapshot.val().itemName;
-			viewItems.price = snapshot.val().price;
-
 			var item = {
 				itemKey: snapshot.key,
-				availability: viewItems.availability,
-				itemName: viewItems.itemName,
-				price: viewItems.price
+				availability: snapshot.val().availability,
+				itemName: snapshot.val().itemName,
+				price: snapshot.val().price
 			};
 
 			viewItems.items.push(item);
 		});
 
 		itemRef.on('child_changed', function (snapshot) {
-//			viewItems.itemKey = snapshot.key;
-			console.log('3');
-
-			viewItems.availability = snapshot.val().availability;
-			viewItems.itemName = snapshot.val().itemName;
-			viewItems.price = snapshot.val().price;
-
 			var item = {
 				itemKey: snapshot.key,
-				availability: viewItems.availability,
-				itemName: viewItems.itemName,
-				price: viewItems.price
+				availability: snapshot.val().availability,
+				itemName: snapshot.val().itemName,
+				price: snapshot.val().price
 			};
 
 			index = viewItems.items.findIndex(x => x.itemKey === snapshot.key);
@@ -576,12 +569,6 @@
 		});
 
 		itemRef.on('child_removed', function (snapshot) {
-//			viewItems.itemKey = snapshot.key;
-
-			viewItems.availability = snapshot.val().availability;
-			viewItems.itemName = snapshot.val().itemName;
-			viewItems.price = snapshot.val().price;
-
 			index = viewItems.items.findIndex(x => x.itemKey === snapshot.key);
 			viewItems.items.splice(index, 1);
 		});
@@ -652,6 +639,9 @@
         header.title = PageTitleService.getTitle(pageTitle + " - ");
 		header.title = header.title.split(" - ")[0];
 		header.user = LoginService.getUser();
+		if (header.user === null) {
+			window.location = '../login/login.html';
+		}
 	}
 	
 	PlaceOrderController.$inject = ['$firebaseArray', 'URL', 'OrderService'];
@@ -689,11 +679,29 @@
 			placeOrder.customerArray
 				.$loaded()
 				.then(function (data) {
-					if (data[0].role === 'customer') {
-						data[0].uid = snapshot.key;
-						placeOrder.customers.push(data[0]);
-						placeOrder.customerName = placeOrder.customers[0];
+//					console.log(data.length);
+					if (data.length === 1 && data[0].role === 'customer') {
+						console.log('length: =', '1');
+						var customerDetails = {
+							email: data[0].email,
+							mobile: data[0].mobile,
+							name: data[0].name,
+							key: data[0].$id,
+							uid: snapshot.key
+						};
+						placeOrder.customers.push(customerDetails);
+					} else if (data.length > 1 && data[1].role === 'customer') {
+						console.log('length: 1 < ', data.length);
+						var customerDetails = {
+							email: data[1].email,
+							mobile: data[1].mobile,
+							name: data[1].name,
+							key: data[1].$id,
+							uid: snapshot.key
+						};
+						placeOrder.customers.push(customerDetails);
 					}
+					placeOrder.customerName = placeOrder.customers[0];
 				});
 		});
 
@@ -707,16 +715,29 @@
 //					console.log(data[0]);
 //					console.log(data[0].$id);
 
-					var index = placeOrder.customers.findIndex(x => x.$id === data[0].$id);
+					var index = placeOrder.customers.findIndex(x => x.key === data[0].$id);
 
-					if (data[0].role !== 'admin') {
+					if (data[0].role === 'customer') {
 
 						if (index === -1) {
-							data[0].uid = snapshot.key;
-							placeOrder.customers.push(data[0]);
+							var customerDetails = {
+								email: data[0].email,
+								mobile: data[0].mobile,
+								name: data[0].name,
+								key: data[0].$id,
+								uid: snapshot.key
+							};
+							placeOrder.customers.push(customerDetails);
 							placeOrder.customerName = placeOrder.customers[0];							
 						} else if (index > 0) {
-							placeOrder.customers[index] = data[0];
+							var customerDetails = {
+								email: data[0].email,
+								mobile: data[0].mobile,
+								name: data[0].name,
+								key: data[0].$id,
+								uid: snapshot.key
+							};
+							placeOrder.customers[index] = customerDetails;
 							placeOrder.customerName = placeOrder.customers[0];							
 						}
 
@@ -753,9 +774,16 @@
 			placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;
 		});*/
 
-		itemRef.on('child_changed', function (snapshot) {
-			var index = placeOrder.menuItems.findIndex(x => x.key === snapshot.key);
-			if (snapshot.val().availability) {
+		firebase.database().ref().child("Items").on('child_changed', function (snapshot) {
+			var index = placeOrder.menuItems.findIndex(x => x.$id === snapshot.key);
+//			console.log(index);
+
+			if (index > -1 && snapshot.val().availability) {
+				placeOrder.menuItems[index].itemName = snapshot.val().itemName;
+				placeOrder.menuItems[index].price = snapshot.val().price;
+
+				placeOrder.price = placeOrder.itemName.price;
+			} else if (index === -1 && snapshot.val().availability) {
 				var item = {
 					key: snapshot.key,
 					availability: snapshot.val().availability,
@@ -763,18 +791,24 @@
 					price: snapshot.val().price
 				};
 
-				placeOrder.menuItems.push(item);
+//				placeOrder.menuItems.push(item);
+				placeOrder.itemName = placeOrder.menuItems[0];
+				placeOrder.price = placeOrder.itemName.price;
 			} else {
-				placeOrder.menuItems.splice(index, 1);
+				placeOrder.menuItems.splice(index, 0);
+				placeOrder.itemName = placeOrder.menuItems[0];
+				placeOrder.price = placeOrder.itemName.price;
 			}
-			placeOrder.itemName = placeOrder.menuItems[0];
-			console.log(placeOrder.itemName);
 
-			placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;
+			placeOrder.amount = placeOrder.quantity * placeOrder.price;
 		});
 		
-		placeOrder.updateAmount = function () {
-			placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;
+		placeOrder.changeCustomer = function (item) {
+			placeOrder.customerName = item;
+		};
+
+		placeOrder.updateAmount = function (item) {
+			placeOrder.amount = placeOrder.quantity * item.price;
 		};
 
 		placeOrder.increase = function () {
@@ -794,6 +828,8 @@
 		};
 		
 		var orderRef = firebase.database().ref().child("Orders");
+		var userOrderRef = firebase.database().ref().child("Users");
+
 		placeOrder.ePlaceOrder = function () {
 			var timeStamp = new Date().getTime();
 			
@@ -804,21 +840,46 @@
 				
 				var orderDetails = {
 					amount: placeOrder.amount,
-					customer: placeOrder.customerName.uid,
+					customerUId: placeOrder.customerName.uid,
+					customerKey: placeOrder.customerName.key,
+//					customer: placeOrder.customerName.uid + "/" + placeOrder.customerName.key,
 					date: timeStamp,
 					instructions: placeOrder.instructions,
 					item: placeOrder.itemName.itemName,
 					price: placeOrder.itemName.price,
 					qty: placeOrder.quantity,
-					status: 'Pending'
+					isDelivered: false
 				};
-//				console.log(orderDetails);
+//				console.log(placeOrder.customerName);
+//				console.log(placeOrder.customerName.uid);
 
 				OrderService
 					.placeOrder(orderRef)
 					.$add(orderDetails)
 					.then(function (success) {
-						alert('Order Placed Successfully.');
+
+//						console.log(success);
+						orderDetails.customerUId = null;
+						orderDetails.customerKey = null;
+//						OrderService.placeOrder(
+						userOrderRef
+							.child(placeOrder.customerName.uid)
+							.child(placeOrder.customerName.key)
+							.child("Orders")
+							.child(success.key)
+							.set(orderDetails)
+							.then(function (success) {
+								alert('Order Placed Successfully.');
+								/*placeOrder.customerName = placeOrder.customers[0];
+								placeOrder.errorQty = false;
+								placeOrder.instructions = '';
+								placeOrder.itemName = placeOrder.menuItems[0];
+								placeOrder.quantity = 1;
+								placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;*/
+							})
+							.catch(function (error) {
+								console.log(error);
+							});
 						placeOrder.customerName = placeOrder.customers[0];
 						placeOrder.errorQty = false;
 						placeOrder.instructions = '';
@@ -835,106 +896,87 @@
 		placeOrder.isFooterVisible = true;
 	}
 	
-    ActiveOrdersHeaderController.$inject = ['PageTitleService', 'LoginService'];
-	function ActiveOrdersHeaderController(PageTitleService, LoginService) {
+    OrdersHeaderController.$inject = ['PageTitleService', 'LoginService'];
+	function OrdersHeaderController(PageTitleService, LoginService) {
 		var header = this,
-			pageTitle = "Active Orders";
+			pageTitle = "Orders";
 
         header.title = PageTitleService.getTitle(pageTitle + " - ");
 		header.title = header.title.split(" - ")[0];
 		header.user = LoginService.getUser();
+		if (header.user === null) {
+			window.location = '../login/login.html';
+		}
 	}
 	
-	ActiveOrdersController.$inject = ['OrderService'];
-	function ActiveOrdersController(OrderService) {
-		var activeOrders = this;
-		var usersOrderRef = firebase.database().ref()
+	OrdersController.$inject = ['$firebaseArray', 'OrderService'];
+	function OrdersController($firebaseArray, OrderService) {
+		var orders = this;
+		var pendingOrderRef = firebase.database().ref()
 									.child("Orders")
-									.orderByChild("status")
-									.equalTo("Pending");
+									.orderByChild("isDelivered")
+									.equalTo(false);
+		var customerRef = firebase.database().ref().child("Users");
 
-		activeOrders.ordersArray = OrderService.users(usersOrderRef);
-		/*activeOrders.orders = [];
-		activeOrders.ordersArray.$loaded()
-			.then(function (data) {
-				activeOrders.orders = data;
-			console.log(data);
-		});*/
+		orders.customers = [];
 
-		/*usersOrderRef.on('child_added', function (snapshot) {
-//				console.log("order child added", snapshot);
+		orders.ordersArray = OrderService.users(pendingOrderRef);
+		orders.ordersArray.$loaded()
+			.then(function (order) {
+				orders.orders = order;
+				for (var i = 0; i < order.length; i++) {
+					$firebaseArray(customerRef.child(order[i].customerUId + "/" + order[i].customerKey))
+						.$loaded()
+						.then(function (customer) {
+//							console.log(customer.$ref().parent.key);
+							var customerDetails = {
+								name: customer[3].$value,
+								email: customer[1].$value,
+								uid: customer.$ref().parent.key
+							};
+							if (orders.customers
+								.findIndex(x => x.uid === customer.$ref().parent.key) === -1) {
+								orders.customers.push(customerDetails);
+							}
+						}).catch(function (error) {
+							console.log(error);
+						});
+				}
+			}).catch(function (error) {
+				console.log(error);
+			});
 
-			var order = {
-				orderKey: snapshot.key,
-				amount: snapshot.val().amount,
-				customer: snapshot.val().customer,
-				date: snapshot.val().date,
-				item: snapshot.val().item,
-				qty: snapshot.val().qty
+		orders.customerName = function (customerUId, customerKey) {
+			let index = orders.customers.findIndex(x => x.uid === customerUId);
+			return orders.customers[index].name;
+		};
+
+		orders.delivered = function (order) {
+			var updatedOrderValues = {
+				isDelivered: true
 			};
 
-			activeOrders.totalAmount += order.amt;
-			activeOrders.orders.push(order);
-		});*/
+			firebase.database().ref().child("Orders")
+				.child(order.$id)
+				.update(updatedOrderValues)
+				.then(function (successOrder) {
 
-		/*usersOrderRef.on('child_changed', function (snapshot) {
-			activeOrders.user = snapshot.key;
-//			console.log(snapshot);
+					customerRef
+						.child(order.customerUId + "/" + order.customerKey)
+						.child("Orders")
+						.child(order.$id)
+						.update(updatedOrderValues)
+						.then(function (successUsersOrder) {
+							alert("Order delivered successfully...");
+						}).catch(function (error) {
+							console.log(error);
+						});
+				}).catch(function (error) {
+					console.log(error);
+				});
+		};
 
-			var orderRef = usersOrderRef.child(activeOrders.user);
-			var index = -1;
-
-			orderRef.on('child_changed', function (snapshot) {
-				activeOrders.orderKey = snapshot.key;
-//				console.log(snapshot);
-
-				activeOrders.amt = snapshot.val().amount;
-				activeOrders.date = snapshot.val().date;
-				activeOrders.itemName = snapshot.val().item;
-				activeOrders.qty = snapshot.val().qty;
-//				console.log(snapshot.val());
-
-				var order = {
-					user: activeOrders.user,
-					orderKey: activeOrders.orderKey,
-					amt: activeOrders.amt,
-					date: activeOrders.date,
-					itemName: activeOrders.itemName,
-					qty: activeOrders.qty
-				};
-
-				index = activeOrders.orders.findIndex(x => x.orderKey === activeOrders.orderKey);
-				console.log(activeOrders.orders);
-//				console.log(index);
-				activeOrders.orders[index] = order;
-			});
-			
-			orderRef.on('child_removed', function (snapshot) {
-				activeOrders.orderKey = snapshot.key;
-//				console.log(JSON.stringify(snapshot.val(), null, 3));
-//				console.log(snapshot);
-
-				activeOrders.amt = snapshot.val().amount;
-				activeOrders.date = snapshot.val().date;
-				activeOrders.itemName = snapshot.val().item;
-				activeOrders.qty = snapshot.val().qty;
-
-				var order = {
-					orderKey: activeOrders.orderKey,
-					amt: activeOrders.amt,
-					date: activeOrders.date,
-					itemName: activeOrders.itemName,
-					qty: activeOrders.qty
-				};
-
-				index = activeOrders.orders.findIndex(x => x.orderKey === activeOrders.orderKey);
-//				console.log(activeOrders.orders);
-//				console.log(index);
-				activeOrders.orders.splice(index, 1);
-			});
-		});*/
-
-		activeOrders.isFooterVisible = false;
+		orders.isFooterVisible = false;
 	}
 	
 	OrderService.$inject = ['$firebaseArray'];

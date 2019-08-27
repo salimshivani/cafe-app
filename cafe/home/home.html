@@ -44,7 +44,7 @@
 						<!-- a ends -->
 
 					</div>
-					<!-- div menu-item ends -->
+					<!-- div ic-menu ends -->
 					
 					<div class="ic-menu" ng-if="header.user === undefined || header.user === null">
 						<a href="" ng-click="header.signUp();">
@@ -53,7 +53,7 @@
 						<!-- a ends -->
 
 					</div>
-					<!-- div menu-item ends -->
+					<!-- div ic-menu ends -->
 
 					<div class="ic-menu" ng-if="header.user !== undefined || header.user !== null">
 						<a href="" ng-click="header.logout();">
@@ -62,10 +62,10 @@
 						<!-- a ends -->
 
 					</div>
-					<!-- div menu-item ends -->
+					<!-- div ic-menu ends -->
 
 				</div>
-				<!-- div menu-list ends -->
+				<!-- div menu ends -->
 
 			</div>
 			<!-- div header-pad, wrapper ends -->
@@ -79,7 +79,7 @@
 					<div class="db-list">
 						
 						<!-- Add Items -->
-						<div class="db-item">
+						<div class="db-item" ng-click="homeScreen.eAddItem();">
 							<div class="item-img">
 								<img ng-src="images/add-items.svg" alt="{{ homeScreen.addItems }}" title="{{ homeScreen.addItems }}" />
 							</div>
@@ -103,7 +103,7 @@
 						<!-- div db-item ends -->
 						
 						<!-- View Menu -->
-						<div class="db-item">
+						<div class="db-item" ng-click="homeScreen.eViewItems();">
 							<div class="item-img">
 								<img ng-src="images/view-menu.svg" alt="{{ homeScreen.menu }}" title="{{ homeScreen.menu }}" />
 							</div>
@@ -127,7 +127,7 @@
 						<!-- div db-item ends -->
 						
 						<!-- Place Order -->
-						<div class="db-item">
+						<div class="db-item" ng-click="homeScreen.ePlaceOrder();">
 							<div class="item-img">
 								<img ng-src="images/place-order.svg" alt="{{ homeScreen.placeOrder }}" title="{{ homeScreen.placeOrder }}" />
 							</div>
@@ -151,20 +151,20 @@
 						<!-- div db-item ends -->
 						
 						<!-- Active Orders -->
-						<div class="db-item">
+						<div class="db-item" ng-click="homeScreen.eOrders();">
 							<div class="item-img">
-								<img ng-src="images/active-orders.svg" alt="{{ homeScreen.activeOrders }}" title="{{ homeScreen.activeOrders }}" />
+								<img ng-src="images/active-orders.svg" alt="{{ homeScreen.orders }}" title="{{ homeScreen.orders }}" />
 							</div>
 							<!-- div item-img ends -->
 							
 							<div class="item-title">
-								<span>{{ homeScreen.activeOrders }}</span>
+								<span>{{ homeScreen.orders }}</span>
 							</div>
 							<!-- div item-title ends -->
 							
 							<div class="item-action">
-								<a href="" ng-click="homeScreen.eActiveOrders();">
-									<img ng-src="../../images/ic-action.svg" alt="{{ homeScreen.activeOrders }}" title="{{ homeScreen.activeOrders }}" />
+								<a href="" ng-click="homeScreen.eOrders();">
+									<img ng-src="../../images/ic-action.svg" alt="{{ homeScreen.orders }}" title="{{ homeScreen.orders }}" />
 								</a>
 								<!-- Add Item -->
 								

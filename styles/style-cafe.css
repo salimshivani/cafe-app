@@ -45,6 +45,7 @@
 	align-items: center;
 	border: 1px solid #999;
 	border-radius: 6px;
+	color: #999;
 	display: flex;
 	justify-content: space-between;
 	margin-bottom: 12px;
@@ -53,6 +54,12 @@
 
 .container .db-list .db-item:last-child {
 	margin-bottom: 0px;
+}
+
+.container .db-list .db-item:hover {
+	background: #EFEFEF;
+	border: 1px solid #bcbcbc;
+	color: #999999;
 }
 
 .container .db-item .item-img {
@@ -66,7 +73,6 @@
 }
 
 .container .db-item .item-title {
-	color: #999;
 	display: flex;
 	flex: 1;
 }
@@ -288,8 +294,10 @@ footer .form-field span {
 }
 
 .container .view-orders .order-list .order-item .item-amount {
+	align-items: flex-end;
 	align-self: center;
 	display: flex;
+	flex-flow: column;
 }
 
 .container .view-orders .order-list .order-item h4 {

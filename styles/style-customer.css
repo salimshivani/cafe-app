@@ -86,6 +86,7 @@
 	width: 15px;
 }
 
+/** View Menu CSS **/
 .container .view-items {
 	display: flex;
 	flex: 1;
@@ -129,6 +130,18 @@
 	display: flex;
 	flex: 1;
 	flex-flow: column;
+}
+
+.container .view-items .item-list .item .item-action {
+	align-self: center;
+	display: flex;
+}
+
+.container .view-items .item-list .item .item-action button {
+	background: #4f7400;
+	color: #ffffff;
+	font-size: 14px;
+	padding: 4px 8px;
 }
 
 .container .view-items .item-list .item .item-status {

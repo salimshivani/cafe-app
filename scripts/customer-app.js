@@ -648,9 +648,10 @@
 		viewOrders.user = LoginService.getUser();
 		
 		var usersOrderRef = firebase.database().ref()
-									.child("Orders")
-									.orderByChild("customer")
-									.equalTo(viewOrders.user.uid);
+									.child("Users")
+									.child("Orders");
+//									.orderByChild("customer")
+//									.equalTo(viewOrders.user.uid);
 
 		viewOrders.amt = 0;
 		viewOrders.date = '';
@@ -661,6 +662,7 @@
 		viewOrders.ordersArray = OrderService.users(usersOrderRef);
 		viewOrders.ordersArray.$loaded()
 			.then(function (success) {
+				console.log(success);
 				angular.forEach(viewOrders.ordersArray, function(value, key) {
 					viewOrders.totalAmount += value.amount;
 				});
