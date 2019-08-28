@@ -200,12 +200,12 @@
 	margin-right: 6px;
 }
 
-.container .place-order-view .form-field .quantity-counter /*div#qty*/ {
+.container .place-order-view .form-field .quantity-counter {
 	display: flex;
 	justify-content: space-between;
 }
 
-.container .place-order-view .form-field .quantity-counter /*div#qty*/ button {
+.container .place-order-view .form-field .quantity-counter button {
 	background: transparent;
 	border: 1px solid #81A300;
 	border-radius: 2px;
@@ -215,11 +215,11 @@
 	padding: 8px 6px 7px;
 }
 
-.container .place-order-view .form-field .quantity-counter /*div#qty*/ button:first-child {
+.container .place-order-view .form-field .quantity-counter button:first-child {
 	margin-left: 0px;
 }
 
-.container .place-order-view .form-field .quantity-counter /*div#qty*/ button:last-child {
+.container .place-order-view .form-field .quantity-counter button:last-child {
 	margin-right: 0px;
 }
 
@@ -232,8 +232,27 @@ footer .form-field span {
 .container .view-orders {
 	display: flex;
 	flex: 1;
+	flex-flow: column;
 	margin: 0px auto;
 	padding: 4px;
+}
+
+.container .view-orders .filter {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 4px;
+}
+
+.container .view-orders .filter select {
+/*	flex: 1;*/
+	margin-top: 0px;
+	margin-right: 6px;
+	padding: 6px 4px;
+}
+
+.container .view-orders .filter select:last-child {
+/*	flex: 1;*/
+	margin-right: 0px;
 }
 
 .container .view-orders .order-list {
@@ -311,6 +330,6 @@ footer .form-field span {
 	margin-bottom: 2px;
 }
 
-.container .view-orders .order-list .order-item .item-details strong:last-child {
+.container .view-orders .order-list .order-item .item-details span:last-child {
 	margin-bottom: 0px;
 }

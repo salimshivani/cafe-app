@@ -28,7 +28,7 @@
 
 <body class="with-footer" ng-controller="LoginScreenController as loginScreen">
 
-	<form method="post">
+	<form method="post" ng-submit="loginScreen.login();">
 
     	<header ng-controller="LoginScreenHeaderController as header">
     	    <div class="header-pad wrapper">

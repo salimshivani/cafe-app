@@ -373,23 +373,11 @@
 
         header.title = PageTitleService.getTitle(pageTitle);
 		header.user = LoginService.getUser();
-
 		if (header.user === null) {
 			window.location = '../login/login.html';
 		}
 		
-        header.login = function () {
-        };
-		
-		header.signUp = function () {
-		};
-		
 		header.logout = LoginService.logoutUser;
-
-		// if (mobileNumber !== '' && mobileNumber.length === 10) {
-		// }
-        // header.login = function () {
-        // };
     }
 
 	HomeScreenController.$inject = ['$firebaseAuth', 'ItemService', 'LoginService'];
@@ -447,6 +435,11 @@
 		if (header.user === null) {
 			window.location = '../login/login.html';
 		}
+		if (header.user.role === 'customer') {
+			header.logoutUser();
+		}
+
+		header.logout = LoginService.logoutUser;
 	}
 	
 	AddItemController.$inject = ['$firebaseArray', 'ItemService', 'LoginService'];
@@ -498,8 +491,10 @@
 			window.location = '../login/login.html';
 		}
 		if (header.user.role === 'customer') {
-			header.user.logoutUser();
+			header.logoutUser();
 		}
+		
+		header.logout = LoginService.logoutUser;
 	}
 	
 	ViewItemsController.$inject = ['ItemService'];
@@ -642,6 +637,11 @@
 		if (header.user === null) {
 			window.location = '../login/login.html';
 		}
+		if (header.user.role === 'customer') {
+			header.logoutUser();
+		}
+		
+		header.logout = LoginService.logoutUser;
 	}
 	
 	PlaceOrderController.$inject = ['$firebaseArray', 'URL', 'OrderService'];
@@ -842,7 +842,6 @@
 					amount: placeOrder.amount,
 					customerUId: placeOrder.customerName.uid,
 					customerKey: placeOrder.customerName.key,
-//					customer: placeOrder.customerName.uid + "/" + placeOrder.customerName.key,
 					date: timeStamp,
 					instructions: placeOrder.instructions,
 					item: placeOrder.itemName.itemName,
@@ -907,6 +906,11 @@
 		if (header.user === null) {
 			window.location = '../login/login.html';
 		}
+		if (header.user.role === 'customer') {
+			header.logoutUser();
+		}
+		
+		header.logout = LoginService.logoutUser;
 	}
 	
 	OrdersController.$inject = ['$firebaseArray', 'OrderService'];
@@ -917,6 +921,9 @@
 									.orderByChild("isDelivered")
 									.equalTo(false);
 		var customerRef = firebase.database().ref().child("Users");
+		
+		orders.filter = ['Pending', 'Customer', 'All Orders'];
+		orders.filterByType = orders.filter[0];
 
 		orders.customers = [];
 
@@ -938,6 +945,7 @@
 								.findIndex(x => x.uid === customer.$ref().parent.key) === -1) {
 								orders.customers.push(customerDetails);
 							}
+							orders.filterByCustomer = orders.customers[0];
 						}).catch(function (error) {
 							console.log(error);
 						});
@@ -949,6 +957,35 @@
 		orders.customerName = function (customerUId, customerKey) {
 			let index = orders.customers.findIndex(x => x.uid === customerUId);
 			return orders.customers[index].name;
+		};
+
+		orders.applyFilter = function (filter) {
+			if (filter === 'Pending') {
+				orders.ordersArray = OrderService.users(pendingOrderRef);
+			} else if (filter === 'All Orders') {
+				var ordersRef = firebase.database().ref().child("Orders").limitToLast(100);
+
+				orders.ordersArray = OrderService.users(ordersRef);
+			} else if (filter === 'Date') {
+				var ordersByDateRef = firebase.database().ref().child("Orders").orderByChild("date");
+
+				orders.ordersArray = OrderService.users(ordersByDateRef);
+			} else if (filter === 'Customer') {
+				var customerOrdersRef = customerRef.child(orders.filterByCustomer.uid);
+
+				$firebaseArray(customerOrdersRef).$loaded().then(function (order) {
+					var usersOrder = customerOrdersRef.child(order[0].$id).child("Orders");
+
+					orders.ordersArray = OrderService.users(usersOrder);
+					orders.ordersArray.$loaded(function (success) {
+						console.log("Orders filtered");
+					}).catch(function (error) {
+						console.log(error);
+					});
+				}).catch(function (error) {
+					console.log(error);
+				});
+			}
 		};
 
 		orders.delivered = function (order) {
