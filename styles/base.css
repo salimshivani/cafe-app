@@ -92,6 +92,10 @@ body.with-footer {
     padding-bottom: 50px;
 }
 
+body.with-footer-40 {
+	padding-bottom: 40px;
+}
+
 button {
 	border-radius: 25px;
 	font-size: 16px;
@@ -151,8 +155,8 @@ input, select {
 .container {
 /*	background: #eee;*/
 	display: flex;
-/*	height: 100%;*/
-	overflow: scroll;
+	height: 100%;
+/*	overflow: scroll;*/
 	width: 100%;
 }
 
@@ -246,4 +250,110 @@ header .title {
     display: flex;
     margin: 0px auto;
     width: 1024px;
+}
+
+/** Login View CSS **/
+.container .login-view {
+	align-self: center;
+	display: flex;
+	flex: 1;
+	flex-flow: column;
+	margin: 0px auto;
+}
+
+/** Sign Up View CSS **/
+.container .sign-up-view {
+	display: flex;
+	flex: 1;
+	flex-flow: column;
+	margin: 0px auto;
+}
+
+/** Home Screen / Dashboard View CSS **/
+.container .db-view {
+	display: flex;
+	flex: 1;
+	margin: 0px auto;
+	padding: 4px;
+}
+
+.container .db-view .db-list {
+	display: flex;
+	flex: 1;
+	flex-flow: column wrap;
+}
+
+.container .db-list .db-item {
+	align-items: center;
+	border: 1px solid #999;
+	border-radius: 6px;
+	color: #999;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 12px;
+	padding: 6px;
+}
+
+.container .db-list .db-item:last-child {
+	margin-bottom: 0px;
+}
+
+.container .db-list .db-item:hover {
+	background: #EFEFEF;
+	border: 1px solid #bcbcbc;
+	color: #999999;
+}
+
+.container .db-item .item-img {
+	display: flex;
+	margin-right: 12px;
+}
+
+.container .db-item .item-img img {
+	height: 40px;
+	width: 40px;
+}
+
+.container .db-item .item-title {
+	display: flex;
+	flex: 1;
+}
+
+.container .db-item .item-action {
+	display: flex;
+	padding: 4px;
+}
+
+.container .db-item .item-action a {
+	display: flex;
+}
+
+.container .db-item .item-action a img {
+	display: flex;
+	height: 15px;
+	width: 15px;
+}
+
+/** Orders' View CSS **/
+.container .view-orders {
+	display: flex;
+	flex: 1;
+	flex-flow: column;
+	margin: 0px auto;
+	padding: 4px 0px 0px;
+}
+.container .view-orders .filter {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 4px;
+}
+
+.container .view-orders .filter select {
+	margin-top: 0px;
+	margin-right: 6px;
+	padding: 6px 4px;
+}
+
+.container .view-orders .filter select:last-child {
+	margin-right: 0px;
 }

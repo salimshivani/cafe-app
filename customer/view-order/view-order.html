@@ -8,16 +8,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
     <!-- AngularJS -->
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
-    <script src="https://code.angularjs.org/1.7.8/angular-route.min.js"></script>
+	<script src="../../scripts/angular-1.7.8.min.js"></script>
+    <script src="../../scripts/angular-route-1.7.8.min.js"></script>
 
 	<!-- The core Firebase JS SDK is always required and must be listed first -->
-	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-app.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-auth.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-database.js"></script>
+	<script src="../../scripts/firebase-app-6.3.5.js"></script>
+	<script src="../../scripts/firebase-auth-6.3.5.js"></script>
+	<script src="../../scripts/firebase-database-6.3.5.js"></script>
 	
-	<!-- AngularFIre -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angularFire/2.3.0/angularfire.min.js"></script>
+	<!-- AngularFire -->
+	<script src="../../scripts/angularfire-2.3.0.min.js"></script>
 
     <script src="../../scripts/customer-app.js"></script>
 <!--    <script src="view-order.js"></script>-->
@@ -26,7 +26,7 @@
     <link rel="stylesheet" type="text/css" href="../../styles/style-customer.css" />
 </head>
 
-<body class="with-footer" ng-controller="ViewOrdersController as viewOrders">
+<body class="with-footer-40" ng-controller="ViewOrdersController as viewOrders">
 		
 	<header ng-controller="ViewOrdersHeaderController as header">
         <div class="header-pad wrapper">
@@ -43,6 +43,19 @@
    	        </div>
    	        <!-- div title ends -->
 
+			<div class="menu">
+				<div class="ic-menu" ng-if="header.user !== undefined || header.user !== null">
+					<a href="" ng-click="header.logout();">
+						<img ng-src="../../images/ic-login.svg" alt="{{ header.user.email }}" title="{{ header.user.email }}" />
+					</a>
+					<!-- a ends -->
+
+				</div>
+				<!-- div ic-menu ends -->
+
+			</div>
+			<!-- div menu ends -->
+
    	    </div>
    	    <!-- div header-pad, wrapper ends -->
 
@@ -52,6 +65,15 @@
 	<div class="container">
 		<div class="container-pad wrapper">
 			<div class="view-orders">
+				<div class="filter">
+					<select ng-options="filter for filter in viewOrders.filter" 
+							ng-change="viewOrders.applyFilter(viewOrders.filterByType);"
+							ng-model="viewOrders.filterByType">
+					</select>
+
+				</div>
+				<!-- div filter ends -->
+
 				<div class="order-list">
 					<div class="order-item" ng-repeat="orders in viewOrders.ordersArray | orderBy : orders.date : true">
 						<div class="item-img">
@@ -62,14 +84,23 @@
 						<div class="item-details">
 							<span>{{ orders.date | date: 'dd-MM-yyyy' }}</span>
 							<span>{{ orders.item + " x " + orders.qty }}</span>
+							<span ng-if="orders.instructions.length > 0">
+								<b>Note:&nbsp;</b>{{ orders.instructions }}
+							</span>
+							<span class="error" ng-if="!orders.isDelivered">
+								<b>Status:&nbsp;</b>Pending
+							</span>
+							<span class="error" ng-if="orders.isDelivered">
+								<b>Status:&nbsp;</b>Delivered
+							</span>
 						</div>
 						<!-- div item-details ends -->
-							
-<!--					<span>Quantity: {{ viewOrders.qty }}</span>-->
+
 						<div class="item-amount">
 							<span>&#8377; {{ orders.amount | number:2 }}</span>
 						</div>
 						<!-- div item-amount ends -->
+
 					</div>
 					<!-- div order-item ends -->
 					

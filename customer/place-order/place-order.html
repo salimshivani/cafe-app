@@ -69,13 +69,15 @@
 						<div class="quantity-counter">
 							<input type="number" id="quantity" ng-model="placeOrder.quantity" name="quantity" ng-disabled="true" ng-required="true" />
 
-							<button ng-disabled="placeOrder.btnDisabled" ng-click="placeOrder.increase();">+</button>
-							<button ng-disabled="placeOrder.btnDisabled" ng-click="placeOrder.decrease();">-</button>
+							<button type="button" ng-disabled="placeOrder.btnDisabled" ng-click="placeOrder.increase();">+</button>
+							<button type="button" ng-disabled="placeOrder.btnDisabled" ng-click="placeOrder.decrease();">-</button>
 							<!-- quantity counter buttons end -->
 							
 						</div>
 						
-						<span class="error" ng-if="placeOrder.errorMsg.length > 0">{{ placeOrder.errorMsg }}</span>
+						<span class="error" ng-if="placeOrder.errorMsg.length > 0">
+							{{ placeOrder.errorMsg }}
+						</span>
 						<span class="error">{{ placeOrder.required }}</span>
 
 					</div>

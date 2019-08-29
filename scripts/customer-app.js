@@ -145,30 +145,23 @@
 				.auth()
 				.signInWithEmailAndPassword(loginScreen.email, loginScreen.password)
 				.then(function (firebaseUser) {
-					loginScreen.uid = firebaseUser.user.uid;
-
-					var userDetails = UsersService.getUserDetails(loginScreen.uid);
+					var userDetails = UsersService.getUserDetails(firebaseUser.user.uid);
 
 					userDetails.$ref().on('child_added', function (snapshot) {
 						if (snapshot.val().role === 'customer') {
-							loginScreen.email = snapshot.val().email;
-							loginScreen.name = snapshot.val().name;
-							loginScreen.phone = snapshot.val().mobile;
-							loginScreen.role = snapshot.val().role;
-
-							LoginService.setUser(loginScreen.email,
-												 loginScreen.name,
-												 loginScreen.phone,
-												 loginScreen.role,
-												 loginScreen.uid);
+							LoginService.setUser(snapshot.key,
+												 snapshot.val().email,
+												 snapshot.val().name,
+												 snapshot.val().mobile,
+												 snapshot.val().role,
+												 firebaseUser.user.uid);
 
 							window.location = '../home/home.html';
 						} else {
 							alert('Incorrect username or password.');
 						}
 					});
-				})
-				.catch(function (error) {
+				}).catch(function (error) {
 					// Handle Errors here.
 					var errorCode = error.code;
 					var errorMessage = error.message;
@@ -186,7 +179,6 @@
 
 	LoginService.$inject = ['$location', '$firebaseAuth'];
 	function LoginService($location, $firebaseAuth) {
-		var email = '', name = '', phone = '', userType = '', uid = '';
 		var auth = $firebaseAuth();
 
 		return {
@@ -197,42 +189,29 @@
 					
 					return null;
 				} else {
-					email = localStorage.getItem('email');
-					name = localStorage.getItem('name');
-					phone = localStorage.getItem('phone');
-					userType = localStorage.getItem('role');
-					uid = localStorage.getItem('uid');
-					
 					return {
-						email: email,
-						name: name,
-						phone: phone,
-						role: userType,
-						uid: uid
+						key: localStorage.getItem('key'),
+						email: localStorage.getItem('email'),
+						name: localStorage.getItem('name'),
+						phone: localStorage.getItem('phone'),
+						role: localStorage.getItem('role'),
+						uid: localStorage.getItem('uid')
 					};
 				}
 			},
-			setUser: function (regEmail, displayName, phoneNumber, role, uId) {
+			setUser: function (key, regEmail, displayName, phoneNumber, role, uId) {
+				localStorage.setItem('key', key);
 				localStorage.setItem('email', regEmail);
 				localStorage.setItem('name', displayName);
 				localStorage.setItem('phone', phoneNumber);
 				localStorage.setItem('role', role);
 				localStorage.setItem('uid', uId);
-				email = regEmail;
-				name = displayName;
-				phone = phoneNumber;
-				userType = role;
-				uid = uId;
 			},
 			logoutUser: function () {
 				auth
 					.$signOut()
 					.then(function () {
-						email = '';
-						name = '';
-						phone = '';
-						userType = '';
-						uid = '';
+						localStorage.removeItem('key');
 						localStorage.removeItem('email');
 						localStorage.removeItem('name');
 						localStorage.removeItem('phone');
@@ -359,32 +338,21 @@
 		};
 	}
 
-    HomeScreenHeaderController.$inject = ['$scope', 'PageTitleService', 'LoginService'];
-    function HomeScreenHeaderController($scope, PageTitleService, LoginService) {
+    HomeScreenHeaderController.$inject = ['$scope', 'LoginService', 'PageTitleService'];
+    function HomeScreenHeaderController($scope, LoginService, PageTitleService) {
         var header = this,
 			pageTitle = "Cafe App",
 			login = 'Login',
 			signUp = 'Sign Up';
 
-        header.title = PageTitleService.getTitle(pageTitle);
 		header.user = LoginService.getUser();
+        header.title = PageTitleService.getTitle("Welcome, " + header.user.name + " - " + pageTitle);
 
 		if (header.user !== null) {
 			
 		}
-		
-        header.login = function () {
-        };
-		
-		header.signUp = function () {
-		};
-		
-		header.logout = LoginService.logoutUser;
 
-		// if (mobileNumber !== '' && mobileNumber.length === 10) {
-		// }
-        // header.login = function () {
-        // };
+		header.logout = LoginService.logoutUser;
     }
 
 	HomeScreenController.$inject = ['$firebaseAuth', 'URL', 'LoginService'];
@@ -525,11 +493,13 @@
 		header.title = header.title.split(" - ")[0];
 	}
 	
-	PlaceOrderController.$inject = ['$firebaseArray', 'URL', 'OrderService', 'LoginService'];
-	function PlaceOrderController($firebaseArray, URL, OrderService, LoginService) {
+	PlaceOrderController.$inject = ['$firebaseArray', 'URL', 'LoginService', 'OrderService'];
+	function PlaceOrderController($firebaseArray, URL, LoginService, OrderService) {
 		var placeOrder = this;
 
-		var itemRef = firebase.database().ref().child("Items").orderByChild("availability").equalTo(true);
+		var itemRef = firebase.database().ref().child("Items")
+												.orderByChild("availability")
+												.equalTo(true);
 		itemRef.on('child_changed', function (snapshot) {
 			var index = placeOrder.menuItems.findIndex(x => x.key === snapshot.key);
 			if (snapshot.val().availability) {
@@ -592,24 +562,27 @@
 			}
 		};
 		
-		var orderRef = firebase.database().ref().child("Orders");
+		var orderRef = firebase.database().ref().child("Orders"), 
+			userOrderRef = firebase.database().ref().child("Users");
+
 		placeOrder.ePlaceOrder = function () {
 			var timeStamp = new Date().getTime();
-			
+
 			if (placeOrder.quantity === 0) {
 				placeOrder.required = 'Required';
 			} else {
 				placeOrder.required = '';
-				
+
 				var orderDetails = {
 					amount: placeOrder.amount,
-					customer: placeOrder.user.uid,
+					customerUId: placeOrder.user.uid,
+					customerKey: placeOrder.user.key,
 					date: timeStamp,
 					instructions: placeOrder.instructions,
 					item: placeOrder.itemName.itemName,
 					price: placeOrder.itemName.price,
 					qty: placeOrder.quantity,
-					status: 'Pending'
+					isDelivered: false
 				};
 //				console.log(orderDetails);
 
@@ -617,14 +590,26 @@
 					.placeOrder(orderRef)
 					.$add(orderDetails)
 					.then(function (success) {
-						alert('Order Placed Successfully.');
+						orderDetails.customerUId = null;
+						orderDetails.customerKey = null;
+//						OrderService.placeOrder(
+						userOrderRef
+							.child(placeOrder.user.uid)
+							.child(placeOrder.user.key)
+							.child("Orders")
+							.child(success.key)
+							.set(orderDetails)
+							.then(function (success) {
+								alert('Order Placed Successfully.');
+							}).catch(function (error) {
+								console.log(error);
+							});
 						placeOrder.errorQty = false;
 						placeOrder.instructions = '';
 						placeOrder.itemName = placeOrder.menuItems[0];
 						placeOrder.quantity = 1;
 						placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;
-					})
-					.catch(function (error) {
+					}).catch(function (error) {
 						console.log(error);
 					});
 			}
@@ -646,12 +631,18 @@
 	function ViewOrdersController(LoginService, OrderService) {
 		var viewOrders = this;
 		viewOrders.user = LoginService.getUser();
-		
-		var usersOrderRef = firebase.database().ref()
+
+		var usersUIdRef = firebase.database().ref()
 									.child("Users")
-									.child("Orders");
-//									.orderByChild("customer")
-//									.equalTo(viewOrders.user.uid);
+									.child(viewOrders.user.uid);
+		var pendingOrderRef = firebase.database().ref()
+									.child("Orders")
+									.orderByChild("isDelivered")
+									.equalTo(false);
+//		var customerRef = firebase.database().ref().child("Users");
+
+		viewOrders.filter = ['Pending', 'Date', 'All Orders'];
+		viewOrders.filterByType = viewOrders.filter[0];
 
 		viewOrders.amt = 0;
 		viewOrders.date = '';
@@ -659,107 +650,105 @@
 		viewOrders.qty = 0;
 		viewOrders.totalAmount = 0;
 
-		viewOrders.ordersArray = OrderService.users(usersOrderRef);
-		viewOrders.ordersArray.$loaded()
-			.then(function (success) {
-				console.log(success);
+		OrderService.usersOrder(usersUIdRef).$loaded().then(function (result) {
+			viewOrders.userKey = result[0].$id;
+			viewOrders.usersPendingOrders = usersUIdRef.child(result[0].$id)
+											.child("Orders")
+											.orderByChild("isDelivered")
+											.equalTo(false);
+
+			viewOrders.ordersArray = OrderService.activeOrders(viewOrders.usersPendingOrders);
+			viewOrders.ordersArray.$loaded().then(function (success) {
+//				console.log(success);
+//				console.log(viewOrders.ordersArray);
 				angular.forEach(viewOrders.ordersArray, function(value, key) {
 					viewOrders.totalAmount += value.amount;
+				});
+
+				viewOrders.usersPendingOrders.on('child_added', function (snapshot) {
+					let index = viewOrders.ordersArray.findIndex(x => x.$id === snapshot.key);
+//					console.log(index);
+//					console.log(snapshot.val());
+					if (index === -1) {
+						viewOrders.totalAmount += snapshot.val().amount;
+					}
+				});
+				
+				viewOrders.usersPendingOrders.on('child_changed', function (snapshot) {
+//					console.log(snapshot.key);
+					var order = {
+						orderKey: snapshot.key,
+						amount: snapshot.val().amount,
+						date: snapshot.val().date,
+						instructions: snapshot.val().instructions,
+						isDelivered: snapshot.val().isDelivered,
+						item: snapshot.val().item,
+						price: snapshot.val().price,
+						qty: snapshot.val().qty
+					};
+
+					var index = viewOrders.ordersArray.findIndex(x => x.$id === snapshot.key);
+					viewOrders.totalAmount -= viewOrders.ordersArray[index].amount;
+					viewOrders.ordersArray[index] = order;
+
+					viewOrders.ordersArray.$save(index).then(function (success) {
+						console.log("success result: ", success);
+						viewOrders.totalAmount += snapshot.val().amount;
+					}).catch(function (error) {
+						console.log(error);
+					});
+				});
+
+				viewOrders.usersPendingOrders.on('child_removed', function (snapshot) {
+//					console.log(JSON.stringify(snapshot.val(), null, 3));
+//					console.log(snapshot.val());
+//					console.log(viewOrders.ordersArray);
+
+					var index = viewOrders.ordersArray.findIndex(x => x.$id === snapshot.key);
+					let deletedAmount = viewOrders.ordersArray[index].amount;
+
+					viewOrders.ordersArray.$remove(index).then(function (success) {
+//						console.log("success result: ", success);
+						if (snapshot.val().isDelivered) {
+							alert("Order delivered successfully.");
+						} else {
+							alert("Order cancelled.");
+						}
+						viewOrders.totalAmount -= deletedAmount;
+					}).catch(function (error) {
+						console.log(error);
+					});
+
 				});
 			}).catch(function (error) {
 				console.log(error);
 			});
-		
-
-		/*viewOrders.ordersArray = OrderService.activeOrders(orderUidRef);
-		viewOrders.orders = [];*/
-
-		/*orderUidRef.on('child_added', function (snapshot) {
-			viewOrders.orderKey = snapshot.key;
-
-			viewOrders.amt = snapshot.val().amount;
-			viewOrders.date = snapshot.val().date;
-			viewOrders.itemName = snapshot.val().item;
-			viewOrders.qty = snapshot.val().qty;
-
-			var order = {
-				orderKey: viewOrders.orderKey,
-				amt: viewOrders.amt,
-				date: viewOrders.date,
-				itemName: viewOrders.itemName,
-				qty: viewOrders.qty
-			};
-
-			viewOrders.totalAmount += order.amt;
-			viewOrders.orders.push(order);
-		});*/
-
-		/*orderUidRef.on('child_changed', function (snapshot) {
-			viewOrders.orderKey = snapshot.key;
-//			console.log(snapshot.key);
-
-			viewOrders.amt = snapshot.val().amount;
-			viewOrders.date = snapshot.val().date;
-			viewOrders.itemName = snapshot.val().item;
-			viewOrders.qty = snapshot.val().qty;
-			console.log(snapshot.val());
-
-			var order = {
-				orderKey: viewOrders.orderKey,
-				amt: viewOrders.amt,
-				date: viewOrders.date,
-				itemName: viewOrders.itemName,
-				qty: viewOrders.qty
-			};
-
-			var index = viewOrders.orders.findIndex(x => x.orderKey === viewOrders.orderKey);
-			viewOrders.totalAmount -= viewOrders.orders[index].amt;
-			viewOrders.orders[index] = order;
-
-			viewOrders.ordersArray
-				.$save(index)
-				.then(function (success) {
-					console.log("success result: ", success);
-					viewOrders.totalAmount += viewOrders.amt;
-				}).catch(function (error) {
-					console.log(error);
-				});
+		}).catch(function (error) {
+			console.log(error);
 		});
 
-		orderUidRef.on('child_removed', function (snapshot) {
-//			console.log(JSON.stringify(snapshot.val(), null, 3));
-			console.log(snapshot);
+		viewOrders.applyFilter = function (filter) {
+			if (filter === 'Pending') {
+				viewOrders.ordersArray = OrderService.activeOrders(viewOrders.usersPendingOrders);
+			} else if (filter === 'All Orders') {
+				var allOrders = usersUIdRef.child(viewOrders.userKey)
+											.child("Orders").limitToLast(100);
 
-			viewOrders.orderKey = snapshot.key;
+				viewOrders.ordersArray = OrderService.usersOrder(allOrders);
+			} else if (filter === 'Date') {
+				var ordersByDate = usersUIdRef.child(viewOrders.userKey)
+												.child("Orders").orderByChild("date");
 
-			viewOrders.amt = snapshot.val().amount;
-			viewOrders.date = snapshot.val().date;
-			viewOrders.itemName = snapshot.val().item;
-			viewOrders.qty = snapshot.val().qty;
-
-			var order = {
-				orderKey: viewOrders.orderKey,
-				amt: viewOrders.amt,
-				date: viewOrders.date,
-				itemName: viewOrders.itemName,
-				qty: viewOrders.qty
-			};
-			
-			var index = viewOrders.orders.findIndex(x => x.orderKey === viewOrders.orderKey);
-			viewOrders.orders[index] = order;
-
-			viewOrders.ordersArray
-				.$remove(index)
-				.then(function (success) {
-					console.log("success result: ", success);
-					viewOrders.totalAmount -= viewOrders.amt;
-				}).catch(function (error) {
-					console.log(error);
+				viewOrders.ordersArray = OrderService.usersOrder(ordersByDate);
+			}
+			viewOrders.totalAmount = 0;
+			viewOrders.ordersArray.$loaded(function (success) {
+				angular.forEach(viewOrders.ordersArray, function(value, key) {
+					viewOrders.totalAmount += value.amount;
 				});
+			});
+		};
 
-			viewOrders.orders.splice(index, 1);
-		});*/
-		
 		viewOrders.isFooterVisible = true;
 	}
 
@@ -768,8 +757,8 @@
 		var orders = this;
 
 		return {
-			users: function (userOrderRef) {
-				return $firebaseArray(userOrderRef);
+			usersOrder: function (usersOrderRef) {
+				return $firebaseArray(usersOrderRef);
 			},
 			activeOrders: function(orderUidRef) {
 				return $firebaseArray(orderUidRef);
@@ -796,9 +785,12 @@
             getTitle: function (title) {
                 if (title === undefined || title === '') {
                     return pageTitle.title;
-                } else if (title.includes(" - ")) {
-                    pageTitle.title = title.concat(pageTitle.title);
+                } else if (title.includes(" - Cafe App")) {
+                    pageTitle.title = title;
                     return pageTitle.title;
+				} else if (title.includes(" - ")) {
+					pageTitle.title = title.concat(pageTitle.title);
+					return pageTitle.title;
                 } else {
                     pageTitle.title = title;
                     return pageTitle.title;

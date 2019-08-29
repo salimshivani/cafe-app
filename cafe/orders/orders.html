@@ -90,10 +90,17 @@
 							<h4 ng-if="order.customerUId.length > 0">
 								{{ orders.customerName(order.customerUId, order.customerKey); }}
 							</h4>
+
 							<span>{{ order.date | date: 'dd-MM-yyyy' }}</span>
 							<span>{{ order.item + " x " + order.qty }}</span>
 							<span ng-if="order.instructions.length > 0">
 								<b>Note:&nbsp;</b>{{ order.instructions }}
+							</span>
+							<span class="error" ng-if="!order.isDelivered && orders.filterByType !== 'Pending'">
+								<b>Status:&nbsp;</b>Pending
+							</span>
+							<span class="error" ng-if="order.isDelivered && orders.filterByType !== 'Pending'">
+								<b>Status:&nbsp;</b>Delivered
 							</span>
 						</div>
 						<!-- div item-details ends -->

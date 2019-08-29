@@ -2,21 +2,21 @@
 <html ng-app="CustomerApp">
 	
 <head>
-	<title ng-controller="TitleController as title" ng-bind-template="{{ title.pageTitle() }}"></title>
+	<title ng-controller="TitleController as title" ng-bind-template="{{ title.pageTitle() }}">
+	</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
-<!--    <script src="../../scripts/angular.min.js"></script>-->
 	<!-- AngularJS -->
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
-    <script src="https://code.angularjs.org/1.7.8/angular-route.min.js"></script>
+	<script src="../../scripts/angular-1.7.8.min.js"></script>
+    <script src="../../scripts/angular-route-1.7.8.min.js"></script>
 
 	<!-- The core Firebase JS SDK is always required and must be listed first -->
-	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-app.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-auth.js"></script>
-
-	<!-- AngularFire -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angularFire/2.3.0/angularfire.min.js"></script>
+	<script src="../../scripts/firebase-app-6.3.5.js"></script>
+	<script src="../../scripts/firebase-auth-6.3.5.js"></script>
+	
+	<!-- AngularFIre -->
+	<script src="../../scripts/angularfire-2.3.0.min.js"></script>
 	
     <script src="../../scripts/customer-app.js"></script>
 <!--    <script src="./signup.js"></script>-->
@@ -30,7 +30,7 @@
 		<header ng-controller="HomeScreenHeaderController as header">
 			<div class="header-pad wrapper">
 				<div class="title">
-					<strong ng-bind-template="{{ header.title }}">
+					<strong ng-bind-template="{{ header.title.split('-')[0] }}">
 					</strong>
 				</div>
 				<!-- div title ends -->

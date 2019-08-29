@@ -649,7 +649,9 @@
 		var placeOrder = this;
 
 		var usersRef = firebase.database().ref().child("Users"),//.orderByChild("name"), 
-			itemRef = firebase.database().ref().child("Items").orderByChild("availability").equalTo(true);
+			itemRef = firebase.database().ref().child("Items")
+												.orderByChild("availability")
+												.equalTo(true);
 
 		placeOrder.customers = [];
 
@@ -817,7 +819,7 @@
 			placeOrder.errorMsg = '';
 			placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;
 		};
-		
+
 		placeOrder.decrease = function () {
 			if (placeOrder.quantity > 0) {
 				placeOrder.quantity--;
@@ -827,12 +829,12 @@
 			}
 		};
 		
-		var orderRef = firebase.database().ref().child("Orders");
-		var userOrderRef = firebase.database().ref().child("Users");
+		var orderRef = firebase.database().ref().child("Orders"), 
+			userOrderRef = firebase.database().ref().child("Users");
 
 		placeOrder.ePlaceOrder = function () {
 			var timeStamp = new Date().getTime();
-			
+
 			if (placeOrder.quantity === 0) {
 				placeOrder.required = 'Required';
 			} else {
