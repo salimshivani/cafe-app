@@ -328,7 +328,7 @@ header .title {
 	display: flex;
 }
 
-.container .db-item .item-action a img {
+.container .db-item .item-action img {
 	display: flex;
 	height: 15px;
 	width: 15px;

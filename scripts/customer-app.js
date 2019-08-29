@@ -1,10 +1,10 @@
 (function () {
     'use strict';
     
-    var customerApp = angular.module('CustomerApp', ['firebase']);
+    var customerApp = angular.module('CustomerApp', ['ngRoute', 'firebase']);
 
 	customerApp
-		.config(function () {
+		.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 			var firebaseObj = {
 				apiKey: "AIzaSyBDsD4wl8GTHCVPL_IJ8tbiBhKVuTVCfDI",
 				authDomain: "cafe-app-52993.firebaseio.com",
@@ -16,7 +16,12 @@
 			};
 
 			firebase.initializeApp(firebaseObj);
-		});
+			
+			$routeProvider.when('../customer/place-order/place-order.html?index',{
+				templateUrl:"../customer/place-order/place-order.html",
+				controller:"PlaceOrderController"
+			});
+		}]);
 	
     customerApp.controller('TitleController', TitleController);
 	
@@ -57,9 +62,7 @@
 		.factory('UsersService', UsersService)
 		.factory('ItemService', ItemService)
 		.factory('OrderService', OrderService);
-	
-	customerApp.constant('URL', 'https://cafe-app-52993.firebaseio.com');
-	
+
 //	customerApp
 //		.config(['$routeProvider', function ($routeProvider) {
 //			$routeProvider
@@ -81,24 +84,33 @@
 	var isFooterVisible = false;
 
     TitleController.$inject = ['PageTitleService'];
-    function TitleController(PageTitleService) {
+    function TitleController (PageTitleService) {
         var title = this;
 
         title.pageTitle = PageTitleService.getTitle;
     }
 	
-	AppHeaderController.$inject = ['$scope', 'PageTitleService', 'LoginService'];
-    function AppHeaderController($scope, PageTitleService, LoginService) {
+	AppHeaderController.$inject = ['PageTitleService', 'LoginService'];
+    function AppHeaderController (PageTitleService, LoginService) {
         var header = this,
 			pageTitle = "Cafe App",
 			login = 'Login',
 			signUp = 'Sign Up';
 
         header.title = PageTitleService.getTitle(pageTitle);
+		header.user = LoginService.getUser();
+		if (header.user === null) {
+			window.location = '../customer/login/login.html';
+		}
+		if (header.user.role === 'admin') {
+			LoginService.logoutUser();
+		}
+		
+		header.logout = LoginService.logoutUser;
     }
 	
-	AppController.$inject = ['$firebaseAuth', 'URL', 'LoginService'];
-	function AppController($firebaseAuth, URL, LoginService) {
+	AppController.$inject = ['LoginService'];
+	function AppController (LoginService) {
 		var app = this;
 		
 		app.user = LoginService.getUser();
@@ -119,8 +131,8 @@
 		}
 	}
 
-    LoginScreenHeaderController.$inject = ['$scope', 'PageTitleService'];
-    function LoginScreenHeaderController($scope, PageTitleService) {
+    LoginScreenHeaderController.$inject = ['PageTitleService'];
+    function LoginScreenHeaderController (PageTitleService) {
         var header = this;
         var pageTitle = "Customer Login";
 
@@ -128,8 +140,8 @@
 		header.title = header.title.split(" - ")[0];
     }
 
-	LoginScreenController.$inject = ['$rootScope', '$firebaseAuth', 'URL', 'UsersService', 'LoginService'];
-    function LoginScreenController($rootScope, $firebaseAuth, URL, UsersService, LoginService) {
+	LoginScreenController.$inject = ['$firebaseAuth', 'UsersService', 'LoginService'];
+    function LoginScreenController ($firebaseAuth, UsersService, LoginService) {
         var loginScreen = this;
 
 		if (LoginService.getUser() !== null) {
@@ -178,7 +190,7 @@
     }
 
 	LoginService.$inject = ['$location', '$firebaseAuth'];
-	function LoginService($location, $firebaseAuth) {
+	function LoginService ($location, $firebaseAuth) {
 		var auth = $firebaseAuth();
 
 		return {
@@ -226,7 +238,7 @@
 	}
 	
 	UsersService.$inject = ['$firebaseArray'];
-	function UsersService($firebaseArray) {
+	function UsersService ($firebaseArray) {
 		var user = this;
 		
 		return {
@@ -240,7 +252,7 @@
 	}
 
     SignUpScreenHeaderController.$inject = ['$scope', 'PageTitleService'];
-    function SignUpScreenHeaderController($scope, PageTitleService) {
+    function SignUpScreenHeaderController ($scope, PageTitleService) {
         var header = this;
         var pageTitle = "Sign Up";
 
@@ -249,7 +261,7 @@
     }
 
 	SignUpScreenController.$inject = ['$firebaseArray', 'SignUpService'];
-    function SignUpScreenController($firebaseArray, SignUpService) {
+    function SignUpScreenController ($firebaseArray, SignUpService) {
         var signUpScreen = this;
 		
 		isFooterVisible = true;
@@ -271,26 +283,10 @@
 				alert('Password mismatch');
 			}
 		};
-
-		signUpScreen.login = function () {
-			$http({
-				method: "POST",
-				url: URL,
-				param: {mobile: loginScreen.mobileNumber}
-			}).then(
-				function (success) {
-					console.log("data:", success.data);
-					window.location = 'index.html';
-				},
-				function (error) {
-					console.log("error:", error.msg);
-				}
-			);
-		};
     }
 	
 	SignUpService.$inject = ['$firebaseArray']
-	function SignUpService($firebaseArray) {
+	function SignUpService ($firebaseArray) {
 		var signUp = this;
 		
 		return {
@@ -339,7 +335,7 @@
 	}
 
     HomeScreenHeaderController.$inject = ['$scope', 'LoginService', 'PageTitleService'];
-    function HomeScreenHeaderController($scope, LoginService, PageTitleService) {
+    function HomeScreenHeaderController ($scope, LoginService, PageTitleService) {
         var header = this,
 			pageTitle = "Cafe App",
 			login = 'Login',
@@ -348,15 +344,18 @@
 		header.user = LoginService.getUser();
         header.title = PageTitleService.getTitle("Welcome, " + header.user.name + " - " + pageTitle);
 
-		if (header.user !== null) {
-			
+		if (header.user === null) {
+			window.location = '../customer/login/login.html';
 		}
-
+		if (header.user.role === 'admin') {
+			LoginService.logoutUser();
+		}
+		
 		header.logout = LoginService.logoutUser;
     }
 
-	HomeScreenController.$inject = ['$firebaseAuth', 'URL', 'LoginService'];
-    function HomeScreenController($firebaseAuth, URL, LoginService) {
+	HomeScreenController.$inject = ['$firebaseAuth', 'LoginService'];
+    function HomeScreenController ($firebaseAuth, LoginService) {
         var homeScreen = this;
 		
 		homeScreen.addItems = 'Add Items';
@@ -395,17 +394,26 @@
 		}
     }
 
-	ViewItemsHeaderController.$inject = ['PageTitleService'];
-	function ViewItemsHeaderController(PageTitleService) {
+	ViewItemsHeaderController.$inject = ['PageTitleService', 'LoginService'];
+	function ViewItemsHeaderController (PageTitleService, LoginService) {
 		var header = this,
 			pageTitle = "View Items";
 
         header.title = PageTitleService.getTitle(pageTitle + " - ");
 		header.title = header.title.split(" - ")[0];
+		header.user = LoginService.getUser();
+		if (header.user === null) {
+			window.location = '../customer/login/login.html';
+		}
+		if (header.user.role === 'admin') {
+			LoginService.logoutUser();
+		}
+		
+		header.logout = LoginService.logoutUser;
 	}
 
 	ViewItemsController.$inject = ['ItemService'];
-	function ViewItemsController(ItemService) {
+	function ViewItemsController (ItemService) {
 		var viewItems = this;
 		var itemRef = firebase.database().ref().child("Items").orderByChild("availability").equalTo(true);
 		var index = -1;
@@ -419,7 +427,7 @@
 
 		itemRef.on('child_added', function (snapshot) {
 //			viewItems.itemKey = snapshot.key;
-			console.log('2');
+//			console.log('2');
 
 			viewItems.availability = snapshot.val().availability;
 			viewItems.itemName = snapshot.val().itemName;
@@ -437,7 +445,7 @@
 
 		itemRef.on('child_changed', function (snapshot) {
 //			viewItems.itemKey = snapshot.key;
-			console.log('3');
+//			console.log('3');
 
 			viewItems.availability = snapshot.val().availability;
 			viewItems.itemName = snapshot.val().itemName;
@@ -465,41 +473,55 @@
 			viewItems.items.splice(index, 1);
 		});
 
+		viewItems.ePlaceOrder = function (index) {
+			window.location = '../place-order/place-order.html?' + index;
+		};
+
 		viewItems.isFooterVisible = false;
 	}
 
 	ItemService.$inject = ['$firebaseArray'];
-	function ItemService($firebaseArray) {
+	function ItemService ($firebaseArray) {
 		var orders = this;
 //		var itemRef = firebase.database().ref().child("Items");
 		var items = [];
 
 		return {
-			getItems: function(itemRef) {
+			getItems: function (itemRef) {
 				return $firebaseArray(itemRef);
 			},
-			addItem: function(itemRef) {
+			addItem: function (itemRef) {
 				return $firebaseArray(itemRef);
 			}
 		};
 	}
 
-    PlaceOrderHeaderController.$inject = ['PageTitleService'];
-	function PlaceOrderHeaderController(PageTitleService) {
+    PlaceOrderHeaderController.$inject = ['PageTitleService', 'LoginService'];
+	function PlaceOrderHeaderController (PageTitleService, LoginService) {
 		var header = this,
 			pageTitle = "Place Order";
 
         header.title = PageTitleService.getTitle(pageTitle + " - ");
 		header.title = header.title.split(" - ")[0];
+		header.user = LoginService.getUser();
+		if (header.user === null) {
+			window.location = '../customer/login/login.html';
+		}
+		if (header.user.role === 'admin') {
+			LoginService.logoutUser();
+		}
+		
+		header.logout = LoginService.logoutUser;
 	}
 	
-	PlaceOrderController.$inject = ['$firebaseArray', 'URL', 'LoginService', 'OrderService'];
-	function PlaceOrderController($firebaseArray, URL, LoginService, OrderService) {
+	PlaceOrderController.$inject = ['ItemService', 'LoginService', 'OrderService'];
+	function PlaceOrderController (ItemService, LoginService, OrderService) {
 		var placeOrder = this;
 
 		var itemRef = firebase.database().ref().child("Items")
 												.orderByChild("availability")
 												.equalTo(true);
+
 		itemRef.on('child_changed', function (snapshot) {
 			var index = placeOrder.menuItems.findIndex(x => x.key === snapshot.key);
 			if (snapshot.val().availability) {
@@ -520,17 +542,19 @@
 			placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;
 		});
 
-		placeOrder.menuItems = $firebaseArray(itemRef);
-		placeOrder.menuItems
-			.$loaded()
-			.then(function (success) {
+		placeOrder.menuItems = ItemService.getItems(itemRef);
+		placeOrder.menuItems.$loaded(function (success) {
 //				console.log(success);
-				placeOrder.itemName = success[0];
-				placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;
-				placeOrder.btnDisabled = false;
-			}).catch(function (error) {
-				console.log(error);
-			});
+			let index = 0;
+			if (window.location.href.split('?').length > 1) {
+				index = window.location.href.split('?')[1];
+			}
+			placeOrder.itemName = success[index];
+			placeOrder.amount = placeOrder.quantity * placeOrder.itemName.price;
+			placeOrder.btnDisabled = false;
+		}).catch(function (error) {
+			console.log(error);
+		});
 
 		placeOrder.errorMsg = '';
 		placeOrder.instructions = '';
@@ -618,17 +642,26 @@
 		placeOrder.isFooterVisible = true;
 	}
 	
-	ViewOrdersHeaderController.$inject = ['PageTitleService'];
-	function ViewOrdersHeaderController(PageTitleService) {
+	ViewOrdersHeaderController.$inject = ['PageTitleService', 'LoginService'];
+	function ViewOrdersHeaderController (PageTitleService, LoginService) {
 		var header = this,
 			pageTitle = "View Orders";
 
         header.title = PageTitleService.getTitle(pageTitle + " - ");
 		header.title = header.title.split(" - ")[0];
+		header.user = LoginService.getUser();
+		if (header.user === null) {
+			window.location = '../customer/login/login.html';
+		}
+		if (header.user.role === 'admin') {
+			LoginService.logoutUser();
+		}
+		
+		header.logout = LoginService.logoutUser;
 	}
 	
 	ViewOrdersController.$inject = ['LoginService', 'OrderService'];
-	function ViewOrdersController(LoginService, OrderService) {
+	function ViewOrdersController (LoginService, OrderService) {
 		var viewOrders = this;
 		viewOrders.user = LoginService.getUser();
 
@@ -753,30 +786,30 @@
 	}
 
 	OrderService.$inject = ['$firebaseArray'];
-	function OrderService($firebaseArray) {
+	function OrderService ($firebaseArray) {
 		var orders = this;
 
 		return {
 			usersOrder: function (usersOrderRef) {
 				return $firebaseArray(usersOrderRef);
 			},
-			activeOrders: function(orderUidRef) {
+			activeOrders: function (orderUidRef) {
 				return $firebaseArray(orderUidRef);
 			},
-			placeOrder: function(orderRef) {
+			placeOrder: function (orderRef) {
 				return $firebaseArray(orderRef);
 			}
 		};
 	}
 
-	function FooterController() {
+	function FooterController () {
 		var footer = this;
         
 //        $scope.isFooterVisible = isFooterVisible;
 		footer.isFooterVisible = isFooterVisible;
 	}
 
-    function PageTitleService() {
+    function PageTitleService () {
         var pageTitle = this;
         
         pageTitle.title = 'Cafe App';

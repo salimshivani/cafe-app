@@ -16,7 +16,6 @@
 			};
 
 			firebase.initializeApp(firebaseObj);
-//			const dbRootRef = firebase.database().ref();
 		});
 	
     cafeApp.controller('TitleController', TitleController);
@@ -52,6 +51,10 @@
 	cafeApp
 		.controller('OrdersHeaderController', OrdersHeaderController)
 		.controller('OrdersController', OrdersController);
+
+	cafeApp
+		.controller('CoWorkersHeaderController', CoWorkersHeaderController)
+		.controller('CoWorkersController', CoWorkersController);
 	
     cafeApp.controller('FooterController', FooterController);
 	
@@ -86,14 +89,14 @@
 	var isFooterVisible = false;
 
     TitleController.$inject = ['PageTitleService'];
-    function TitleController(PageTitleService) {
+    function TitleController (PageTitleService) {
         var title = this;
 
         title.pageTitle = PageTitleService.getTitle;
     }
 	
 	AppHeaderController.$inject = ['PageTitleService'];
-    function AppHeaderController(PageTitleService) {
+    function AppHeaderController (PageTitleService) {
         var header = this,
 			pageTitle = "Cafe App",
 			login = 'Login',
@@ -103,7 +106,7 @@
     }
 	
 	AppController.$inject = ['$firebaseAuth', 'URL', 'LoginService'];
-	function AppController($firebaseAuth, URL, LoginService) {
+	function AppController ($firebaseAuth, URL, LoginService) {
 		var app = this;
 		
 		app.user = LoginService.getUser();
@@ -134,7 +137,7 @@
     }
 
 	LoginScreenController.$inject = ['$rootScope', 'URL', 'UsersService', 'LoginService'];
-    function LoginScreenController($rootScope, URL, UsersService, LoginService) {
+    function LoginScreenController ($rootScope, URL, UsersService, LoginService) {
         var loginScreen = this;
 
 		if (LoginService.getUser() !== null) {
@@ -190,7 +193,7 @@
     }
 	
 	LoginService.$inject = ['$location', '$firebaseAuth'];
-	function LoginService($location, $firebaseAuth) {
+	function LoginService ($location, $firebaseAuth) {
 		var email = '', name = '', phone = '', userType = '', uid = '';
 		var auth = $firebaseAuth();
 
@@ -252,7 +255,7 @@
 	}
 	
 	UsersService.$inject = ['$firebaseArray'];
-	function UsersService($firebaseArray) {
+	function UsersService ($firebaseArray) {
 		var user = this;
 		
 		return {
@@ -266,7 +269,7 @@
 	}
 
     SignUpScreenHeaderController.$inject = ['$scope', 'PageTitleService'];
-    function SignUpScreenHeaderController($scope, PageTitleService) {
+    function SignUpScreenHeaderController ($scope, PageTitleService) {
         var header = this;
         var pageTitle = "Sign Up";
 
@@ -275,7 +278,7 @@
     }
 
 	SignUpScreenController.$inject = ['$firebaseArray', 'SignUpService'];
-    function SignUpScreenController($firebaseArray, SignUpService) {
+    function SignUpScreenController ($firebaseArray, SignUpService) {
         var signUpScreen = this;
 		
 		isFooterVisible = true;
@@ -316,7 +319,7 @@
     }
 	
 	SignUpService.$inject = ['$firebaseArray']
-	function SignUpService($firebaseArray) {
+	function SignUpService ($firebaseArray) {
 		var signUp = this;
 		
 		return {
@@ -365,7 +368,7 @@
 	}
 
     HomeScreenHeaderController.$inject = ['$scope', 'PageTitleService', 'LoginService'];
-    function HomeScreenHeaderController($scope, PageTitleService, LoginService) {
+    function HomeScreenHeaderController ($scope, PageTitleService, LoginService) {
         var header = this,
 			pageTitle = "Cafe App",
 			login = 'Login',
@@ -381,13 +384,14 @@
     }
 
 	HomeScreenController.$inject = ['$firebaseAuth', 'ItemService', 'LoginService'];
-    function HomeScreenController($firebaseAuth, ItemService, LoginService) {
+    function HomeScreenController ($firebaseAuth, ItemService, LoginService) {
         var homeScreen = this;
 
 		homeScreen.addItems = 'Add Items';
 		homeScreen.menu = 'View Menu';
 		homeScreen.orders = 'Orders';
 		homeScreen.placeOrder = 'Place Order';
+		homeScreen.manageCoWorkers = 'Manage Co-Workers';
 		
 		homeScreen.user = LoginService.getUser();
 		if (homeScreen.user !== null) {
@@ -414,6 +418,10 @@
 					window.location = '../orders/orders.html';
 				};
 
+				homeScreen.eManageCoWorkers = function () {
+					window.location = '../co-workers/co-workers.html';
+				};
+
 				homeScreen.isFooterVisible = false;
 			} else {
 				window.location = '../login/login.html';
@@ -425,7 +433,7 @@
     }
 
 	AddItemHeaderController.$inject = ['PageTitleService', 'LoginService'];
-	function AddItemHeaderController(PageTitleService, LoginService) {
+	function AddItemHeaderController (PageTitleService, LoginService) {
 		var header = this,
 			pageTitle = "Add Items";
 
@@ -443,7 +451,7 @@
 	}
 	
 	AddItemController.$inject = ['$firebaseArray', 'ItemService', 'LoginService'];
-	function AddItemController($firebaseArray, ItemService, LoginService) {
+	function AddItemController ($firebaseArray, ItemService, LoginService) {
 		var addItem = this,
 			itemRef = firebase.database().ref().child("Items");
 
@@ -480,7 +488,7 @@
 	}
 	
 	ViewItemsHeaderController.$inject = ['PageTitleService', 'LoginService'];
-	function ViewItemsHeaderController(PageTitleService, LoginService) {
+	function ViewItemsHeaderController (PageTitleService, LoginService) {
 		var header = this,
 			pageTitle = "View Items";
 
@@ -498,7 +506,7 @@
 	}
 	
 	ViewItemsController.$inject = ['ItemService'];
-	function ViewItemsController(ItemService) {
+	function ViewItemsController (ItemService) {
 		var viewItems = this;
 		var itemRef = firebase.database().ref().child("Items");
 		var index = -1;
@@ -572,7 +580,7 @@
 	}
 	
 	ItemService.$inject = ['$firebaseArray'];
-	function ItemService($firebaseArray) {
+	function ItemService ($firebaseArray) {
 		var orders = this;
 //		var itemRef = firebase.database().ref().child("Items");
 		var items = [];
@@ -627,7 +635,7 @@
 	}
 	
     PlaceOrderHeaderController.$inject = ['PageTitleService', 'LoginService'];
-	function PlaceOrderHeaderController(PageTitleService, LoginService) {
+	function PlaceOrderHeaderController (PageTitleService, LoginService) {
 		var header = this,
 			pageTitle = "Place Order";
 
@@ -645,7 +653,7 @@
 	}
 	
 	PlaceOrderController.$inject = ['$firebaseArray', 'URL', 'OrderService'];
-	function PlaceOrderController($firebaseArray, URL, OrderService) {
+	function PlaceOrderController ($firebaseArray, URL, OrderService) {
 		var placeOrder = this;
 
 		var usersRef = firebase.database().ref().child("Users"),//.orderByChild("name"), 
@@ -898,7 +906,7 @@
 	}
 	
     OrdersHeaderController.$inject = ['PageTitleService', 'LoginService'];
-	function OrdersHeaderController(PageTitleService, LoginService) {
+	function OrdersHeaderController (PageTitleService, LoginService) {
 		var header = this,
 			pageTitle = "Orders";
 
@@ -916,7 +924,7 @@
 	}
 	
 	OrdersController.$inject = ['$firebaseArray', 'OrderService'];
-	function OrdersController($firebaseArray, OrderService) {
+	function OrdersController ($firebaseArray, OrderService) {
 		var orders = this;
 		var pendingOrderRef = firebase.database().ref()
 									.child("Orders")
@@ -1019,7 +1027,7 @@
 	}
 	
 	OrderService.$inject = ['$firebaseArray'];
-	function OrderService($firebaseArray) {
+	function OrderService ($firebaseArray) {
 		var orders = this;
 		
 		return {
@@ -1035,14 +1043,36 @@
 		};
 	}
 
-	function FooterController() {
+	CoWorkersHeaderController.$inject = ['PageTitleService', 'LoginService'];
+	function CoWorkersHeaderController (PageTitleService, LoginService) {
+		var header = this,
+			pageTitle = "Manage Co-Workers";
+
+        header.title = PageTitleService.getTitle(pageTitle + " - ");
+		header.title = header.title.split(" - ")[0];
+		header.user = LoginService.getUser();
+		if (header.user === null) {
+			window.location = '../login/login.html';
+		}
+		if (header.user.role === 'customer') {
+			header.logoutUser();
+		}
+		
+		header.logout = LoginService.logoutUser;
+	}
+
+	function CoWorkersController () {
+		
+	}
+
+	function FooterController () {
 		var footer = this;
         
 //        $scope.isFooterVisible = isFooterVisible;
 		footer.isFooterVisible = isFooterVisible;
 	}
 
-    function PageTitleService() {
+    function PageTitleService () {
         var pageTitle = this;
         
         pageTitle.title = 'Cafe App';
