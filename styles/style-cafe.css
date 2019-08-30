@@ -1,14 +1,7 @@
-/*
-.form-field .btn-login {
+/*.form-field .btn-login {
 	display: flex;
 	padding: 8px 65px;
-}
-
-.form-field .btn-register {
-	display: flex;
-	padding: 8px 25px;
-}
-*/
+}*/
 
 /** Add Item View CSS **/
 .container .add-item-view {
@@ -219,4 +212,71 @@ footer .form-field span {
 
 .container .view-orders .order-list .order-item .item-details span:last-child {
 	margin-bottom: 0px;
+}
+
+/** Co-Workers View CSS **/
+.container .co-workers-view {
+	display: flex;
+	flex: 1;
+	padding: 4px;
+}
+
+.container .co-workers-view .co-workers-list {
+	display: flex;
+	flex: 1;
+	flex-flow: column;
+}
+
+.container .co-workers-view .co-workers-list .co-worker-item {
+	align-items: center;
+	border: 1px solid #999999;
+	border-radius: 6px;
+	color: #999999;
+	display: flex;
+	flex-flow: row wrap;
+	font-size: 14px;
+/*	justify-content: space-between;*/
+	margin-bottom: 12px;
+	padding: 4px 9px;
+}
+
+.container .co-workers-view .co-workers-list .co-worker-item:last-child {
+	margin-bottom: 0px;
+}
+
+.container .co-workers-view .co-workers-list .co-worker-item .co-worker-img {
+	display: flex;
+	margin-right: 12px;
+}
+
+.container .co-workers-view .co-workers-list .co-worker-item .co-worker-details {
+	display: flex;
+	flex-flow: column;
+}
+
+.container .co-workers-view .co-workers-list .co-worker-item .co-worker-details h4 {
+	display: flex;
+	margin-bottom: 3px;
+}
+
+.container .co-workers-view .co-workers-list .co-worker-item .co-worker-details span {
+	display: flex;
+	margin-bottom: 3px;
+}
+
+.container .co-workers-view .co-workers-list .co-worker-item .co-worker-details span:last-child {
+	margin-bottom: 0px;
+}
+
+.container .co-workers-view .co-workers-list .co-worker-item .co-worker-details:last-child {
+	margin-bottom: 0px;
+}
+
+.btn-new-co-worker {
+	background: #4f7400;
+	border-radius: 6px;
+	color: #ffffff;
+	margin: 0px auto;
+	font-size: 14px;
+	padding: 4px 8px;
 }

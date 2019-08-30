@@ -1,7 +1,7 @@
 (function () {
-    'use strict';
+	'use strict';
     
-    var cafeApp = angular.module('CafeApp', ['firebase']);
+	var cafeApp = angular.module('CafeApp', ['firebase', 'cp.ngConfirm']);
 
 	cafeApp
 		.config(function () {
@@ -18,23 +18,23 @@
 			firebase.initializeApp(firebaseObj);
 		});
 	
-    cafeApp.controller('TitleController', TitleController);
+	cafeApp.controller('TitleController', TitleController);
 	
 	cafeApp
 		.controller('AppHeaderController', AppHeaderController)
 		.controller('AppController', AppController);
 
 	cafeApp
-        .controller('LoginScreenHeaderController', LoginScreenHeaderController)
-        .controller('LoginScreenController', LoginScreenController);
+		.controller('LoginScreenHeaderController', LoginScreenHeaderController)
+		.controller('LoginScreenController', LoginScreenController);
 	
-    cafeApp
-        .controller('SignUpScreenHeaderController', SignUpScreenHeaderController)
-        .controller('SignUpScreenController', SignUpScreenController);
+	cafeApp
+		.controller('SignUpScreenHeaderController', SignUpScreenHeaderController)
+		.controller('SignUpScreenController', SignUpScreenController);
 
-    cafeApp
-        .controller('HomeScreenHeaderController', HomeScreenHeaderController)
-        .controller('HomeScreenController', HomeScreenController);
+	cafeApp
+		.controller('HomeScreenHeaderController', HomeScreenHeaderController)
+		.controller('HomeScreenController', HomeScreenController);
 	
 	cafeApp
 		.controller('AddItemHeaderController', AddItemHeaderController)
@@ -56,9 +56,9 @@
 		.controller('CoWorkersHeaderController', CoWorkersHeaderController)
 		.controller('CoWorkersController', CoWorkersController);
 	
-    cafeApp.controller('FooterController', FooterController);
+	cafeApp.controller('FooterController', FooterController);
 	
-    cafeApp
+	cafeApp
 		.factory('PageTitleService', PageTitleService)
 		.factory('SignUpService', SignUpService)
 		.factory('LoginService', LoginService)
@@ -84,19 +84,17 @@
 				});
 		}]);*/
 	
-	var email = '', mobileNumber = '', name = '', password = '', conPassword;
-	
-	var isFooterVisible = false;
+	var email = '', mobileNumber = '', name = '', password = '', conPassword, isFooterVisible = false;
 
-    TitleController.$inject = ['PageTitleService'];
-    function TitleController (PageTitleService) {
+	TitleController.$inject = ['PageTitleService'];
+	function TitleController(PageTitleService) {
         var title = this;
 
         title.pageTitle = PageTitleService.getTitle;
     }
 	
 	AppHeaderController.$inject = ['PageTitleService'];
-    function AppHeaderController (PageTitleService) {
+	function AppHeaderController(PageTitleService) {
         var header = this,
 			pageTitle = "Cafe App",
 			login = 'Login',
@@ -105,16 +103,16 @@
         header.title = PageTitleService.getTitle(pageTitle);
     }
 	
-	AppController.$inject = ['$firebaseAuth', 'URL', 'LoginService'];
-	function AppController ($firebaseAuth, URL, LoginService) {
+	AppController.$inject = ['$firebaseAuth', 'LoginService'];
+	function AppController($firebaseAuth, LoginService) {
 		var app = this;
 		
 		app.user = LoginService.getUser();
 		if (app.user !== null) {
 			if (app.user.uid !== null 
-				&& app.user.uid !== undefined 
-				&& app.user.uid !== '' 
-				&& app.user.role === 'admin') {
+					&& app.user.uid !== undefined 
+					&& app.user.uid !== '' 
+					&& app.user.role === 'admin') {
 				console.log(app.user);
 				window.location = '../cafe/home/home.html';
 			} else {
@@ -127,8 +125,8 @@
 		}
 	}
 
-    LoginScreenHeaderController.$inject = ['$scope', 'PageTitleService'];
-    function LoginScreenHeaderController($scope, PageTitleService) {
+	LoginScreenHeaderController.$inject = ['$scope', 'PageTitleService'];
+	function LoginScreenHeaderController($scope, PageTitleService) {
         var header = this;
         var pageTitle = "Cafe Login";
 
@@ -136,8 +134,8 @@
 		header.title = header.title.split(" - ")[0];
     }
 
-	LoginScreenController.$inject = ['$rootScope', 'URL', 'UsersService', 'LoginService'];
-    function LoginScreenController ($rootScope, URL, UsersService, LoginService) {
+	LoginScreenController.$inject = ['$rootScope', 'UsersService', 'LoginService', '$ngConfirm'];
+	function LoginScreenController($rootScope, UsersService, LoginService, $ngConfirm) {
         var loginScreen = this;
 
 		if (LoginService.getUser() !== null) {
@@ -149,9 +147,7 @@
 		loginScreen.login = function () {
 			
 //			Auth Logic will be here			
-			firebase
-				.auth()
-				.signInWithEmailAndPassword(loginScreen.email, loginScreen.password)
+			firebase.auth().signInWithEmailAndPassword(loginScreen.email, loginScreen.password)
 				.then(function (firebaseUser) {
 					loginScreen.uid = firebaseUser.user.uid;
 
@@ -175,8 +171,7 @@
 							alert('Incorrect username or password.');
 						}
 					});
-				})
-				.catch(function (error) {
+				}).catch(function (error) {
 					// Handle Errors here.
 					var errorCode = error.code;
 					var errorMessage = error.message;
@@ -193,7 +188,7 @@
     }
 	
 	LoginService.$inject = ['$location', '$firebaseAuth'];
-	function LoginService ($location, $firebaseAuth) {
+	function LoginService($location, $firebaseAuth) {
 		var email = '', name = '', phone = '', userType = '', uid = '';
 		var auth = $firebaseAuth();
 
@@ -255,7 +250,7 @@
 	}
 	
 	UsersService.$inject = ['$firebaseArray'];
-	function UsersService ($firebaseArray) {
+	function UsersService($firebaseArray) {
 		var user = this;
 		
 		return {
@@ -268,8 +263,8 @@
 		};
 	}
 
-    SignUpScreenHeaderController.$inject = ['$scope', 'PageTitleService'];
-    function SignUpScreenHeaderController ($scope, PageTitleService) {
+	SignUpScreenHeaderController.$inject = ['$scope', 'PageTitleService'];
+	function SignUpScreenHeaderController($scope, PageTitleService) {
         var header = this;
         var pageTitle = "Sign Up";
 
@@ -278,7 +273,7 @@
     }
 
 	SignUpScreenController.$inject = ['$firebaseArray', 'SignUpService'];
-    function SignUpScreenController ($firebaseArray, SignUpService) {
+	function SignUpScreenController($firebaseArray, SignUpService) {
         var signUpScreen = this;
 		
 		isFooterVisible = true;
@@ -319,14 +314,13 @@
     }
 	
 	SignUpService.$inject = ['$firebaseArray']
-	function SignUpService ($firebaseArray) {
+	function SignUpService($firebaseArray) {
 		var signUp = this;
 		
 		return {
 			registerUser: function (email, mobile, name, password) {
-				firebase.auth()
-					.createUserWithEmailAndPassword(email, password)
-					.then(function (success) {
+				firebase.auth().createUserWithEmailAndPassword(email, password).then(
+					function (success) {
 						var uid = success.user.uid;
 						var userRef = firebase.database().ref().child("Users");
 						var userUidRef = userRef.child(uid);
@@ -338,37 +332,30 @@
 							role: 'admin'
 						};
 						signUp.userObj = $firebaseArray(userUidRef);
-						signUp.userObj
-							.$add(userDetails)
-							.then(function (success) {
-								alert('Sign Up Successful');
-								window.location = '../login/login.html';
-							})
-							.catch(function (error) {
-								console.log(error);
-							})
-					})
-//					.then(function (success) {
-//						window.location = '../login/login.html';
-//					})
-					.catch(function (error) {
-						// Handle Errors here.
-						var errorCode = error.code, errorMessage = error.message;
-						// [START_EXCLUDE]
-						if (errorCode === 'auth/weak-password') {
-							alert('The password is too weak.');
-						} else {
-							alert(errorMessage);
-						}
-						console.log(error);
-						// [END_EXCLUDE]
-					});
+						signUp.userObj.$add(userDetails).then(function (success) {
+							alert('Sign Up Successful');
+							window.location = '../login/login.html';
+						}).catch(function (error) {
+							console.log(error);
+						});
+				}).catch(function (error) {
+					// Handle Errors here.
+					var errorCode = error.code, errorMessage = error.message;
+					// [START_EXCLUDE]
+					if (errorCode === 'auth/weak-password') {
+						alert('The password is too weak.');
+					} else {
+						alert(errorMessage);
+					}
+					console.log(error);
+					// [END_EXCLUDE]
+				});
 			}
 		};
 	}
 
-    HomeScreenHeaderController.$inject = ['$scope', 'PageTitleService', 'LoginService'];
-    function HomeScreenHeaderController ($scope, PageTitleService, LoginService) {
+	HomeScreenHeaderController.$inject = ['$scope', 'PageTitleService', 'LoginService'];
+	function HomeScreenHeaderController($scope, PageTitleService, LoginService) {
         var header = this,
 			pageTitle = "Cafe App",
 			login = 'Login',
@@ -383,15 +370,15 @@
 		header.logout = LoginService.logoutUser;
     }
 
-	HomeScreenController.$inject = ['$firebaseAuth', 'ItemService', 'LoginService'];
-    function HomeScreenController ($firebaseAuth, ItemService, LoginService) {
+	HomeScreenController.$inject = ['$firebaseAuth', 'ItemService', 'LoginService', '$ngConfirm'];
+	function HomeScreenController($firebaseAuth, ItemService, LoginService, $ngConfirm) {
         var homeScreen = this;
 
 		homeScreen.addItems = 'Add Items';
 		homeScreen.menu = 'View Menu';
 		homeScreen.orders = 'Orders';
 		homeScreen.placeOrder = 'Place Order';
-		homeScreen.manageCoWorkers = 'Manage Co-Workers';
+		homeScreen.coWorkers = 'Co-Workers';
 		
 		homeScreen.user = LoginService.getUser();
 		if (homeScreen.user !== null) {
@@ -418,7 +405,7 @@
 					window.location = '../orders/orders.html';
 				};
 
-				homeScreen.eManageCoWorkers = function () {
+				homeScreen.eCoWorkers = function () {
 					window.location = '../co-workers/co-workers.html';
 				};
 
@@ -433,7 +420,7 @@
     }
 
 	AddItemHeaderController.$inject = ['PageTitleService', 'LoginService'];
-	function AddItemHeaderController (PageTitleService, LoginService) {
+	function AddItemHeaderController(PageTitleService, LoginService) {
 		var header = this,
 			pageTitle = "Add Items";
 
@@ -451,7 +438,7 @@
 	}
 	
 	AddItemController.$inject = ['$firebaseArray', 'ItemService', 'LoginService'];
-	function AddItemController ($firebaseArray, ItemService, LoginService) {
+	function AddItemController($firebaseArray, ItemService, LoginService) {
 		var addItem = this,
 			itemRef = firebase.database().ref().child("Items");
 
@@ -488,7 +475,7 @@
 	}
 	
 	ViewItemsHeaderController.$inject = ['PageTitleService', 'LoginService'];
-	function ViewItemsHeaderController (PageTitleService, LoginService) {
+	function ViewItemsHeaderController(PageTitleService, LoginService) {
 		var header = this,
 			pageTitle = "View Items";
 
@@ -506,7 +493,7 @@
 	}
 	
 	ViewItemsController.$inject = ['ItemService'];
-	function ViewItemsController (ItemService) {
+	function ViewItemsController(ItemService) {
 		var viewItems = this;
 		var itemRef = firebase.database().ref().child("Items");
 		var index = -1;
@@ -538,14 +525,11 @@
 //			viewItems.items[index] = item;
 //			viewItems.itemsArray[index] = item;
 
-			itemRef
-				.child(item.itemKey)
-				.update(updatedItemValues)
-				.then(function (success) {
-					alert("Item updated successfully...");
-				}).catch(function (error) {
-					console.log(error);
-				});
+			itemRef.child(item.itemKey).update(updatedItemValues).then(function (success) {
+				alert("Item updated successfully...");
+			}).catch(function (error) {
+				console.log(error);
+			});
 		};
 
 		itemRef.on('child_added', function (snapshot) {
@@ -580,7 +564,7 @@
 	}
 	
 	ItemService.$inject = ['$firebaseArray'];
-	function ItemService ($firebaseArray) {
+	function ItemService($firebaseArray) {
 		var orders = this;
 //		var itemRef = firebase.database().ref().child("Items");
 		var items = [];
@@ -634,8 +618,8 @@
 		};
 	}
 	
-    PlaceOrderHeaderController.$inject = ['PageTitleService', 'LoginService'];
-	function PlaceOrderHeaderController (PageTitleService, LoginService) {
+	PlaceOrderHeaderController.$inject = ['PageTitleService', 'LoginService'];
+	function PlaceOrderHeaderController(PageTitleService, LoginService) {
 		var header = this,
 			pageTitle = "Place Order";
 
@@ -653,7 +637,7 @@
 	}
 	
 	PlaceOrderController.$inject = ['$firebaseArray', 'URL', 'OrderService'];
-	function PlaceOrderController ($firebaseArray, URL, OrderService) {
+	function PlaceOrderController($firebaseArray, URL, OrderService) {
 		var placeOrder = this;
 
 		var usersRef = firebase.database().ref().child("Users"),//.orderByChild("name"), 
@@ -905,8 +889,8 @@
 		placeOrder.isFooterVisible = true;
 	}
 	
-    OrdersHeaderController.$inject = ['PageTitleService', 'LoginService'];
-	function OrdersHeaderController (PageTitleService, LoginService) {
+	OrdersHeaderController.$inject = ['PageTitleService', 'LoginService'];
+	function OrdersHeaderController(PageTitleService, LoginService) {
 		var header = this,
 			pageTitle = "Orders";
 
@@ -924,7 +908,7 @@
 	}
 	
 	OrdersController.$inject = ['$firebaseArray', 'OrderService'];
-	function OrdersController ($firebaseArray, OrderService) {
+	function OrdersController($firebaseArray, OrderService) {
 		var orders = this;
 		var pendingOrderRef = firebase.database().ref()
 									.child("Orders")
@@ -1027,7 +1011,7 @@
 	}
 	
 	OrderService.$inject = ['$firebaseArray'];
-	function OrderService ($firebaseArray) {
+	function OrderService($firebaseArray) {
 		var orders = this;
 		
 		return {
@@ -1044,9 +1028,9 @@
 	}
 
 	CoWorkersHeaderController.$inject = ['PageTitleService', 'LoginService'];
-	function CoWorkersHeaderController (PageTitleService, LoginService) {
+	function CoWorkersHeaderController(PageTitleService, LoginService) {
 		var header = this,
-			pageTitle = "Manage Co-Workers";
+			pageTitle = "Co-Workers";
 
         header.title = PageTitleService.getTitle(pageTitle + " - ");
 		header.title = header.title.split(" - ")[0];
@@ -1061,8 +1045,182 @@
 		header.logout = LoginService.logoutUser;
 	}
 
-	function CoWorkersController () {
+	CoWorkersController.$inject = ['$firebaseArray', '$scope', '$ngConfirm'];
+	function CoWorkersController($firebaseArray, $scope, $ngConfirm) {
+		var coWorkers = this, 
+				usersRef = firebase.database().ref().child("Users");
+
+		coWorkers.isAdded = false;
+		coWorkers.customers = [];
+
+		$firebaseArray(usersRef).$loaded(function (success) {
+
+			angular.forEach(success, function (value, key) {
+
+				var customerRef = usersRef.child(success[key].$id).orderByChild("role").equalTo("customer");
+				customerRef.on('child_added', function (snapshot) {
+
+					var coWorker = {
+						key: snapshot.key,
+						email: snapshot.val().email,
+						mobile: snapshot.val().mobile,
+						name: snapshot.val().name
+					};
+					coWorkers.customers.push(coWorker);
+
+				});
+
+			});
+
+		}).catch(function (error) {
+			console.log(error);
+		});
 		
+		coWorkers.eNewCoWorker = function () {
+//			swal("Hello world!");
+			$ngConfirm({
+				title: 'Add Co-Worker',
+//				backgroundDismiss: true,
+				boxWidth: '90%',
+//				content: 'Here goes a little content, <strong>{{hey}}</strong>',
+				contentUrl: 'add-co-worker.html', // if contentUrl is provided, 'content' is ignored
+				columnClass: 'large',
+				escapeKey: 'close',
+				typeAnimated: true,
+				name: "new-co-worker",
+				scope: $scope,
+				useBootstrap: false,
+				buttons: {   
+					ok: { 
+						btnClass: 'btn-green',
+						text: "Add",
+						action: function (scope) {
+//							console.log(scope.coWorker);
+							
+							if (scope.coWorker.password === scope.coWorker.conPassword) {
+								firebase.auth()
+									.createUserWithEmailAndPassword(scope.coWorker.email, scope.coWorker.password)
+									.then(function (success) {
+										var uid = success.user.uid;
+										var userRef = firebase.database().ref().child("Users");
+										var userUidRef = userRef.child(uid);
+
+										var coWorkerDetails = {
+											email: scope.coWorker.email,
+											mobile: scope.coWorker.mobile,
+											name: scope.coWorker.name,
+											role: 'customer'
+										};
+
+										coWorkers.newCoWorker = $firebaseArray(userUidRef);
+										coWorkers.newCoWorker.$add(coWorkerDetails).then(function (success) {
+											coWorkers.isAdded = true;
+											scope.coWorker = null;
+
+											$ngConfirm({
+												boxWidth: '75%',
+												columnClass: 'medium',
+												content: 'Sign Up Successful',
+												title: 'Success',
+												type: 'green',
+												typeAnimated: true,
+												useBootstrap: false,
+												buttons: {
+													ok: {
+														btnClass: 'btn-green',
+														text: "OK",
+														action: function () {
+															return true;
+														}
+													}
+												}
+											});
+
+											return coWorkers.isAdded;
+										}).catch(function (error) {
+											console.log(error);
+										});
+
+								}).catch(function (error) {
+									// Handle Errors here.
+									var errorCode = error.code, errorMessage = error.message;
+									// [START_EXCLUDE]
+									if (errorCode === 'auth/weak-password') {
+										$ngConfirm({
+											boxWidth: '75%',
+											columnClass: 'medium',
+											title: 'Error',
+											content: 'The password is too weak.',
+											type: 'red',
+											typeAnimated: true,
+											useBootstrap: false,
+											buttons: {
+												ok: {
+													text: 'OK',
+													btnClass: 'btn-red',
+													action: function (){
+														return true;
+													}
+												}
+											}
+										});
+									} else {
+										$ngConfirm({
+											boxWidth: '75%',
+											columnClass: 'medium',
+											content: errorMessage,
+											typeAnimated: true,
+											type: 'red',
+											useBootstrap: false,
+											buttons: {
+												ok: {
+													text: 'Ok',
+													btnClass: 'btn-red',
+													action: function () {
+														return true;
+													}
+												}
+											}
+										});
+									}
+									console.log(error);
+									// [END_EXCLUDE]
+								});
+
+							} else {
+								$ngConfirm({
+									buttons: {
+										ok: {
+											text: 'OK',
+											btnClass: 'btn-red',
+											action: function(){
+												return true;
+											}
+										}
+									},
+									boxWidth: '75%',
+									columnClass: 'medium',
+									content: 'Password mismatch',
+									title: 'Error',
+									type: 'red',
+									typeAnimated: true,
+									useBootstrap: false
+								});
+							}
+//							 $ngConfirm('the user clicked ok');
+						}
+					},
+					// short hand button definition
+					close: {
+						btnClass: 'btn-red',
+						boxWidth: '75%',
+						columnClass: 'medium',
+						keys: ['esc'],
+						text: "Cancel"
+					}
+				},
+			});
+		};
 	}
 
 	function FooterController () {

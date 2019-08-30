@@ -8,25 +8,32 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<!-- AngularJS -->
+	<script src="../../scripts/jquery-3.4.1.min.js"></script>
 	<script src="../../scripts/angular-1.7.8.min.js"></script>
     <script src="../../scripts/angular-route-1.7.8.min.js"></script>
 
 	<!-- The core Firebase JS SDK is always required and must be listed first -->
 	<script src="../../scripts/firebase-app-6.3.5.js"></script>
 	<script src="../../scripts/firebase-auth-6.3.5.js"></script>
+	<script src="../../scripts/firebase-database-6.3.5.js"></script>
 	
 	<!-- AngularFIre -->
 	<script src="../../scripts/angularfire-2.3.0.min.js"></script>
-	
+
+	<!-- Sweet Alert / Modal -->
+	<script src="../../scripts/angular-confirm.min.js"></script>
+<!--	<script src="../../scripts/sweetalert.2.1.2.min.js"></script>-->
+
     <script src="../../scripts/cafe-app.js"></script>
 <!--    <script src="./signup.js"></script>-->
 <!--    <script src="../home/home.js"></script>-->
 
+    <link rel="stylesheet" type="text/css" href="../../styles/angular-confirm.min.css" />
     <link rel="stylesheet" type="text/css" href="../../styles/base.css" />
     <link rel="stylesheet" type="text/css" href="../../styles/style-cafe.css" />
 </head>
 
-<body>
+<body ng-controller="CoWorkersController as coWorkers">
 	<header ng-controller="CoWorkersHeaderController as header">
 		<div class="header-pad wrapper">
 			<div class="ic-back">
@@ -44,7 +51,16 @@
 
 			<div class="menu">
 				<div class="ic-menu" ng-if="header.user !== undefined || header.user !== null">
-					<a href="" ng-click="header.logout();">
+					<a ng-click="coWorkers.eNewCoWorker();">
+						<img ng-src="../../images/ic-add.svg" alt="New Co-Worker" title="New Co-Worker" />
+					</a>
+					<!-- a ends -->
+
+				</div>
+				<!-- div ic-menu ends -->
+
+				<div class="ic-menu" ng-if="header.user !== undefined || header.user !== null">
+					<a ng-click="header.logout();">
 						<img ng-src="../../images/ic-login.svg" alt="{{ header.user.email }}" title="{{ header.user.email }}" />
 					</a>
 					<!-- a ends -->
@@ -61,8 +77,38 @@
 	</header>
 	<!-- header ends -->
 
-	<div class="container" ng-controller="CoWorkersController as coWorkers">
+	<div class="container">
 		<div class="container-pad wrapper">
+			<div class="co-workers-view">
+				<div class="co-workers-list">
+					<div class="co-worker-item" ng-repeat="customer in coWorkers.customers">
+						<div class="co-worker-img">
+							<img ng-src="../../images/profile-male.svg" alt="{{ customer.name }}" title="{{ customer.name }}" />
+						</div>
+						<!-- div item-img ends -->
+
+						<div class="co-worker-details">
+							<h4>
+								{{ customer.name }}
+							</h4>
+
+							<span>{{ customer.email }}</span>
+							<span>{{ customer.mobile }}</span>
+							<span ng-if="order.instructions.length > 0">
+								<b>Note:&nbsp;</b>{{ customer.instructions }}
+							</span>
+						</div>
+						<!-- div item-details ends -->
+
+					</div>
+					<!-- div co-worker-item ends -->
+
+				</div>
+				<!-- div co-workers-list ends -->
+
+			</div>
+			<!-- div co-workers-view ends -->
+
 		</div>
 		<!-- div container-pad, wrapper ends -->
 
