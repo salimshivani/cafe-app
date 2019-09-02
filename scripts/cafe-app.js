@@ -95,13 +95,13 @@
 	
 	AppHeaderController.$inject = ['PageTitleService'];
 	function AppHeaderController(PageTitleService) {
-        var header = this,
-			pageTitle = "Cafe App",
-			login = 'Login',
-			signUp = 'Sign Up';
-
-        header.title = PageTitleService.getTitle(pageTitle);
-    }
+		var header = this,
+				pageTitle = "Cafe App",
+				login = 'Login',
+				signUp = 'Sign Up';
+		
+		header.title = PageTitleService.getTitle(pageTitle);
+	}
 	
 	AppController.$inject = ['$firebaseAuth', 'LoginService'];
 	function AppController($firebaseAuth, LoginService) {
@@ -1057,23 +1057,25 @@
 
 			angular.forEach(success, function (value, key) {
 
-				var customerRef = usersRef.child(success[key].$id).orderByChild("role").equalTo("customer");
+				var customerRef = usersRef.child(success[key].$id);
 				customerRef.on('child_added', function (snapshot) {
 
-					var coWorker = {
-						key: snapshot.key,
-						email: snapshot.val().email,
-						mobile: snapshot.val().mobile,
-						name: snapshot.val().name
-					};
-					coWorkers.customers.push(coWorker);
+					if (snapshot.val().role === 'customer') {
+						var coWorker = {
+							key: snapshot.key,
+							company: snapshot.val().company,
+							email: snapshot.val().email,
+							mobile: snapshot.val().mobile,
+							name: snapshot.val().name,
+							status: "Inactive"
+						};
+						coWorkers.customers.push(coWorker);
+					}
 
 				});
 
 			});
 
-		}).catch(function (error) {
-			console.log(error);
 		});
 		
 		coWorkers.eNewCoWorker = function () {
@@ -1101,42 +1103,62 @@
 								firebase.auth()
 									.createUserWithEmailAndPassword(scope.coWorker.email, scope.coWorker.password)
 									.then(function (success) {
-										var uid = success.user.uid;
-										var userRef = firebase.database().ref().child("Users");
-										var userUidRef = userRef.child(uid);
+										success.user.sendEmailVerification().then(function () {
+											//Mail sent
+											var userUidRef = usersRef.child(success.user.uid);
 
-										var coWorkerDetails = {
-											email: scope.coWorker.email,
-											mobile: scope.coWorker.mobile,
-											name: scope.coWorker.name,
-											role: 'customer'
-										};
+											var coWorkerDetails = {
+												company: scope.coWorker.company,
+												email: scope.coWorker.email,
+												mobile: scope.coWorker.mobile,
+												name: scope.coWorker.name,
+												role: 'customer',
+												status: 'Inactive'
+											};
 
-										coWorkers.newCoWorker = $firebaseArray(userUidRef);
-										coWorkers.newCoWorker.$add(coWorkerDetails).then(function (success) {
-											coWorkers.isAdded = true;
-											scope.coWorker = null;
+											coWorkers.newCoWorker = $firebaseArray(userUidRef);
+											coWorkers.newCoWorker.$add(coWorkerDetails).then(function (success) {
+												coWorkers.isAdded = true;
+												scope.coWorker = null;
 
-											$ngConfirm({
-												boxWidth: '75%',
-												columnClass: 'medium',
-												content: 'Sign Up Successful',
-												title: 'Success',
-												type: 'green',
-												typeAnimated: true,
-												useBootstrap: false,
-												buttons: {
-													ok: {
-														btnClass: 'btn-green',
-														text: "OK",
-														action: function () {
-															return true;
+												coWorkers.newCoWorker.$loaded(function (snapshot) {
+													var coWorker = {
+														key: snapshot[0].$id,
+														company: snapshot[0].company,
+														email: snapshot[0].email,
+														mobile: snapshot[0].mobile,
+														name: snapshot[0].name,
+														status: snapshot[0].status
+													};
+													coWorkers.customers.push(coWorker);
+
+												}).catch(function (error) {
+													console.log(error);
+												});
+
+												$ngConfirm({
+													boxWidth: '75%',
+													columnClass: 'medium',
+													content: 'Sign Up Successful',
+													title: 'Success',
+													type: 'green',
+													typeAnimated: true,
+													useBootstrap: false,
+													buttons: {
+														ok: {
+															btnClass: 'btn-green',
+															text: "OK",
+															action: function () {
+																return true;
+															}
 														}
 													}
-												}
-											});
+												});
 
-											return coWorkers.isAdded;
+												return coWorkers.isAdded;
+											}).catch(function (error) {
+												console.log(error);
+											});
 										}).catch(function (error) {
 											console.log(error);
 										});
