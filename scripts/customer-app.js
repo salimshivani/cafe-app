@@ -142,9 +142,7 @@
 
 		const urlParams = new URLSearchParams(window.location.search);
 
-		document.addEventListener('DOMContentLoaded', function() {
-			// TODO: Implement getParameterByName()
-
+//		document.addEventListener('DOMContentLoaded', function() {
 			// Get the action to complete.
 			var mode = urlParams.get('mode');
 			// Get the one-time code from the query parameter.
@@ -172,7 +170,7 @@
 				default:
 					// Error: invalid mode.
 			}
-		}, false);
+//		}, false);
 	}
 
 	function handleResetPassword(auth, actionCode, continueUrl, lang) {
