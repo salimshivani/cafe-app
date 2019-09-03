@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
     
-	var customerApp = angular.module('CustomerApp', ['ngRoute', 'firebase']);
+	var customerApp = angular.module('CustomerApp', ['ngRoute', 'firebase', 'cp.ngConfirm']);
 
 	customerApp
 		.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
@@ -136,9 +136,9 @@
 		}
 	}
 
-//	UserManagementController.$inject = ['LoginService'];
-	function UserManagementController () {
-		var app = this;
+	UserManagementController.$inject = ['$ngConfirm'];
+	function UserManagementController ($ngConfirm) {
+		var user = this;
 
 		const urlParams = new URLSearchParams(window.location.search);
 
@@ -157,7 +157,7 @@
 			switch (mode) {
 				case 'resetPassword':
 					// Display reset password handler and UI.
-					handleResetPassword(customerApp.auth, actionCode, continueUrl, lang);
+					handleResetPassword($ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
 					break;
 				case 'recoverEmail':
 					// Display email recovery handler and UI.
@@ -165,7 +165,7 @@
 					break;
 				case 'verifyEmail':
 					// Display email verification handler and UI.
-					handleVerifyEmail(customerApp.auth, actionCode, continueUrl, lang);
+					handleVerifyEmail($ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
 					break;
 				default:
 					// Error: invalid mode.
@@ -173,7 +173,8 @@
 //		}, false);
 	}
 
-	function handleResetPassword(auth, actionCode, continueUrl, lang) {
+	handleResetPassword.$inject = ['$ngConfirm'];
+	function handleResetPassword($ngConfirm, auth, actionCode, continueUrl, lang) {
 		// Localize the UI to the selected language as determined by the lang
 		// parameter.
 		var accountEmail;
@@ -195,6 +196,25 @@
 				// TODO: If a continue URL is available, display a button which on
 				// click redirects the user back to the app via continueUrl with
 				// additional state determined from that URL's parameters.
+				console.log(newPassword);
+				$ngConfirm({
+					boxWidth: '75%',
+					columnClass: 'medium',
+					content: 'Email verified successfully!',
+					title: 'Success',
+					type: 'green',
+					typeAnimated: true,
+					useBootstrap: false,
+					buttons: {
+						ok: {
+							btnClass: 'btn-green',
+							text: "OK",
+							action: function () {
+								return true;
+							}
+						}
+					}
+				});
 			}).catch(function(error) {
 				// Error occurred during confirmation. The code might have expired or the
 				// password is too weak.
@@ -233,7 +253,8 @@
 		});
 	}
 
-	function handleVerifyEmail(auth, actionCode, continueUrl, lang) {
+	handleVerifyEmail.$inject = ['$ngConfirm'];
+	function handleVerifyEmail($ngConfirm, auth, actionCode, continueUrl, lang) {
 		// Localize the UI to the selected language as determined by the lang parameter.
 		// Try to apply the email verification code.
 		auth.applyActionCode(actionCode).then(function(resp) {
@@ -245,10 +266,52 @@
 			// TODO: If a continue URL is available, display a button which on
 			// click redirects the user back to the app via continueUrl with
 			// additional state determined from that URL's parameters.
-			handleResetPassword(auth, actionCode, continueUrl, lang);
+			$ngConfirm({
+				boxWidth: '75%',
+				columnClass: 'medium',
+				content: resp,
+				title: 'Email Verified Successfully',
+				type: 'green',
+				typeAnimated: true,
+				useBootstrap: false,
+				buttons: {
+					ok: {
+						btnClass: 'btn-green',
+						text: "OK",
+						action: function () {
+							return true;
+						}
+					}
+				}
+			});
+			handleResetPassword($ngConfirm, auth, actionCode, continueUrl, lang);
 		}).catch(function(error) {
 			// Code is invalid or expired. Ask the user to verify their email address again.
 			console.log(error);
+			var msg = '';
+			if (error.code === 'auth/invalid-action-code') {
+				msg = 'The link is already used or expired.'; 
+			} else {
+				msg = 'Error while verifying your email. Please try again later.';
+			}
+			$ngConfirm({
+				boxWidth: '75%',
+				columnClass: 'medium',
+				content: msg,
+				title: 'Error',
+				type: 'red',
+				typeAnimated: true,
+				useBootstrap: false,
+				buttons: {
+					ok: {
+						btnClass: 'btn-red',
+						text: "OK",
+						action: function () {
+							return true;
+						}
+					}
+				}
+			});
 		});
 	}
 
