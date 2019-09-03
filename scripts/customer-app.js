@@ -160,7 +160,7 @@
 			switch (mode) {
 				case 'resetPassword':
 					// Display reset password handler and UI.
-					user.headerTitle = "Reset Password";
+					userManagement.headerTitle = "Reset Password";
 					PageTitleService.getTitle(userManagement.headerTitle);
 					handleResetPassword(userManagement.user, $ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
 					break;
@@ -171,7 +171,7 @@
 					break;
 				case 'verifyEmail':
 					// Display email verification handler and UI.
-					user.headerTitle = "Verify Email";
+					userManagement.headerTitle = "Verify Email";
 					PageTitleService.getTitle(userManagement.headerTitle);
 					console.log(customerApp.auth);
 					handleVerifyEmail(userManagement.user, $ngConfirm, 
