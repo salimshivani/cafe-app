@@ -144,8 +144,6 @@
 
 		document.addEventListener('DOMContentLoaded', function() {
 			// TODO: Implement getParameterByName()
-			var auth = customerApp.auth();
-			console.log(auth);
 
 			// Get the action to complete.
 			var mode = urlParams.get('mode');
