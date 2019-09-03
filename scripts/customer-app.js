@@ -137,10 +137,10 @@
 
 	UserManagementController.$inject = ['$ngConfirm', 'PageTitleService'];
 	function UserManagementController ($ngConfirm, PageTitleService) {
-		var user = this;
-		user.isEmailVerified = false;
-		user.headerTitle = "User Management";
-		PageTitleService.getTitle(user.headerTitle);
+		var userManagement = this;
+		userManagement.user.isEmailVerified = false;
+		userManagement.headerTitle = "User Management";
+		PageTitleService.getTitle(userManagement.headerTitle);
 
 		const urlParams = new URLSearchParams(window.location.search);
 
@@ -159,19 +159,19 @@
 				case 'resetPassword':
 					// Display reset password handler and UI.
 					user.headerTitle = "Reset Password";
-					PageTitleService.getTitle(user.headerTitle);
-					handleResetPassword(user, $ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
+					PageTitleService.getTitle(userManagement.headerTitle);
+					handleResetPassword(userManagement.user, $ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
 					break;
 				case 'recoverEmail':
 					// Display email recovery handler and UI.
-					PageTitleService.getTitle(user.headerTitle);
+					PageTitleService.getTitle(userManagement.headerTitle);
 					handleRecoverEmail(customerApp.auth, actionCode, lang);
 					break;
 				case 'verifyEmail':
 					// Display email verification handler and UI.
 					user.headerTitle = "Verify Email";
-					PageTitleService.getTitle(user.headerTitle);
-					handleVerifyEmail(user, $ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
+					PageTitleService.getTitle(userManagement.headerTitle);
+					handleVerifyEmail(userManagement.user, $ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
 					break;
 				default:
 					// Error: invalid mode.
@@ -203,8 +203,6 @@
 					// TODO: If a continue URL is available, display a button which on
 					// click redirects the user back to the app via continueUrl with
 					// additional state determined from that URL's parameters.
-					console.log(user.password);
-					console.log(resp);
 					$ngConfirm({
 						boxWidth: '75%',
 						columnClass: 'medium',
@@ -266,8 +264,7 @@
 				});
 			}
 		}).catch(function(error) {
-			// Invalid or expired action code. Ask user to try to reset the password
-			// again.
+			// Invalid or expired action code. Ask user to try to reset the password again.
 			$ngConfirm({
 				boxWidth: '75%',
 				columnClass: 'medium',
@@ -326,10 +323,6 @@
 
 			// TODO: Display a confirmation message to the user.
 			// You could also provide the user with a link back to the app.
-
-			// TODO: If a continue URL is available, display a button which on
-			// click redirects the user back to the app via continueUrl with
-			// additional state determined from that URL's parameters.
 			user.isEmailVerified = true;
 
 			$ngConfirm({
@@ -351,10 +344,14 @@
 				}
 			});
 			console.log(user);
+
+			// TODO: If a continue URL is available, display a button which on
+			// click redirects the user back to the app via continueUrl with
+			// additional state determined from that URL's parameters.
+
 //			handleResetPassword(user, $ngConfirm, auth, actionCode, continueUrl, lang);
 		}).catch(function(error) {
 			// Code is invalid or expired. Ask the user to verify their email address again.
-			console.log(error);
 			var msg = '';
 			if (error.code === 'auth/invalid-action-code') {
 				msg = 'The link is already used or expired.'; 
@@ -391,8 +388,8 @@
 		header.title = header.title.split(" - ")[0];
     }
 
-	LoginScreenController.$inject = ['$firebaseAuth', 'UsersService', 'LoginService'];
-	function LoginScreenController ($firebaseAuth, UsersService, LoginService) {
+	LoginScreenController.$inject = ['$firebaseAuth', 'UsersService', 'LoginService', '$ngConfirm'];
+	function LoginScreenController ($firebaseAuth, UsersService, LoginService, $ngConfirm) {
         var loginScreen = this;
 
 		if (LoginService.getUser() !== null) {
@@ -421,7 +418,24 @@
 
 							window.location = '../home/home.html';
 						} else {
-							alert('Incorrect username or password.');
+							$ngConfirm({
+								boxWidth: '75%',
+								columnClass: 'medium',
+								content: 'Incorrect username or password.',
+								title: 'Error',
+								type: 'red',
+								typeAnimated: true,
+								useBootstrap: false,
+								buttons: {
+									ok: {
+										btnClass: 'btn-red',
+										text: "OK",
+										action: function () {
+											return true;
+										}
+									}
+								}
+							});
 						}
 					});
 				}).catch(function (error) {
@@ -431,9 +445,43 @@
 
 					// [START_EXCLUDE]
 					if (errorCode === 'auth/wrong-password') {
-						alert('Wrong password.');
+						$ngConfirm({
+							boxWidth: '75%',
+							columnClass: 'medium',
+							content: 'Wrong password.',
+							title: 'Error',
+							type: 'red',
+							typeAnimated: true,
+							useBootstrap: false,
+							buttons: {
+								ok: {
+									btnClass: 'btn-red',
+									text: "OK",
+									action: function () {
+										return true;
+									}
+								}
+							}
+						});
 					} else {
-						alert(errorMessage);
+						$ngConfirm({
+							boxWidth: '75%',
+							columnClass: 'medium',
+							content: errorMessage,
+							title: 'Error',
+							type: 'red',
+							typeAnimated: true,
+							useBootstrap: false,
+							buttons: {
+								ok: {
+									btnClass: 'btn-red',
+									text: "OK",
+									action: function () {
+										return true;
+									}
+								}
+							}
+						});
 					}
 					console.log(error);
 				});
