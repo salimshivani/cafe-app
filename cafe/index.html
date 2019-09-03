@@ -2,7 +2,7 @@
 <html ng-app="CafeApp">
 
 <head>
-	<title ng-controller="TitleController as title" ng-bind-template="{{ title.pageTitle() }}">
+	<title ng-controller="TitleController as title" ng-bind-template="{{ title.pageTitle(); }}">
 	</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,10 +15,11 @@
   <script src="../scripts/angular-route-1.7.8.min.js"></script>
 
 	<!-- Firebase -->
-<!--	<script src="https://www.gstatic.com/firebasejs/3.6.6/firebase.js"></script>-->
+	<script src="../scripts/firebase-app-6.3.5.js"></script>
+	<script src="../scripts/firebase-auth-6.3.5.js"></script>
 
 	<!-- AngularFire -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angularFire/2.3.0/angularfire.min.js"></script>
+	<script src="../scripts/angularfire-2.3.0.min.js"></script>
 
 	<!-- Sweet Alert / Modal -->
 	<script src="../scripts/angular-confirm.min.js"></script>
@@ -101,13 +102,6 @@
 	<!-- footer ends -->
 
 	<!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
-
-	<!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
-	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-app.js"></script>
-
-	<!-- Add Firebase products that you want to use -->
-	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-auth.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-firestore.js"></script>
 
 </body>
 

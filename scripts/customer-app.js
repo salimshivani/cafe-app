@@ -138,6 +138,8 @@
 	UserManagementController.$inject = ['$ngConfirm', 'PageTitleService'];
 	function UserManagementController ($ngConfirm, PageTitleService) {
 		var userManagement = this;
+
+		userManagement.user = {};
 		userManagement.user.isEmailVerified = false;
 		userManagement.headerTitle = "User Management";
 		PageTitleService.getTitle(userManagement.headerTitle);
@@ -171,7 +173,9 @@
 					// Display email verification handler and UI.
 					user.headerTitle = "Verify Email";
 					PageTitleService.getTitle(userManagement.headerTitle);
-					handleVerifyEmail(userManagement.user, $ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
+					console.log(customerApp.auth);
+					handleVerifyEmail(userManagement.user, $ngConfirm, 
+														customerApp.auth, actionCode, continueUrl, lang);
 					break;
 				default:
 					// Error: invalid mode.
