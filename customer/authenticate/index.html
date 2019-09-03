@@ -38,17 +38,19 @@
 			};
 		}
 
+		const urlParams = new URLSearchParams(window.location.search);
+
 		document.addEventListener('DOMContentLoaded', function() {
 			// TODO: Implement getParameterByName()
 
 			// Get the action to complete.
-			var mode = getParameterByName('mode');
+			var mode = urlParams.get('mode');
 			// Get the one-time code from the query parameter.
-			var actionCode = getParameterByName('oobCode');
+			var actionCode = urlParams.get('oobCode');
 			// (Optional) Get the continue URL from the query parameter if available.
-			var continueUrl = getParameterByName('continueUrl');
+			var continueUrl = urlParams.get('continueUrl');
 			// (Optional) Get the language code if available.
-			var lang = getParameterByName('lang') || 'en';
+			var lang = urlParams.get('lang') || 'en';
 
 			// Handle the user management action.
 			console.log(mode);
