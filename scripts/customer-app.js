@@ -154,7 +154,6 @@
 			var lang = urlParams.get('lang') || 'en';
 
 			// Handle the user management action.
-			console.log(mode);
 			switch (mode) {
 				case 'resetPassword':
 					// Display reset password handler and UI.
@@ -185,7 +184,7 @@
 
 			// TODO: Show the reset screen with the user's email and ask the user for
 			// the new password.
-			if (user.password === user.confPassword) {
+			if (user.password.length >= 6 && user.password === user.confPassword) {
 
 				// Save the new password.
 				auth.confirmPasswordReset(actionCode, user.password).then(function(resp) {
@@ -326,11 +325,12 @@
 			// click redirects the user back to the app via continueUrl with
 			// additional state determined from that URL's parameters.
 			user.isEmailVerified = true;
+			console.log(resp);
 
 			$ngConfirm({
 				boxWidth: '75%',
 				columnClass: 'medium',
-				content: resp,
+				content: 'Your email is verified successfully. Thank you for becoming the part of The Hogspot Cafe.',
 				title: 'Email Verified Successfully',
 				type: 'green',
 				typeAnimated: true,

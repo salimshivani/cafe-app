@@ -171,7 +171,7 @@
 
 <body ng-controller="UserManagementController as user">
 
-	<form method="post">
+	<form method="post" ng-if="user.isEmailVerified">
 
     	<!--<header ng-controller="LoginScreenHeaderController as header">
     	    <div class="header-pad wrapper">
@@ -189,7 +189,7 @@
 		
 		<div class="container">
 			<div class="container-pad wrapper">
-				<div class="login-view" ng-if="user.isEmailVerified">
+				<div class="login-view">
 					<div class="form-field">
 						<input type="password" id="password" ng-model="user.password" placeholder="New Password" ng-required="true" ng-auto-focus="" />
 						<span class="error" ng-if="user.password === ''">Required</span>

@@ -1103,6 +1103,8 @@
 								firebase.auth()
 									.createUserWithEmailAndPassword(scope.coWorker.email, scope.coWorker.password)
 									.then(function (success) {
+									console.log(success);
+									console.log(success.user);
 										success.user.sendEmailVerification().then(function () {
 											//Mail sent
 											var userUidRef = usersRef.child(success.user.uid);
