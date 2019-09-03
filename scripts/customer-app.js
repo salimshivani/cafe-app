@@ -140,47 +140,47 @@
 		var userManagement = this;
 
 		userManagement.user = {};
+		userManagement.user.email = customerApp.auth.currentUser.email;
 		userManagement.user.isEmailVerified = false;
 		userManagement.headerTitle = "User Management";
-		PageTitleService.getTitle(userManagement.headerTitle);
+		userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
 
 		const urlParams = new URLSearchParams(window.location.search);
 
-//		document.addEventListener('DOMContentLoaded', function() {
-			// Get the action to complete.
-			var mode = urlParams.get('mode');
-			// Get the one-time code from the query parameter.
-			var actionCode = urlParams.get('oobCode');
-			// (Optional) Get the continue URL from the query parameter if available.
-			var continueUrl = urlParams.get('continueUrl');
-			// (Optional) Get the language code if available.
-			var lang = urlParams.get('lang') || 'en';
+		// Get the action to complete.
+		var mode = urlParams.get('mode');
+		// Get the one-time code from the query parameter.
+		var actionCode = urlParams.get('oobCode');
+		// (Optional) Get the continue URL from the query parameter if available.
+		var continueUrl = urlParams.get('continueUrl');
+		// (Optional) Get the language code if available.
+		var lang = urlParams.get('lang') || 'en';
 
-			// Handle the user management action.
-			switch (mode) {
-				case 'resetPassword':
-					// Display reset password handler and UI.
-					userManagement.headerTitle = "Reset Password";
-					PageTitleService.getTitle(userManagement.headerTitle);
-					handleResetPassword(userManagement.user, $ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
-					break;
-				case 'recoverEmail':
-					// Display email recovery handler and UI.
-					PageTitleService.getTitle(userManagement.headerTitle);
-					handleRecoverEmail(customerApp.auth, actionCode, lang);
-					break;
-				case 'verifyEmail':
-					// Display email verification handler and UI.
-					userManagement.headerTitle = "Verify Email";
-					PageTitleService.getTitle(userManagement.headerTitle);
-					console.log(customerApp.auth);
-					handleVerifyEmail(userManagement.user, $ngConfirm, 
+		// Handle the user management action.
+		switch (mode) {
+			case 'resetPassword':
+				// Display reset password handler and UI.
+				userManagement.headerTitle = PageTitleService.getTitle("Reset Password");
+				handleResetPassword(userManagement.user, $ngConfirm, 
 														customerApp.auth, actionCode, continueUrl, lang);
-					break;
-				default:
-					// Error: invalid mode.
-			}
-//		}, false);
+				break;
+
+			case 'recoverEmail':
+				// Display email recovery handler and UI.
+				userManagement.headerTitle = PageTitleService.getTitle("Recover Email");
+				handleRecoverEmail(customerApp.auth, actionCode, lang);
+				break;
+
+			case 'verifyEmail':
+				// Display email verification handler and UI.
+				userManagement.headerTitle = PageTitleService.getTitle("Verify Email");
+				handleVerifyEmail(userManagement.user, $ngConfirm, 
+													customerApp.auth, actionCode, continueUrl, lang);
+				break;
+
+			default:
+				// Error: invalid mode.
+		}
 	}
 
 	handleResetPassword.$inject = ['$ngConfirm'];
@@ -354,7 +354,7 @@
 			// additional state determined from that URL's parameters.
 
 //			handleResetPassword(user, $ngConfirm, auth, actionCode, continueUrl, lang);
-			firebase.auth().sendPasswordResetEmail(user.email);
+			firebase.auth().sendPasswordResetEmail(auth.currentUser.email);
 		}).catch(function(error) {
 			// Code is invalid or expired. Ask the user to verify their email address again.
 			var msg = '';
