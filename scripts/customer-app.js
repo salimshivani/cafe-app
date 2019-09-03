@@ -325,13 +325,12 @@
 			// click redirects the user back to the app via continueUrl with
 			// additional state determined from that URL's parameters.
 			user.isEmailVerified = true;
-			console.log(resp);
 
 			$ngConfirm({
 				boxWidth: '75%',
 				columnClass: 'medium',
 				content: 'Your email is verified successfully. Thank you for becoming the part of The Hogspot Cafe.',
-				title: 'Email Verified Successfully',
+				title: 'Email Verified',
 				type: 'green',
 				typeAnimated: true,
 				useBootstrap: false,
@@ -345,7 +344,8 @@
 					}
 				}
 			});
-			handleResetPassword(user, $ngConfirm, auth, actionCode, continueUrl, lang);
+			console.log(user);
+//			handleResetPassword(user, $ngConfirm, auth, actionCode, continueUrl, lang);
 		}).catch(function(error) {
 			// Code is invalid or expired. Ask the user to verify their email address again.
 			console.log(error);
