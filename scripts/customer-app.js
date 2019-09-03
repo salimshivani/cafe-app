@@ -1,7 +1,7 @@
 (function () {
-    'use strict';
+	'use strict';
     
-    var customerApp = angular.module('CustomerApp', ['ngRoute', 'firebase']);
+	var customerApp = angular.module('CustomerApp', ['ngRoute', 'firebase']);
 
 	customerApp
 		.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
@@ -15,7 +15,8 @@
 				appId: "1:257963047060:web:a2c7416276ba0730"
 			};
 
-			firebase.initializeApp(firebaseObj);
+			customerApp.app = firebase.initializeApp(firebaseObj);
+			customerApp.auth = customerApp.app.auth();
 			
 			$routeProvider.when('../customer/place-order/place-order.html?index',{
 				templateUrl:"../customer/place-order/place-order.html",
@@ -23,23 +24,27 @@
 			});
 		}]);
 	
-    customerApp.controller('TitleController', TitleController);
+	customerApp.controller('TitleController', TitleController);
 	
 	customerApp
 		.controller('AppHeaderController', AppHeaderController)
 		.controller('AppController', AppController);
 
 	customerApp
-        .controller('LoginScreenHeaderController', LoginScreenHeaderController)
-        .controller('LoginScreenController', LoginScreenController);
-	
-    customerApp
-        .controller('SignUpScreenHeaderController', SignUpScreenHeaderController)
-        .controller('SignUpScreenController', SignUpScreenController);
+//		.controller('AppHeaderController', AppHeaderController)
+		.controller('UserManagementController', UserManagementController);
 
-    customerApp
-        .controller('HomeScreenHeaderController', HomeScreenHeaderController)
-        .controller('HomeScreenController', HomeScreenController);
+	customerApp
+		.controller('LoginScreenHeaderController', LoginScreenHeaderController)
+		.controller('LoginScreenController', LoginScreenController);
+
+	customerApp
+		.controller('SignUpScreenHeaderController', SignUpScreenHeaderController)
+		.controller('SignUpScreenController', SignUpScreenController);
+
+	customerApp
+		.controller('HomeScreenHeaderController', HomeScreenHeaderController)
+		.controller('HomeScreenController', HomeScreenController);
 
 	customerApp
 		.controller('ViewItemsHeaderController', ViewItemsHeaderController)
@@ -53,9 +58,9 @@
 		.controller('ViewOrdersHeaderController', ViewOrdersHeaderController)
 		.controller('ViewOrdersController', ViewOrdersController);
 	
-    customerApp.controller('FooterController', FooterController);
+	customerApp.controller('FooterController', FooterController);
 	
-    customerApp
+	customerApp
 		.factory('PageTitleService', PageTitleService)
 		.factory('SignUpService', SignUpService)
 		.factory('LoginService', LoginService)
@@ -83,15 +88,15 @@
 	
 	var isFooterVisible = false;
 
-    TitleController.$inject = ['PageTitleService'];
-    function TitleController (PageTitleService) {
+	TitleController.$inject = ['PageTitleService'];
+	function TitleController (PageTitleService) {
         var title = this;
 
         title.pageTitle = PageTitleService.getTitle;
     }
 	
 	AppHeaderController.$inject = ['PageTitleService', 'LoginService'];
-    function AppHeaderController (PageTitleService, LoginService) {
+	function AppHeaderController (PageTitleService, LoginService) {
         var header = this,
 			pageTitle = "Cafe App",
 			login = 'Login',
@@ -131,8 +136,128 @@
 		}
 	}
 
-    LoginScreenHeaderController.$inject = ['PageTitleService'];
-    function LoginScreenHeaderController (PageTitleService) {
+//	UserManagementController.$inject = ['LoginService'];
+	function UserManagementController () {
+		var app = this;
+
+		const urlParams = new URLSearchParams(window.location.search);
+
+		document.addEventListener('DOMContentLoaded', function() {
+			// TODO: Implement getParameterByName()
+			var auth = customerApp.auth();
+			console.log(auth);
+
+			// Get the action to complete.
+			var mode = urlParams.get('mode');
+			// Get the one-time code from the query parameter.
+			var actionCode = urlParams.get('oobCode');
+			// (Optional) Get the continue URL from the query parameter if available.
+			var continueUrl = urlParams.get('continueUrl');
+			// (Optional) Get the language code if available.
+			var lang = urlParams.get('lang') || 'en';
+
+			// Handle the user management action.
+			console.log(mode);
+			switch (mode) {
+				case 'resetPassword':
+					// Display reset password handler and UI.
+					handleResetPassword(customerApp.auth, actionCode, continueUrl, lang);
+					break;
+				case 'recoverEmail':
+					// Display email recovery handler and UI.
+					handleRecoverEmail(customerApp.auth, actionCode, lang);
+					break;
+				case 'verifyEmail':
+					// Display email verification handler and UI.
+					handleVerifyEmail(customerApp.auth, actionCode, continueUrl, lang);
+					break;
+				default:
+					// Error: invalid mode.
+			}
+		}, false);
+	}
+
+	function handleResetPassword(auth, actionCode, continueUrl, lang) {
+		// Localize the UI to the selected language as determined by the lang
+		// parameter.
+		var accountEmail;
+		// Verify the password reset code is valid.
+		auth.verifyPasswordResetCode(actionCode).then(function(email) {
+			var accountEmail = email;
+
+			// TODO: Show the reset screen with the user's email and ask the user for
+			// the new password.
+
+			// Save the new password.
+			auth.confirmPasswordReset(actionCode, newPassword).then(function(resp) {
+				// Password reset has been confirmed and new password updated.
+
+				// TODO: Display a link back to the app, or sign-in the user directly
+				// if the page belongs to the same domain as the app:
+				// auth.signInWithEmailAndPassword(accountEmail, newPassword);
+
+				// TODO: If a continue URL is available, display a button which on
+				// click redirects the user back to the app via continueUrl with
+				// additional state determined from that URL's parameters.
+			}).catch(function(error) {
+				// Error occurred during confirmation. The code might have expired or the
+				// password is too weak.
+			});
+		}).catch(function(error) {
+			// Invalid or expired action code. Ask user to try to reset the password
+			// again.
+		});
+	}
+
+	function handleRecoverEmail(auth, actionCode, lang) {
+		// Localize the UI to the selected language as determined by the lang
+		// parameter.
+		var restoredEmail = null;
+		// Confirm the action code is valid.
+		auth.checkActionCode(actionCode).then(function(info) {
+			// Get the restored email address.
+			restoredEmail = info['data']['email'];
+
+			// Revert to the old email.
+			return auth.applyActionCode(actionCode);
+		}).then(function() {
+			// Account email reverted to restoredEmail
+
+			// TODO: Display a confirmation message to the user.
+
+			// You might also want to give the user the option to reset their password
+			// in case the account was compromised:
+			auth.sendPasswordResetEmail(restoredEmail).then(function() {
+				// Password reset confirmation sent. Ask user to check their email.
+			}).catch(function(error) {
+				// Error encountered while sending password reset code.
+			});
+		}).catch(function(error) {
+			// Invalid code.
+		});
+	}
+
+	function handleVerifyEmail(auth, actionCode, continueUrl, lang) {
+		// Localize the UI to the selected language as determined by the lang parameter.
+		// Try to apply the email verification code.
+		auth.applyActionCode(actionCode).then(function(resp) {
+			// Email address has been verified.
+
+			// TODO: Display a confirmation message to the user.
+			// You could also provide the user with a link back to the app.
+
+			// TODO: If a continue URL is available, display a button which on
+			// click redirects the user back to the app via continueUrl with
+			// additional state determined from that URL's parameters.
+			handleResetPassword(auth, actionCode, continueUrl, lang);
+		}).catch(function(error) {
+			// Code is invalid or expired. Ask the user to verify their email address again.
+			console.log(error);
+		});
+	}
+
+	LoginScreenHeaderController.$inject = ['PageTitleService'];
+	function LoginScreenHeaderController (PageTitleService) {
         var header = this;
         var pageTitle = "Customer Login";
 
@@ -141,7 +266,7 @@
     }
 
 	LoginScreenController.$inject = ['$firebaseAuth', 'UsersService', 'LoginService'];
-    function LoginScreenController ($firebaseAuth, UsersService, LoginService) {
+	function LoginScreenController ($firebaseAuth, UsersService, LoginService) {
         var loginScreen = this;
 
 		if (LoginService.getUser() !== null) {
@@ -251,8 +376,8 @@
 		};
 	}
 
-    SignUpScreenHeaderController.$inject = ['$scope', 'PageTitleService'];
-    function SignUpScreenHeaderController ($scope, PageTitleService) {
+	SignUpScreenHeaderController.$inject = ['$scope', 'PageTitleService'];
+	function SignUpScreenHeaderController ($scope, PageTitleService) {
         var header = this;
         var pageTitle = "Sign Up";
 
@@ -261,11 +386,11 @@
     }
 
 	SignUpScreenController.$inject = ['$firebaseArray', 'SignUpService'];
-    function SignUpScreenController ($firebaseArray, SignUpService) {
-        var signUpScreen = this;
+	function SignUpScreenController ($firebaseArray, SignUpService) {
+		var signUpScreen = this;
 		
 		isFooterVisible = true;
-        signUpScreen.isFooterVisible = isFooterVisible;
+		signUpScreen.isFooterVisible = isFooterVisible;
 
 		signUpScreen.email = '';
 		signUpScreen.mobile = '';
@@ -283,7 +408,7 @@
 				alert('Password mismatch');
 			}
 		};
-    }
+	}
 	
 	SignUpService.$inject = ['$firebaseArray']
 	function SignUpService ($firebaseArray) {
@@ -334,8 +459,8 @@
 		};
 	}
 
-    HomeScreenHeaderController.$inject = ['$scope', 'LoginService', 'PageTitleService'];
-    function HomeScreenHeaderController ($scope, LoginService, PageTitleService) {
+	HomeScreenHeaderController.$inject = ['$scope', 'LoginService', 'PageTitleService'];
+	function HomeScreenHeaderController ($scope, LoginService, PageTitleService) {
         var header = this,
 			pageTitle = "Cafe App",
 			login = 'Login',
@@ -355,7 +480,7 @@
     }
 
 	HomeScreenController.$inject = ['$firebaseAuth', 'LoginService'];
-    function HomeScreenController ($firebaseAuth, LoginService) {
+	function HomeScreenController ($firebaseAuth, LoginService) {
         var homeScreen = this;
 		
 		homeScreen.addItems = 'Add Items';
@@ -496,7 +621,7 @@
 		};
 	}
 
-    PlaceOrderHeaderController.$inject = ['PageTitleService', 'LoginService'];
+	PlaceOrderHeaderController.$inject = ['PageTitleService', 'LoginService'];
 	function PlaceOrderHeaderController (PageTitleService, LoginService) {
 		var header = this,
 			pageTitle = "Place Order";
@@ -809,7 +934,7 @@
 		footer.isFooterVisible = isFooterVisible;
 	}
 
-    function PageTitleService () {
+	function PageTitleService () {
         var pageTitle = this;
         
         pageTitle.title = 'Cafe App';
