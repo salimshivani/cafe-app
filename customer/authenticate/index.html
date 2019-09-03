@@ -15,7 +15,7 @@
 <!--	<script src="../../scripts/user-management.js"></script>-->
 
 	<script>
-		if (!window.location.getParameter()) {
+		if (!window.location.getParameter) {
 			window.location.getParameter = function(key) {
 				function parseParams() {
 						var params = {},
