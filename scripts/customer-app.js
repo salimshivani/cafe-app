@@ -140,7 +140,7 @@
 		var userManagement = this;
 
 		userManagement.user = {};
-		userManagement.user.email = customerApp.auth.currentUser.email;
+//		userManagement.user.email = customerApp.auth.currentUser.email;
 		userManagement.user.isEmailVerified = false;
 		userManagement.headerTitle = "User Management";
 		userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
@@ -348,6 +348,8 @@
 				}
 			});
 			console.log(user);
+			console.log(auth);
+			console.log(auth.currentUser);
 
 			// TODO: If a continue URL is available, display a button which on
 			// click redirects the user back to the app via continueUrl with
