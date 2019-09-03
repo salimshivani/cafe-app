@@ -171,23 +171,23 @@
 
 <body ng-controller="UserManagementController as user">
 
-	<form method="post" ng-if="user.isEmailVerified">
+	<form method="post">
 
-    	<!--<header ng-controller="LoginScreenHeaderController as header">
-    	    <div class="header-pad wrapper">
-    	        <div class="title">
-    	            <strong ng-bind-template="{{ header.title }}">
-    	            </strong>
-    	        </div>
-    	         div title ends 
+		<header>
+			<div class="header-pad wrapper">
+				<div class="title">
+					<strong ng-bind-template="{{ user.headerTitle }}">
+					</strong>
+				</div>
+				<!-- div title ends -->
 
-    	    </div>
-    	     div header-pad, wrapper ends 
+			</div>
+			<!-- div header-pad, wrapper ends -->
 
-    	</header>
-    	 header ends -->
+		</header>
+		<!-- header ends -->
 		
-		<div class="container">
+		<div class="container" ng-if="user.isEmailVerified">
 			<div class="container-pad wrapper">
 				<div class="login-view">
 					<div class="form-field">
@@ -216,7 +216,7 @@
 		</div>
 		<!-- div container ends -->
 	
-		<footer ng-controller="FooterController as footer" ng-if="!footer.isFooterVisible">
+		<footer ng-controller="FooterController as footer" ng-if="user.isEmailVerified">
 			<div class="footer-pad wrapper">
 				<div class="form-field">
 					<button id="login-button">Reset Password</button>

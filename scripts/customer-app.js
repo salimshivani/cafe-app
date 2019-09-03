@@ -31,7 +31,6 @@
 		.controller('AppController', AppController);
 
 	customerApp
-//		.controller('AppHeaderController', AppHeaderController)
 		.controller('UserManagementController', UserManagementController);
 
 	customerApp
@@ -97,12 +96,12 @@
 	
 	AppHeaderController.$inject = ['PageTitleService', 'LoginService'];
 	function AppHeaderController (PageTitleService, LoginService) {
-        var header = this,
-			pageTitle = "Cafe App",
-			login = 'Login',
-			signUp = 'Sign Up';
+		var header = this,
+				pageTitle = "Cafe App",
+				login = 'Login',
+				signUp = 'Sign Up';
 
-        header.title = PageTitleService.getTitle(pageTitle);
+		header.title = PageTitleService.getTitle(pageTitle);
 		header.user = LoginService.getUser();
 		if (header.user === null) {
 			window.location = '../customer/login/login.html';
@@ -112,7 +111,7 @@
 		}
 		
 		header.logout = LoginService.logoutUser;
-    }
+	}
 	
 	AppController.$inject = ['LoginService'];
 	function AppController (LoginService) {
@@ -136,10 +135,12 @@
 		}
 	}
 
-	UserManagementController.$inject = ['$ngConfirm'];
-	function UserManagementController ($ngConfirm) {
+	UserManagementController.$inject = ['$ngConfirm', 'PageTitleService'];
+	function UserManagementController ($ngConfirm, PageTitleService) {
 		var user = this;
 		user.isEmailVerified = false;
+		user.headerTitle = "User Management";
+		PageTitleService.getTitle(user.headerTitle);
 
 		const urlParams = new URLSearchParams(window.location.search);
 
@@ -157,14 +158,19 @@
 			switch (mode) {
 				case 'resetPassword':
 					// Display reset password handler and UI.
+					user.headerTitle = "Reset Password";
+					PageTitleService.getTitle(user.headerTitle);
 					handleResetPassword(user, $ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
 					break;
 				case 'recoverEmail':
 					// Display email recovery handler and UI.
+					PageTitleService.getTitle(user.headerTitle);
 					handleRecoverEmail(customerApp.auth, actionCode, lang);
 					break;
 				case 'verifyEmail':
 					// Display email verification handler and UI.
+					user.headerTitle = "Verify Email";
+					PageTitleService.getTitle(user.headerTitle);
 					handleVerifyEmail(user, $ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
 					break;
 				default:
