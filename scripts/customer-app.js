@@ -350,6 +350,7 @@
 			// additional state determined from that URL's parameters.
 
 //			handleResetPassword(user, $ngConfirm, auth, actionCode, continueUrl, lang);
+			firebase.auth().sendPasswordResetEmail(user.email);
 		}).catch(function(error) {
 			// Code is invalid or expired. Ask the user to verify their email address again.
 			var msg = '';
