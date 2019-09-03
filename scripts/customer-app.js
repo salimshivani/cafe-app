@@ -139,6 +139,7 @@
 	UserManagementController.$inject = ['$ngConfirm'];
 	function UserManagementController ($ngConfirm) {
 		var user = this;
+		user.isEmailVerified = false;
 
 		const urlParams = new URLSearchParams(window.location.search);
 
@@ -157,7 +158,7 @@
 			switch (mode) {
 				case 'resetPassword':
 					// Display reset password handler and UI.
-					handleResetPassword($ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
+					handleResetPassword(user, $ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
 					break;
 				case 'recoverEmail':
 					// Display email recovery handler and UI.
@@ -165,7 +166,7 @@
 					break;
 				case 'verifyEmail':
 					// Display email verification handler and UI.
-					handleVerifyEmail($ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
+					handleVerifyEmail(user, $ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
 					break;
 				default:
 					// Error: invalid mode.
@@ -174,7 +175,7 @@
 	}
 
 	handleResetPassword.$inject = ['$ngConfirm'];
-	function handleResetPassword($ngConfirm, auth, actionCode, continueUrl, lang) {
+	function handleResetPassword(user, $ngConfirm, auth, actionCode, continueUrl, lang) {
 		// Localize the UI to the selected language as determined by the lang
 		// parameter.
 		var accountEmail;
@@ -184,30 +185,73 @@
 
 			// TODO: Show the reset screen with the user's email and ask the user for
 			// the new password.
+			if (user.password === user.confPassword) {
 
-			// Save the new password.
-			auth.confirmPasswordReset(actionCode, newPassword).then(function(resp) {
-				// Password reset has been confirmed and new password updated.
+				// Save the new password.
+				auth.confirmPasswordReset(actionCode, user.password).then(function(resp) {
+					// Password reset has been confirmed and new password updated.
 
-				// TODO: Display a link back to the app, or sign-in the user directly
-				// if the page belongs to the same domain as the app:
-				// auth.signInWithEmailAndPassword(accountEmail, newPassword);
+					// TODO: Display a link back to the app, or sign-in the user directly
+					// if the page belongs to the same domain as the app:
+					// auth.signInWithEmailAndPassword(accountEmail, newPassword);
 
-				// TODO: If a continue URL is available, display a button which on
-				// click redirects the user back to the app via continueUrl with
-				// additional state determined from that URL's parameters.
-				console.log(newPassword);
+					// TODO: If a continue URL is available, display a button which on
+					// click redirects the user back to the app via continueUrl with
+					// additional state determined from that URL's parameters.
+					console.log(user.password);
+					console.log(resp);
+					$ngConfirm({
+						boxWidth: '75%',
+						columnClass: 'medium',
+						content: 'Password updated successfully.',
+						title: 'Success',
+						type: 'green',
+						typeAnimated: true,
+						useBootstrap: false,
+						buttons: {
+							ok: {
+								btnClass: 'btn-green',
+								text: "OK",
+								action: function () {
+//									window.location = '../login/login.html';
+									return true;
+								}
+							}
+						}
+					});
+				}).catch(function(error) {
+					// Error occurred during confirmation. The code might have expired or the
+					// password is too weak.
+					$ngConfirm({
+						boxWidth: '75%',
+						columnClass: 'medium',
+						content: error.message,
+						title: 'Error',
+						type: 'red',
+						typeAnimated: true,
+						useBootstrap: false,
+						buttons: {
+							ok: {
+								btnClass: 'btn-red',
+								text: "OK",
+								action: function () {
+									return true;
+								}
+							}
+						}
+					});
+				});
+			} else {
 				$ngConfirm({
 					boxWidth: '75%',
 					columnClass: 'medium',
-					content: 'Email verified successfully!',
-					title: 'Success',
-					type: 'green',
-					typeAnimated: true,
+					content: 'Password does not match',
+					title: 'Error',
+					type: 'red',
 					useBootstrap: false,
 					buttons: {
 						ok: {
-							btnClass: 'btn-green',
+							btnClass: 'btn-red',
 							text: "OK",
 							action: function () {
 								return true;
@@ -215,13 +259,28 @@
 						}
 					}
 				});
-			}).catch(function(error) {
-				// Error occurred during confirmation. The code might have expired or the
-				// password is too weak.
-			});
+			}
 		}).catch(function(error) {
 			// Invalid or expired action code. Ask user to try to reset the password
 			// again.
+			$ngConfirm({
+				boxWidth: '75%',
+				columnClass: 'medium',
+				content: error.message,
+				title: 'Error',
+				type: 'red',
+				typeAnimated: true,
+				useBootstrap: false,
+				buttons: {
+					ok: {
+						btnClass: 'btn-red',
+						text: "OK",
+						action: function () {
+							return true;
+						}
+					}
+				}
+			});
 		});
 	}
 
@@ -254,7 +313,7 @@
 	}
 
 	handleVerifyEmail.$inject = ['$ngConfirm'];
-	function handleVerifyEmail($ngConfirm, auth, actionCode, continueUrl, lang) {
+	function handleVerifyEmail(user, $ngConfirm, auth, actionCode, continueUrl, lang) {
 		// Localize the UI to the selected language as determined by the lang parameter.
 		// Try to apply the email verification code.
 		auth.applyActionCode(actionCode).then(function(resp) {
@@ -266,6 +325,8 @@
 			// TODO: If a continue URL is available, display a button which on
 			// click redirects the user back to the app via continueUrl with
 			// additional state determined from that URL's parameters.
+			user.isEmailVerified = true;
+
 			$ngConfirm({
 				boxWidth: '75%',
 				columnClass: 'medium',
@@ -284,7 +345,7 @@
 					}
 				}
 			});
-			handleResetPassword($ngConfirm, auth, actionCode, continueUrl, lang);
+			handleResetPassword(user, $ngConfirm, auth, actionCode, continueUrl, lang);
 		}).catch(function(error) {
 			// Code is invalid or expired. Ask the user to verify their email address again.
 			console.log(error);

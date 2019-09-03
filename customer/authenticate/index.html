@@ -169,7 +169,68 @@
 	<link rel="stylesheet" type="text/css" href="../../styles/style-customer.css" />
 </head>
 
-<body ng-controller="UserManagementController">
+<body ng-controller="UserManagementController as user">
+
+	<form method="post">
+
+    	<!--<header ng-controller="LoginScreenHeaderController as header">
+    	    <div class="header-pad wrapper">
+    	        <div class="title">
+    	            <strong ng-bind-template="{{ header.title }}">
+    	            </strong>
+    	        </div>
+    	         div title ends 
+
+    	    </div>
+    	     div header-pad, wrapper ends 
+
+    	</header>
+    	 header ends -->
+		
+		<div class="container">
+			<div class="container-pad wrapper">
+				<div class="login-view" ng-if="user.isEmailVerified">
+					<div class="form-field">
+						<input type="password" id="password" ng-model="user.password" placeholder="New Password" ng-required="true" ng-auto-focus="" />
+						<span class="error" ng-if="user.password === ''">Required</span>
+
+					</div>
+					<!-- div form-field ends -->
+					
+					<div class="form-field">
+						<input type="password" id="conf-password" ng-model="user.confPassword" placeholder="Confirm Password" ng-required="true" />
+						<span class="error" ng-if="user.confPassword === ''">Required</span>
+						<span class="error" ng-if="user.password !== user.confPassword">
+							Password does not match
+						</span>
+						
+					</div>
+					<!-- div form-field ends -->
+					
+				</div>
+				<!-- div login-view ends -->
+
+			</div>
+			<!-- div container-pad, wrapper ends -->
+
+		</div>
+		<!-- div container ends -->
+	
+		<footer ng-controller="FooterController as footer" ng-if="!footer.isFooterVisible">
+			<div class="footer-pad wrapper">
+				<div class="form-field">
+					<button id="login-button">Reset Password</button>
+				</div>
+				<!-- div form-field ends -->
+
+			</div>
+			<!-- div footer-pad, wrapper ends -->
+
+		</footer>
+		<!-- footer ends -->
+
+	</form>
+	<!-- form ends -->
 
 </body>
 
