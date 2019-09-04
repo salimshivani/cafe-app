@@ -140,6 +140,7 @@
 		var userManagement = this;
 
 		userManagement.user = {};
+		userManagement.user.email = customerApp.auth.currentUser.email;
 		userManagement.user.isEmailVerified = false;
 		userManagement.headerTitle = "User Management";
 		userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
@@ -161,7 +162,7 @@
 				// Display reset password handler and UI.
 				userManagement.headerTitle = PageTitleService.getTitle("Reset Password");
 				handleResetPassword(userManagement.user, $ngConfirm, 
-														firebase.auth(), actionCode, continueUrl, lang);
+														customerApp.auth, actionCode, continueUrl, lang);
 				break;
 
 			case 'recoverEmail':
@@ -174,8 +175,7 @@
 				// Display email verification handler and UI.
 				userManagement.headerTitle = PageTitleService.getTitle("Verify Email");
 				handleVerifyEmail(userManagement.user, $ngConfirm, 
-													firebase.auth(), actionCode, continueUrl, lang);
-				console.log(firebase.auth());
+													customerApp.auth, actionCode, continueUrl, lang);
 				break;
 
 			default:
@@ -348,18 +348,13 @@
 				}
 			});
 			console.log(user);
-			console.log(auth);
 
 			// TODO: If a continue URL is available, display a button which on
 			// click redirects the user back to the app via continueUrl with
 			// additional state determined from that URL's parameters.
 
 //			handleResetPassword(user, $ngConfirm, auth, actionCode, continueUrl, lang);
-			firebase.auth().sendPasswordResetEmail(auth.currentUser.email).then(function (response) {
-				console.log(response);
-			}).catch(function (error) {
-				console.log(error);
-			});
+			firebase.auth().sendPasswordResetEmail(auth.currentUser.email);
 		}).catch(function(error) {
 			// Code is invalid or expired. Ask the user to verify their email address again.
 			var msg = '';
