@@ -140,7 +140,6 @@
 		var userManagement = this;
 
 		userManagement.user = {};
-//		userManagement.user.email = customerApp.auth.currentUser.email;
 		userManagement.user.isEmailVerified = false;
 		userManagement.headerTitle = "User Management";
 		userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
@@ -356,7 +355,11 @@
 			// additional state determined from that URL's parameters.
 
 //			handleResetPassword(user, $ngConfirm, auth, actionCode, continueUrl, lang);
-//			firebase.auth().sendPasswordResetEmail(auth.currentUser.email);
+			firebase.auth().sendPasswordResetEmail(auth.currentUser.email).then(function (response) {
+				console.log(response);
+			}).catch(function (error) {
+				console.log(error);
+			});
 		}).catch(function(error) {
 			// Code is invalid or expired. Ask the user to verify their email address again.
 			var msg = '';
