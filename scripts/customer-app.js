@@ -200,9 +200,10 @@
 				// Display email verification handler and UI.
 				userManagement.headerTitle = "Verify Email - ";
 				userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
-				handleVerifyEmail(userManagement.user, $ngConfirm, 
+
+				handleVerifyEmail($ngConfirm, 
 													customerApp.auth, actionCode, continueUrl, lang);
-//				console.log(customerApp.auth);
+
 				userManagement.user.email = auth.currentUser.email;
 				userManagement.user.isEmailVerified = auth.currentUser.emailVerified;
 				console.log(userManagement.user);
