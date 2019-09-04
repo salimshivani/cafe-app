@@ -352,10 +352,10 @@
 
 			// TODO: Display a confirmation message to the user.
 			// You could also provide the user with a link back to the app.
-			console.log(scope);
-			console.log(scope.user);
-			scope.user.email = auth.currentUser.email;
-			scope.user.isEmailVerified = auth.currentUser.emailVerified;
+			console.log($scope);
+			console.log($scope.user);
+			$scope.user.email = auth.currentUser.email;
+			$scope.user.isEmailVerified = auth.currentUser.emailVerified;
 			console.log(user);
 
 			$ngConfirm({
