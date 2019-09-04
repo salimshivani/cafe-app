@@ -140,9 +140,8 @@
 		var userManagement = this;
 
 		userManagement.user = {};
-		userManagement.user.email = customerApp.auth.currentUser.email;
 		userManagement.user.isEmailVerified = false;
-		userManagement.headerTitle = "User Management";
+//		userManagement.headerTitle = "User Management - ";
 		userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
 
 		const urlParams = new URLSearchParams(window.location.search);
@@ -156,26 +155,30 @@
 		// (Optional) Get the language code if available.
 		var lang = urlParams.get('lang') || 'en';
 
+		let auth = customerApp.auth;
+		let currentUser = auth.currentUser;
 		// Handle the user management action.
 		switch (mode) {
 			case 'resetPassword':
 				// Display reset password handler and UI.
-				userManagement.headerTitle = PageTitleService.getTitle("Reset Password");
+				userManagement.headerTitle = PageTitleService.getTitle("Reset Password - ");
 				handleResetPassword(userManagement.user, $ngConfirm, 
-														customerApp.auth, actionCode, continueUrl, lang);
+														auth, actionCode, continueUrl, lang);
 				break;
 
 			case 'recoverEmail':
 				// Display email recovery handler and UI.
-				userManagement.headerTitle = PageTitleService.getTitle("Recover Email");
-				handleRecoverEmail(customerApp.auth, actionCode, lang);
+				userManagement.headerTitle = PageTitleService.getTitle("Recover Email - ");
+				handleRecoverEmail(auth, actionCode, lang);
 				break;
 
 			case 'verifyEmail':
 				// Display email verification handler and UI.
-				userManagement.headerTitle = PageTitleService.getTitle("Verify Email");
+				userManagement.headerTitle = PageTitleService.getTitle("Verify Email - ");
 				handleVerifyEmail(userManagement.user, $ngConfirm, 
-													customerApp.auth, actionCode, continueUrl, lang);
+													auth, actionCode, continueUrl, lang);
+				console.log(auth);
+//				userManagement.user.email = currentUser.email;
 				break;
 
 			default:
@@ -328,6 +331,7 @@
 			// TODO: Display a confirmation message to the user.
 			// You could also provide the user with a link back to the app.
 			user.isEmailVerified = true;
+			console.log(user);
 
 			$ngConfirm({
 				boxWidth: '75%',
@@ -347,17 +351,19 @@
 					}
 				}
 			});
-			console.log(user);
 
 			// TODO: If a continue URL is available, display a button which on
 			// click redirects the user back to the app via continueUrl with
 			// additional state determined from that URL's parameters.
 
 //			handleResetPassword(user, $ngConfirm, auth, actionCode, continueUrl, lang);
-			firebase.auth().sendPasswordResetEmail(auth.currentUser.email);
+				console.log(auth.currentUser);
+				console.log(firebase.auth());
+//			firebase.auth().sendPasswordResetEmail(auth.currentUser.email);
 		}).catch(function(error) {
 			// Code is invalid or expired. Ask the user to verify their email address again.
 			var msg = '';
+			console.log(error);
 			if (error.code === 'auth/invalid-action-code') {
 				msg = 'The link is already used or expired.'; 
 			} else {
