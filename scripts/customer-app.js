@@ -140,7 +140,7 @@
 		var userManagement = this;
 
 		$scope.user = {};
-		scope.user.isEmailVerified = false;
+		$scope.user.isEmailVerified = false;
 //		userManagement.headerTitle = "User Management - ";
 		userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
 
