@@ -162,7 +162,7 @@
 				// Display reset password handler and UI.
 				userManagement.headerTitle = PageTitleService.getTitle("Reset Password");
 				handleResetPassword(userManagement.user, $ngConfirm, 
-														customerApp.auth, actionCode, continueUrl, lang);
+														firebase.auth(), actionCode, continueUrl, lang);
 				break;
 
 			case 'recoverEmail':
@@ -175,8 +175,8 @@
 				// Display email verification handler and UI.
 				userManagement.headerTitle = PageTitleService.getTitle("Verify Email");
 				handleVerifyEmail(userManagement.user, $ngConfirm, 
-													customerApp.auth, actionCode, continueUrl, lang);
-				console.log(customerApp.auth);
+													firebase.auth(), actionCode, continueUrl, lang);
+				console.log(firebase.auth());
 				break;
 
 			default:
@@ -356,7 +356,7 @@
 			// additional state determined from that URL's parameters.
 
 //			handleResetPassword(user, $ngConfirm, auth, actionCode, continueUrl, lang);
-			firebase.auth().sendPasswordResetEmail(auth.currentUser.email);
+//			firebase.auth().sendPasswordResetEmail(auth.currentUser.email);
 		}).catch(function(error) {
 			// Code is invalid or expired. Ask the user to verify their email address again.
 			var msg = '';
