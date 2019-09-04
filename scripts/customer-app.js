@@ -204,8 +204,8 @@
 				handleVerifyEmail($ngConfirm, 
 													customerApp.auth, actionCode, continueUrl, lang);
 
-				userManagement.user.email = auth.currentUser.email;
-				userManagement.user.isEmailVerified = auth.currentUser.emailVerified;
+				userManagement.user.email = customerApp.auth.currentUser.email;
+				userManagement.user.isEmailVerified = customerApp.auth.currentUser.emailVerified;
 				console.log(userManagement.user);
 //				userManagement.user.email = currentUser.email;
 				break;
