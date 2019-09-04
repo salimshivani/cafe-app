@@ -356,7 +356,7 @@
 			console.log($scope.user);
 			$scope.user.email = auth.currentUser.email;
 			$scope.user.isEmailVerified = auth.currentUser.emailVerified;
-			console.log(user);
+			console.log($scope.user);
 
 			$ngConfirm({
 				boxWidth: '75%',
