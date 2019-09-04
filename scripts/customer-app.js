@@ -358,8 +358,6 @@
 			// TODO: If a continue URL is available, display a button which on
 			// click redirects the user back to the app via continueUrl with
 			// additional state determined from that URL's parameters.
-
-//			handleResetPassword(user, $ngConfirm, auth, actionCode, continueUrl, lang);
 			auth.sendPasswordResetEmail(user.email);
 		}).catch(function(error) {
 			// Code is invalid or expired. Ask the user to verify their email address again.
