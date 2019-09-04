@@ -155,29 +155,28 @@
 		// (Optional) Get the language code if available.
 		var lang = urlParams.get('lang') || 'en';
 
-		let auth = customerApp.auth;
-		let currentUser = auth.currentUser;
+		let currentUser = customerApp.auth.currentUser;
 		// Handle the user management action.
 		switch (mode) {
 			case 'resetPassword':
 				// Display reset password handler and UI.
 				userManagement.headerTitle = PageTitleService.getTitle("Reset Password - ");
 				handleResetPassword(userManagement.user, $ngConfirm, 
-														auth, actionCode, continueUrl, lang);
+														customerApp.auth, actionCode, continueUrl, lang);
 				break;
 
 			case 'recoverEmail':
 				// Display email recovery handler and UI.
 				userManagement.headerTitle = PageTitleService.getTitle("Recover Email - ");
-				handleRecoverEmail(auth, actionCode, lang);
+				handleRecoverEmail(customerApp.auth, actionCode, lang);
 				break;
 
 			case 'verifyEmail':
 				// Display email verification handler and UI.
 				userManagement.headerTitle = PageTitleService.getTitle("Verify Email - ");
 				handleVerifyEmail(userManagement.user, $ngConfirm, 
-													auth, actionCode, continueUrl, lang);
-				console.log(auth);
+													customerApp.auth, actionCode, continueUrl, lang);
+				console.log(customerApp.auth);
 //				userManagement.user.email = currentUser.email;
 				break;
 
@@ -331,6 +330,8 @@
 			// TODO: Display a confirmation message to the user.
 			// You could also provide the user with a link back to the app.
 			console.log(auth.currentUser);
+			console.log(customerApp.auth);
+			console.log(customerApp.auth.currentUser);
 			user.email = auth.currentUser.email;
 			user.isEmailVerified = auth.currentUser.emailVerified;
 
