@@ -161,8 +161,30 @@
 			case 'resetPassword':
 				// Display reset password handler and UI.
 				userManagement.headerTitle = PageTitleService.getTitle("Reset Password - ");
-				handleResetPassword(userManagement.user, $ngConfirm, 
-														customerApp.auth, actionCode, continueUrl, lang);
+				if (userManagement.user.isEmailVerified) {
+					handleResetPassword(userManagement.user, $ngConfirm, 
+															customerApp.auth, actionCode, continueUrl, lang);
+				} else {
+					$ngConfirm({
+						boxWidth: '75%',
+						columnClass: 'medium',
+						content: 'Please verify your email before changing your password.',
+						title: 'Error',
+						type: 'red',
+						typeAnimated: true,
+						useBootstrap: false,
+						buttons: {
+							ok: {
+								btnClass: 'btn-red',
+								text: "OK",
+								action: function () {
+//									window.location = '../login/login.html';
+									return true;
+								}
+							}
+						}
+					});
+				}
 				break;
 
 			case 'recoverEmail':
