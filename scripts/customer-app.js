@@ -196,10 +196,10 @@
 			case 'verifyEmail':
 				// Display email verification handler and UI.
 				userManagement.headerTitle = PageTitleService.getTitle("Verify Email - ");
-				handleVerifyEmail(scope, $scope.user, $ngConfirm, 
+				handleVerifyEmail($scope, $scope.user, $ngConfirm, 
 													customerApp.auth, actionCode, continueUrl, lang);
 //				console.log(customerApp.auth);
-				console.log(userManagement.user);
+				console.log($scope.user);
 //				userManagement.user.email = currentUser.email;
 				break;
 
@@ -344,7 +344,7 @@
 	}
 
 	handleVerifyEmail.$inject = ['$ngConfirm'];
-	function handleVerifyEmail(scope, user, $ngConfirm, auth, actionCode, continueUrl, lang) {
+	function handleVerifyEmail($scope, user, $ngConfirm, auth, actionCode, continueUrl, lang) {
 		// Localize the UI to the selected language as determined by the lang parameter.
 		// Try to apply the email verification code.
 		auth.applyActionCode(actionCode).then(function(resp) {
@@ -354,9 +354,9 @@
 			// You could also provide the user with a link back to the app.
 			console.log(scope);
 			console.log(scope.user);
-			console.log(user);
 			scope.user.email = auth.currentUser.email;
 			scope.user.isEmailVerified = auth.currentUser.emailVerified;
+			console.log(user);
 
 			$ngConfirm({
 				boxWidth: '75%',
