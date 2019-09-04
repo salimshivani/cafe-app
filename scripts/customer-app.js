@@ -330,8 +330,9 @@
 
 			// TODO: Display a confirmation message to the user.
 			// You could also provide the user with a link back to the app.
-			user.isEmailVerified = true;
-			console.log(user);
+			console.log(auth.currentUser);
+			user.email = auth.currentUser.email;
+			user.isEmailVerified = auth.currentUser.emailVerified;
 
 			$ngConfirm({
 				boxWidth: '75%',
@@ -357,9 +358,7 @@
 			// additional state determined from that URL's parameters.
 
 //			handleResetPassword(user, $ngConfirm, auth, actionCode, continueUrl, lang);
-				console.log(auth.currentUser);
-				console.log(firebase.auth());
-//			firebase.auth().sendPasswordResetEmail(auth.currentUser.email);
+			auth.sendPasswordResetEmail(user.email);
 		}).catch(function(error) {
 			// Code is invalid or expired. Ask the user to verify their email address again.
 			var msg = '';
