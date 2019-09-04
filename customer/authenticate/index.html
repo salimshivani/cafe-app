@@ -236,7 +236,7 @@
 		</div>
 		<!-- div container ends -->
 	
-		<footer ng-controller="FooterController as footer" ng-if="user.isEmailVerified">
+		<footer ng-controller="FooterController as footer" ng-if="userManagement.user.isEmailVerified">
 			<div class="footer-pad wrapper">
 				<div class="form-field">
 					<button id="login-button" ng-click="userManagement.user.resetPassword();">
