@@ -135,12 +135,12 @@
 		}
 	}
 
-	UserManagementController.$inject = ['$scope', '$ngConfirm', 'PageTitleService'];
-	function UserManagementController ($scope, $ngConfirm, PageTitleService) {
+	UserManagementController.$inject = ['$ngConfirm', 'PageTitleService'];
+	function UserManagementController ($ngConfirm, PageTitleService) {
 		var userManagement = this;
 
-		$scope.user = {};
-		$scope.user.isEmailVerified = false;
+		userManagement.user = {};
+		userManagement.user.isEmailVerified = false;
 //		userManagement.headerTitle = "User Management - ";
 		userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
 
@@ -161,8 +161,9 @@
 			case 'resetPassword':
 				// Display reset password handler and UI.
 				userManagement.headerTitle = PageTitleService.getTitle("Reset Password - ");
-				if ($scope.user.isEmailVerified) {
-					handleResetPassword($scope.user, $ngConfirm, 
+				userManagement.user.isEmailVerified = customerApp.auth.currentUser.emailVerified;
+				if (userManagement.user.isEmailVerified) {
+					handleResetPassword(userManagement.user, $ngConfirm, 
 															customerApp.auth, actionCode, continueUrl, lang);
 				} else {
 					$ngConfirm({
@@ -196,10 +197,10 @@
 			case 'verifyEmail':
 				// Display email verification handler and UI.
 				userManagement.headerTitle = PageTitleService.getTitle("Verify Email - ");
-				handleVerifyEmail($scope, $scope.user, $ngConfirm, 
+				handleVerifyEmail(userManagement.user, $ngConfirm, 
 													customerApp.auth, actionCode, continueUrl, lang);
 //				console.log(customerApp.auth);
-				console.log($scope.user);
+				console.log(userManagement.user);
 //				userManagement.user.email = currentUser.email;
 				break;
 
@@ -344,7 +345,7 @@
 	}
 
 	handleVerifyEmail.$inject = ['$ngConfirm'];
-	function handleVerifyEmail($scope, user, $ngConfirm, auth, actionCode, continueUrl, lang) {
+	function handleVerifyEmail(user, $ngConfirm, auth, actionCode, continueUrl, lang) {
 		// Localize the UI to the selected language as determined by the lang parameter.
 		// Try to apply the email verification code.
 		auth.applyActionCode(actionCode).then(function(resp) {
@@ -352,11 +353,11 @@
 
 			// TODO: Display a confirmation message to the user.
 			// You could also provide the user with a link back to the app.
-			console.log($scope);
-			console.log($scope.user);
-			$scope.user.email = auth.currentUser.email;
-			$scope.user.isEmailVerified = auth.currentUser.emailVerified;
-			console.log($scope.user);
+			console.log(auth.currentUser);
+			console.log(customerApp.auth);
+			console.log(customerApp.auth.currentUser);
+			user.email = auth.currentUser.email;
+			user.isEmailVerified = auth.currentUser.emailVerified;
 
 			$ngConfirm({
 				boxWidth: '75%',
