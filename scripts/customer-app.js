@@ -176,7 +176,8 @@
 				userManagement.headerTitle = PageTitleService.getTitle("Verify Email - ");
 				handleVerifyEmail(userManagement.user, $ngConfirm, 
 													customerApp.auth, actionCode, continueUrl, lang);
-				console.log(customerApp.auth);
+//				console.log(customerApp.auth);
+				console.log(userManagement.user);
 //				userManagement.user.email = currentUser.email;
 				break;
 
