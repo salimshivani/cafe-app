@@ -189,10 +189,10 @@
 				userManagement.headerTitle = "Verify Email - ";
 				userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
 
-				handleVerifyEmail($ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
-
 				userManagement.user.email = customerApp.auth.currentUser.email;
 				userManagement.user.isEmailVerified = customerApp.auth.currentUser.emailVerified;
+				handleVerifyEmail($ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
+
 				console.log(userManagement.user);
 //				userManagement.user.email = currentUser.email;
 				break;
@@ -368,6 +368,7 @@
 
 			// TODO: Display a confirmation message to the user.
 			// You could also provide the user with a link back to the app.
+			console.log(resp);
 
 			$ngConfirm({
 				boxWidth: '75%',
@@ -391,7 +392,6 @@
 			// TODO: If a continue URL is available, display a button which on
 			// click redirects the user back to the app via continueUrl with
 			// additional state determined from that URL's parameters.
-			console.log(continueUrl);
 			console.log(auth);
 			console.log(auth.email);
 			console.log(auth.currentUser);
