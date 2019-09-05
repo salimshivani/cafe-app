@@ -190,9 +190,9 @@
 				userManagement.headerTitle = "Verify Email - ";
 				userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
 
+				handleVerifyEmail($ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
 				userManagement.user.email = customerApp.auth.currentUser.email;
 				userManagement.user.isEmailVerified = customerApp.auth.currentUser.emailVerified;
-				handleVerifyEmail($ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
 
 				console.log(userManagement.user);
 
