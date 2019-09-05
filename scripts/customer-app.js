@@ -386,7 +386,6 @@
 
 			// TODO: Display a confirmation message to the user.
 			// You could also provide the user with a link back to the app.
-			console.log(resp);
 
 			$ngConfirm({
 				boxWidth: '75%',
@@ -401,6 +400,51 @@
 						btnClass: 'btn-green',
 						text: "OK",
 						action: function () {
+							auth.onAuthStateChanged(function(user) {
+								if (user) {
+									console.log(user.emailVerified);
+									if(user.emailVerified) {
+										$ngConfirm({
+											boxWidth: '75%',
+											columnClass: 'medium',
+											content: 'Hoorayyyy!!!',
+											title: 'Hoorrrayyyyyy',
+											type: 'green',
+											typeAnimated: true,
+											useBootstrap: false,
+											buttons: {
+												ok: {
+													text: 'OK',
+													action: function () {
+														return true;
+													}
+												}
+											}
+										});
+//										$location.path('/home');
+									} else {
+										$ngConfirm({
+											boxWidth: '75%',
+											columnClass: 'medium',
+											content: 'Ooooppppssss!!!',
+											title: 'Ooopppsss',
+											type: 'green',
+											typeAnimated: true,
+											useBootstrap: false,
+											buttons: {
+												ok: {
+													text: 'OK',
+													action: function () {
+														return true;
+													}
+												}
+											}
+										});
+									}
+								} else {
+									// No user is signed in.
+								}
+							});
 							return true;
 						}
 					}
