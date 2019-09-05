@@ -167,11 +167,12 @@
 
 				userManagement.resetPassword = function () {
 					if (userManagement.password.length < 6) {
-						
+						userManagement.errorMsg = "Minimum 6 characters required"
 					} else if (userManagement.password !== userManagement.confPassword) {
 						userManagement.passwordMatched = false;
 					} else {
-						handleResetPassword($ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
+						handleResetPassword($ngConfirm, 
+																customerApp.auth, actionCode, continueUrl, lang, userManagement.password);
 					}
 				};
 				break;
@@ -198,11 +199,29 @@
 
 			default:
 				// Error: invalid mode.
+				$ngConfirm({
+					boxWidth: '75%',
+					columnClass: 'medium',
+					content: 'The link is incorrect or invalid to complete any tasks.',
+					title: 'Error',
+					type: 'red',
+					typeAnimated: true,
+					useBootstrap: false,
+					buttons: {
+						ok: {
+							btnClass: 'btn-red',
+							text: "OK",
+							action: function () {
+								return true;
+							}
+						}
+					}
+				});
 		}
 	}
 
 	handleResetPassword.$inject = ['$ngConfirm'];
-	function handleResetPassword($ngConfirm, auth, actionCode, continueUrl, lang) {
+	function handleResetPassword($ngConfirm, auth, actionCode, continueUrl, lang, password) {
 		// Localize the UI to the selected language as determined by the lang
 		// parameter.
 		var accountEmail;
@@ -212,10 +231,10 @@
 
 			// TODO: Show the reset screen with the user's email and ask the user for
 			// the new password.
-			if (user.password.length >= 6 && user.password === user.confPassword) {
+//			if (user.password.length >= 6 && user.password === user.confPassword) {
 
 				// Save the new password.
-				auth.confirmPasswordReset(actionCode, user.password).then(function(resp) {
+				auth.confirmPasswordReset(actionCode, password).then(function(resp) {
 					// Password reset has been confirmed and new password updated.
 
 					// TODO: Display a link back to the app, or sign-in the user directly
@@ -266,25 +285,25 @@
 						}
 					});
 				});
-			} else {
-				$ngConfirm({
-					boxWidth: '75%',
-					columnClass: 'medium',
-					content: 'Password does not match',
-					title: 'Error',
-					type: 'red',
-					useBootstrap: false,
-					buttons: {
-						ok: {
-							btnClass: 'btn-red',
-							text: "OK",
-							action: function () {
-								return true;
-							}
-						}
-					}
-				});
-			}
+//			} else {
+//				$ngConfirm({
+//					boxWidth: '75%',
+//					columnClass: 'medium',
+//					content: 'Password does not match',
+//					title: 'Error',
+//					type: 'red',
+//					useBootstrap: false,
+//					buttons: {
+//						ok: {
+//							btnClass: 'btn-red',
+//							text: "OK",
+//							action: function () {
+//								return true;
+//							}
+//						}
+//					}
+//				});
+//			}
 		}).catch(function(error) {
 			// Invalid or expired action code. Ask user to try to reset the password again.
 			$ngConfirm({
@@ -368,7 +387,28 @@
 			// TODO: If a continue URL is available, display a button which on
 			// click redirects the user back to the app via continueUrl with
 			// additional state determined from that URL's parameters.
-			auth.sendPasswordResetEmail(auth.currentUser.email);
+			auth.sendPasswordResetEmail(auth.currentUser.email).then(function (success) {
+				$ngConfirm({
+					boxWidth: '75%',
+					columnClass: 'medium',
+					content: 'Link to set your new password has been sent to you. Please set your password to proceed further.',
+					title: 'Reset Password',
+					type: 'green',
+					typeAnimated: true,
+					useBootstrap: false,
+					buttons: {
+						ok: {
+							btnClass: 'btn-green',
+							text: "OK",
+							action: function () {
+								return true;
+							}
+						}
+					}
+				});
+			}).catch(function (error) {
+				console.log(error);
+			});
 		}).catch(function(error) {
 			// Code is invalid or expired. Ask the user to verify their email address again.
 			var msg = '';
