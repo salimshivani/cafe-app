@@ -141,6 +141,7 @@
 
 		userManagement.user = {};
 		userManagement.user.isEmailVerified = false;
+		userManagement.passwordMatched = true;
 
 		userManagement.isResetPassword = false;
 		userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
@@ -194,6 +195,19 @@
 				handleVerifyEmail($ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
 
 				console.log(userManagement.user);
+
+				userManagement.isResetPassword = true;
+
+				userManagement.resetPassword = function () {
+					if (userManagement.password.length < 6) {
+						userManagement.errorMsg = "Minimum 6 characters required"
+					} else if (userManagement.password !== userManagement.confPassword) {
+						userManagement.passwordMatched = false;
+					} else {
+						handleResetPassword($ngConfirm, 
+																customerApp.auth, actionCode, continueUrl, lang, userManagement.password);
+					}
+				};
 //				userManagement.user.email = currentUser.email;
 				break;
 
@@ -395,7 +409,7 @@
 			console.log(auth);
 			console.log(auth.email);
 			console.log(auth.currentUser);
-			auth.sendPasswordResetEmail(auth.currentUser.email).then(function (success) {
+			/*auth.sendPasswordResetEmail(auth.currentUser.email).then(function (success) {
 				$ngConfirm({
 					boxWidth: '75%',
 					columnClass: 'medium',
@@ -416,7 +430,7 @@
 				});
 			}).catch(function (error) {
 				console.log(error);
-			});
+			});*/
 		}).catch(function(error) {
 			// Code is invalid or expired. Ask the user to verify their email address again.
 			var msg = '';
