@@ -141,7 +141,8 @@
 
 		userManagement.user = {};
 		userManagement.user.isEmailVerified = false;
-//		userManagement.headerTitle = "User Management - ";
+
+		userManagement.isResetPassword = false;
 		userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
 
 		const urlParams = new URLSearchParams(window.location.search);
@@ -162,31 +163,17 @@
 				// Display reset password handler and UI.
 				userManagement.headerTitle = "Reset Password - ";
 				userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
-				userManagement.user.isEmailVerified = customerApp.auth.currentUser.emailVerified;
-				if (userManagement.user.isEmailVerified) {
-					handleResetPassword(userManagement.user, $ngConfirm, 
-															customerApp.auth, actionCode, continueUrl, lang);
-				} else {
-					$ngConfirm({
-						boxWidth: '75%',
-						columnClass: 'medium',
-						content: 'Please verify your email before changing your password.',
-						title: 'Error',
-						type: 'red',
-						typeAnimated: true,
-						useBootstrap: false,
-						buttons: {
-							ok: {
-								btnClass: 'btn-red',
-								text: "OK",
-								action: function () {
-//									window.location = '../login/login.html';
-									return true;
-								}
-							}
-						}
-					});
-				}
+				userManagement.isResetPassword = true;
+
+				userManagement.resetPassword = function () {
+					if (userManagement.password.length < 6) {
+						
+					} else if (userManagement.password !== userManagement.confPassword) {
+						userManagement.passwordMatched = false;
+					} else {
+						handleResetPassword($ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
+					}
+				};
 				break;
 
 			case 'recoverEmail':
@@ -201,8 +188,7 @@
 				userManagement.headerTitle = "Verify Email - ";
 				userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
 
-				handleVerifyEmail($ngConfirm, 
-													customerApp.auth, actionCode, continueUrl, lang);
+				handleVerifyEmail($ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
 
 				userManagement.user.email = customerApp.auth.currentUser.email;
 				userManagement.user.isEmailVerified = customerApp.auth.currentUser.emailVerified;

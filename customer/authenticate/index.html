@@ -173,7 +173,7 @@
 
 <body ng-controller="UserManagementController as userManagement">
 
-	<form method="post">
+	<form method="post" name="resetPassword">
 
 		<header>
 			<div class="header-pad wrapper">
@@ -189,12 +189,12 @@
 		</header>
 		<!-- header ends -->
 		
-		<div class="container" ng-if="userManagement.user.isEmailVerified">
+		<div class="container" ng-if="userManagement.isResetPassword">
 			<div class="container-pad wrapper">
 				<div class="login-view">
 					<div>
 						<p>
-							<strong>Hello {{ userManagement.user.email }}, </strong> please select your password to proceed further.
+							<strong>Hello {{ userManagement.email }}, </strong> please select your password to proceed further.
 						</p>
 						<!-- p ends -->
 
@@ -203,24 +203,23 @@
 
 					<div class="form-field">
 						<input type="password" id="password" 
-									 ng-model="userManagement.user.password" 
+									 ng-model="userManagement.password" 
 									 placeholder="New Password" ng-required="true" ng-auto-focus="" />
-						<span class="error" ng-if="userManagement.user.password === ''">Required</span>
+
+						<span class="error" ng-if="userManagement.password.legth < 6">
+							{{ userManagement.errorMsg }}
+						</span>
 
 					</div>
 					<!-- div form-field ends -->
 					
 					<div class="form-field">
 						<input type="password" id="conf-password" 
-									 ng-model="userManagement.user.confPassword" 
-									 placeholder="Confirm Password" 
-									 ng-required="true" />
-						<span class="error" 
-									ng-if="userManagement.user.confPassword === ''">
-							Required
-						</span>
-						<span class="error" 
-									ng-if="userManagement.user.password !== userManagement.user.confPassword">
+									 ng-model="userManagement.confPassword" 
+									 placeholder="Confirm Password" ng-required="true" />
+
+						<span class="error" ng-if="userManagement.confPassword === ''">Required</span>
+						<span class="error" ng-if="!userManagement.passwordMatched">
 							Password does not match
 						</span>
 						
@@ -236,10 +235,10 @@
 		</div>
 		<!-- div container ends -->
 	
-		<footer ng-controller="FooterController as footer" ng-if="userManagement.user.isEmailVerified">
+		<footer ng-controller="FooterController as footer" ng-if="userManagement.isResetPassword">
 			<div class="footer-pad wrapper">
 				<div class="form-field">
-					<button id="login-button" ng-click="userManagement.user.resetPassword();">
+					<button id="login-button" ng-click="resetPassword.$valid && userManagement.resetPassword();">
 						Reset Password
 					</button>
 				</div>
