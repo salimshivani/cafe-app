@@ -197,6 +197,10 @@
 //				userManagement.user.email = currentUser.email;
 				break;
 
+			case 'email':
+				console.log(window.location.href);
+				break;
+
 			default:
 				// Error: invalid mode.
 				$ngConfirm({
