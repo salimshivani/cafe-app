@@ -190,11 +190,12 @@
 				userManagement.headerTitle = "Verify Email - ";
 				userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
 
+				console.log(customerApp.auth);
 				handleVerifyEmail($ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
-				userManagement.user.email = customerApp.auth.currentUser.email;
-				userManagement.user.isEmailVerified = customerApp.auth.currentUser.emailVerified;
+//				userManagement.user.email = customerApp.auth.currentUser.email;
+//				userManagement.user.isEmailVerified = customerApp.auth.currentUser.emailVerified;
 
-				console.log(userManagement.user);
+//				console.log(userManagement.user);
 
 				userManagement.isResetPassword = true;
 
@@ -376,6 +377,9 @@
 	handleVerifyEmail.$inject = ['$ngConfirm'];
 	function handleVerifyEmail($ngConfirm, auth, actionCode, continueUrl, lang) {
 		// Localize the UI to the selected language as determined by the lang parameter.
+		console.log(auth);
+		console.log(auth.email);
+		console.log(auth.currentUser);
 		// Try to apply the email verification code.
 		auth.applyActionCode(actionCode).then(function(resp) {
 			// Email address has been verified.
@@ -406,9 +410,7 @@
 			// TODO: If a continue URL is available, display a button which on
 			// click redirects the user back to the app via continueUrl with
 			// additional state determined from that URL's parameters.
-			console.log(auth);
-			console.log(auth.email);
-			console.log(auth.currentUser);
+			
 			/*auth.sendPasswordResetEmail(auth.currentUser.email).then(function (success) {
 				$ngConfirm({
 					boxWidth: '75%',
