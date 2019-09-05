@@ -401,6 +401,8 @@
 						text: "OK",
 						action: function () {
 							auth.onAuthStateChanged(function(user) {
+								console.log(auth);
+								console.log(user);
 								if (user) {
 									console.log(user.emailVerified);
 									if(user.emailVerified) {
@@ -414,6 +416,7 @@
 											useBootstrap: false,
 											buttons: {
 												ok: {
+													btnClass: 'btn-green',
 													text: 'OK',
 													action: function () {
 														return true;
@@ -428,11 +431,12 @@
 											columnClass: 'medium',
 											content: 'Ooooppppssss!!!',
 											title: 'Ooopppsss',
-											type: 'green',
+											type: 'red',
 											typeAnimated: true,
 											useBootstrap: false,
 											buttons: {
 												ok: {
+													btnClass: 'btn-red',
 													text: 'OK',
 													action: function () {
 														return true;
@@ -443,6 +447,24 @@
 									}
 								} else {
 									// No user is signed in.
+									$ngConfirm({
+											boxWidth: '75%',
+											columnClass: 'medium',
+											content: 'Ooooppppssss!!!',
+											title: 'Ooopppsss',
+											type: 'red',
+											typeAnimated: true,
+											useBootstrap: false,
+											buttons: {
+												ok: {
+													btnClass: 'btn-red',
+													text: 'OK',
+													action: function () {
+														return true;
+													}
+												}
+											}
+										});
 								}
 							});
 							return true;
