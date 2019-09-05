@@ -1079,6 +1079,9 @@
 		});
 		
 		usersRef.on('child_added', function (snapshot) {
+			usersRef.child(snapshot.key).on('value', function (snapshotUser) {
+				
+			});
 			console.log('added: ', snapshot.val());
 		});
 
@@ -1124,7 +1127,7 @@
 											dynamicLinkDomain: undefined
 										};
 
-										success.user.sendEmailVerification(actionCodeSettings).then(function () {
+										success.user.sendEmailVerification().then(function () {
 											//Mail sent
 											var userUidRef = usersRef.child(success.user.uid);
 
