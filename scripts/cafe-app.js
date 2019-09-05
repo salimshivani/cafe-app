@@ -1078,6 +1078,14 @@
 
 		});
 		
+		usersRef.on('child_added', function (snapshot) {
+			console.log('added: ', snapshot.val());
+		});
+
+		usersRef.on('child_changed', function (snapshot) {
+			console.log('updated: ', snapshot.val());
+		});
+		
 		coWorkers.eNewCoWorker = function () {
 //			swal("Hello world!");
 			$ngConfirm({
@@ -1096,6 +1104,7 @@
 					ok: { 
 						btnClass: 'btn-green',
 						text: "Add",
+						keys: ['enter', 'return'],
 						action: function (scope) {
 //							console.log(scope.coWorker);
 							
@@ -1105,7 +1114,17 @@
 									.then(function (success) {
 										console.log(success);
 										console.log(success.user);
-										success.user.sendEmailVerification().then(function () {
+										var actionCodeSettings = {
+											url: 'https://salimshivani.github.io/cafe-app/customer/authenticate/index.html?email=' + success.user.email,
+											iOS: undefined,
+											android: undefined,
+											handleCodeInApp: false,
+											// When multiple custom dynamic link domains are defined, specify which
+											// one to use.
+											dynamicLinkDomain: undefined
+										};
+
+										success.user.sendEmailVerification(actionCodeSettings).then(function () {
 											//Mail sent
 											var userUidRef = usersRef.child(success.user.uid);
 
@@ -1234,7 +1253,6 @@
 //							 $ngConfirm('the user clicked ok');
 						}
 					},
-					// short hand button definition
 					close: {
 						btnClass: 'btn-red',
 						boxWidth: '75%',

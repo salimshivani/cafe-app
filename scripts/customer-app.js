@@ -387,6 +387,10 @@
 			// TODO: If a continue URL is available, display a button which on
 			// click redirects the user back to the app via continueUrl with
 			// additional state determined from that URL's parameters.
+			console.log(continueUrl);
+			console.log(auth);
+			console.log(auth.email);
+			console.log(auth.currentUser);
 			auth.sendPasswordResetEmail(auth.currentUser.email).then(function (success) {
 				$ngConfirm({
 					boxWidth: '75%',
