@@ -204,7 +204,7 @@
 					<div class="form-field">
 						<input type="password" id="password" 
 									 ng-model="userManagement.password" 
-									 placeholder="New Password" ng-required="true" ng-auto-focus="" />
+									 placeholder="New Password (Min. 6 letters)" ng-required="true" ng-auto-focus="" />
 
 						<span class="error" ng-if="userManagement.errorMsg.legth > 0">
 							{{ userManagement.errorMsg }}
@@ -218,7 +218,7 @@
 									 ng-model="userManagement.confPassword" 
 									 placeholder="Confirm Password" ng-required="true" />
 
-						<span class="error" ng-if="resetPassword.$valid">Required</span>
+						<span class="error" ng-if="resetPassword.$valid && userManagement.resetPassword();">Required</span>
 						<span class="error" ng-if="!userManagement.passwordMatched">
 							Password does not match
 						</span>

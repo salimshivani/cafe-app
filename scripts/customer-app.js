@@ -141,10 +141,10 @@
 
 		userManagement.user = {};
 		userManagement.user.isEmailVerified = false;
+		userManagement.isResetPassword = false;
 		userManagement.passwordMatched = true;
 
-		userManagement.isResetPassword = false;
-		userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
+//		userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
 
 		const urlParams = new URLSearchParams(window.location.search);
 
@@ -165,6 +165,8 @@
 				userManagement.headerTitle = "Reset Password - ";
 				userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
 				userManagement.isResetPassword = true;
+						console.log(customerApp.auth);
+				userManagement.email = customerApp.auth.currentUser.email;
 
 				userManagement.resetPassword = function () {
 					if (userManagement.password.length < 6) {
@@ -228,79 +230,58 @@
 
 			// TODO: Show the reset screen with the user's email and ask the user for
 			// the new password.
-//			if (user.password.length >= 6 && user.password === user.confPassword) {
 
-				// Save the new password.
-				auth.confirmPasswordReset(actionCode, password).then(function(resp) {
-					// Password reset has been confirmed and new password updated.
+			// Save the new password.
+			auth.confirmPasswordReset(actionCode, password).then(function(resp) {
+				// Password reset has been confirmed and new password updated.
 
-					// TODO: Display a link back to the app, or sign-in the user directly
-					// if the page belongs to the same domain as the app:
-					// auth.signInWithEmailAndPassword(accountEmail, newPassword);
+				// TODO: Display a link back to the app, or sign-in the user directly
+				// if the page belongs to the same domain as the app:
+				// auth.signInWithEmailAndPassword(accountEmail, newPassword);
 
-					// TODO: If a continue URL is available, display a button which on
-					// click redirects the user back to the app via continueUrl with
-					// additional state determined from that URL's parameters.
-					$ngConfirm({
-						boxWidth: '75%',
-						columnClass: 'medium',
-						content: 'Password updated successfully.',
-						title: 'Success',
-						type: 'green',
-						typeAnimated: true,
-						useBootstrap: false,
-						buttons: {
-							ok: {
-								btnClass: 'btn-green',
-								text: "OK",
-								action: function () {
-//									window.location = '../login/login.html';
-									return true;
-								}
+				// TODO: If a continue URL is available, display a button which on
+				// click redirects the user back to the app via continueUrl with
+				// additional state determined from that URL's parameters.
+				$ngConfirm({
+					boxWidth: '75%',
+					columnClass: 'medium',
+					content: 'Password updated successfully.',
+					title: 'Success',
+					type: 'green',
+					typeAnimated: true,
+					useBootstrap: false,
+					buttons: {
+						ok: {
+							btnClass: 'btn-green',
+							text: "OK",
+							action: function () {
+								window.top.close();
 							}
 						}
-					});
-				}).catch(function(error) {
-					// Error occurred during confirmation. The code might have expired or the
-					// password is too weak.
-					$ngConfirm({
-						boxWidth: '75%',
-						columnClass: 'medium',
-						content: error.message,
-						title: 'Error',
-						type: 'red',
-						typeAnimated: true,
-						useBootstrap: false,
-						buttons: {
-							ok: {
-								btnClass: 'btn-red',
-								text: "OK",
-								action: function () {
-									return true;
-								}
-							}
-						}
-					});
+					}
 				});
-//			} else {
-//				$ngConfirm({
-//					boxWidth: '75%',
-//					columnClass: 'medium',
-//					content: 'Password does not match',
-//					title: 'Error',
-//					type: 'red',
-//					useBootstrap: false,
-//					buttons: {
-//						ok: {
-//							btnClass: 'btn-red',
-//							text: "OK",
-//							action: function () {
-//								return true;
-//							}
-//						}
-//					}
-//				});
-//			}
+			}).catch(function(error) {
+				// Error occurred during confirmation. The code might have expired or the
+				// password is too weak.
+				$ngConfirm({
+					boxWidth: '75%',
+					columnClass: 'medium',
+					content: error.message,
+					title: 'Error',
+					type: 'red',
+					typeAnimated: true,
+					useBootstrap: false,
+					buttons: {
+						ok: {
+							btnClass: 'btn-red',
+							text: "OK",
+							action: function () {
+								return true;
+							}
+						}
+					}
+				});
+			});
 		}).catch(function(error) {
 			// Invalid or expired action code. Ask user to try to reset the password again.
 			$ngConfirm({
