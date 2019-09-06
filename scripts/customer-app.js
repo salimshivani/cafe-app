@@ -139,8 +139,7 @@
 	function UserManagementController ($ngConfirm, PageTitleService) {
 		var userManagement = this;
 
-		userManagement.user = {};
-		userManagement.user.isEmailVerified = false;
+		userManagement.email = undefined;
 		userManagement.isResetPassword = false;
 		userManagement.passwordMatched = true;
 
@@ -165,8 +164,6 @@
 				userManagement.headerTitle = "Reset Password - ";
 				userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
 				userManagement.isResetPassword = true;
-						console.log(customerApp.auth);
-				userManagement.email = customerApp.auth.currentUser.email;
 
 				userManagement.resetPassword = function () {
 					if (userManagement.password.length < 6) {
@@ -175,7 +172,7 @@
 						userManagement.passwordMatched = false;
 					} else {
 						handleResetPassword($ngConfirm, 
-																customerApp.auth, actionCode, continueUrl, lang, userManagement.password);
+																customerApp.auth, actionCode, continueUrl, lang, userManagement.password, userManagement.email);
 					}
 				};
 				break;
@@ -191,8 +188,6 @@
 				// Display email verification handler and UI.
 				userManagement.headerTitle = "Verify Email - ";
 				userManagement.headerTitle = PageTitleService.getTitle(userManagement.headerTitle);
-
-				console.log(customerApp.auth);
 				handleVerifyEmail($ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
 				break;
 
@@ -220,13 +215,13 @@
 	}
 
 	handleResetPassword.$inject = ['$ngConfirm'];
-	function handleResetPassword($ngConfirm, auth, actionCode, continueUrl, lang, password) {
+	function handleResetPassword($ngConfirm, auth, actionCode, continueUrl, lang, password, userEmail) {
 		// Localize the UI to the selected language as determined by the lang
 		// parameter.
 		var accountEmail;
 		// Verify the password reset code is valid.
 		auth.verifyPasswordResetCode(actionCode).then(function(email) {
-			var accountEmail = email;
+			userEmail = email;
 
 			// TODO: Show the reset screen with the user's email and ask the user for
 			// the new password.
