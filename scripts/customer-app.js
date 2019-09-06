@@ -400,73 +400,7 @@
 						btnClass: 'btn-green',
 						text: "OK",
 						action: function () {
-							auth.onAuthStateChanged(function(user) {
-								console.log(auth);
-								console.log(user);
-								if (user) {
-									console.log(user.emailVerified);
-									if(user.emailVerified) {
-										$ngConfirm({
-											boxWidth: '75%',
-											columnClass: 'medium',
-											content: 'Hoorayyyy!!!',
-											title: 'Hoorrrayyyyyy',
-											type: 'green',
-											typeAnimated: true,
-											useBootstrap: false,
-											buttons: {
-												ok: {
-													btnClass: 'btn-green',
-													text: 'OK',
-													action: function () {
-														return true;
-													}
-												}
-											}
-										});
-//										$location.path('/home');
-									} else {
-										$ngConfirm({
-											boxWidth: '75%',
-											columnClass: 'medium',
-											content: 'Ooooppppssss!!!',
-											title: 'Ooopppsss',
-											type: 'red',
-											typeAnimated: true,
-											useBootstrap: false,
-											buttons: {
-												ok: {
-													btnClass: 'btn-red',
-													text: 'OK',
-													action: function () {
-														return true;
-													}
-												}
-											}
-										});
-									}
-								} else {
-									// No user is signed in.
-									$ngConfirm({
-											boxWidth: '75%',
-											columnClass: 'medium',
-											content: 'Ooooppppssss!!!',
-											title: 'Ooopppsss',
-											type: 'red',
-											typeAnimated: true,
-											useBootstrap: false,
-											buttons: {
-												ok: {
-													btnClass: 'btn-red',
-													text: 'OK',
-													action: function () {
-														return true;
-													}
-												}
-											}
-										});
-								}
-							});
+							window.top.close();
 							return true;
 						}
 					}
@@ -476,29 +410,6 @@
 			// TODO: If a continue URL is available, display a button which on
 			// click redirects the user back to the app via continueUrl with
 			// additional state determined from that URL's parameters.
-			
-			/*auth.sendPasswordResetEmail(auth.currentUser.email).then(function (success) {
-				$ngConfirm({
-					boxWidth: '75%',
-					columnClass: 'medium',
-					content: 'Link to set your new password has been sent to you. Please set your password to proceed further.',
-					title: 'Reset Password',
-					type: 'green',
-					typeAnimated: true,
-					useBootstrap: false,
-					buttons: {
-						ok: {
-							btnClass: 'btn-green',
-							text: "OK",
-							action: function () {
-								return true;
-							}
-						}
-					}
-				});
-			}).catch(function (error) {
-				console.log(error);
-			});*/
 		}).catch(function(error) {
 			// Code is invalid or expired. Ask the user to verify their email address again.
 			var msg = '';

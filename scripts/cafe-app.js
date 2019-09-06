@@ -1066,8 +1066,7 @@
 							company: snapshot.val().company,
 							email: snapshot.val().email,
 							mobile: snapshot.val().mobile,
-							name: snapshot.val().name,
-							status: "Inactive"
+							name: snapshot.val().name
 						};
 						coWorkers.customers.push(coWorker);
 					}
@@ -1080,7 +1079,7 @@
 		
 		usersRef.on('child_added', function (snapshot) {
 			usersRef.child(snapshot.key).on('value', function (snapshotUser) {
-				
+				console.log('added: ', snapshotUser.val());
 			});
 			console.log('added: ', snapshot.val());
 		});
@@ -1117,17 +1116,9 @@
 									.then(function (success) {
 										console.log(success);
 										console.log(success.user);
-										var actionCodeSettings = {
-											url: 'https://salimshivani.github.io/cafe-app/customer/authenticate/index.html?email=' + success.user.email,
-											iOS: undefined,
-											android: undefined,
-											handleCodeInApp: false,
-											// When multiple custom dynamic link domains are defined, specify which
-											// one to use.
-											dynamicLinkDomain: undefined
-										};
 
-										success.user.sendEmailVerification().then(function () {
+										success.user.sendEmailVerification()
+											.then(function () {
 											//Mail sent
 											var userUidRef = usersRef.child(success.user.uid);
 
@@ -1136,8 +1127,7 @@
 												email: scope.coWorker.email,
 												mobile: scope.coWorker.mobile,
 												name: scope.coWorker.name,
-												role: 'customer',
-												status: 'Inactive'
+												role: 'customer'
 											};
 
 											coWorkers.newCoWorker = $firebaseArray(userUidRef);
@@ -1183,8 +1173,61 @@
 											}).catch(function (error) {
 												console.log(error);
 											});
-										}).catch(function (error) {
+										})
+											.catch(function (error) {
 											console.log(error);
+										});
+
+										firebase.auth().sendPasswordResetEmail(success.user.email)
+											.then(function (success) {
+												$ngConfirm({
+													boxWidth: '75%',
+													columnClass: 'medium',
+													content: 'Link to set your new password has been sent to you. Please set your password to proceed further.',
+													title: 'Reset Password',
+													type: 'green',
+													typeAnimated: true,
+													useBootstrap: false,
+													buttons: {
+														ok: {
+															btnClass: 'btn-green',
+															text: "OK",
+															action: function () {
+																return true;
+															}
+														}
+													}
+												});
+											})
+											.catch(function (error) {
+												console.log(error);
+											});
+
+										success.user.updateProfile({
+											displayName: scope.coWorker.name,
+											phoneNumber: scope.coWorker.mobile
+										}).then(function () {
+											window.top.close();
+										}).catch(function (error) {
+											$ngConfirm({
+												title: 'Error',
+												backgroundDismiss: true,
+												boxWidth: '75%',
+												content: erorr.message,
+												columnClass: 'medium',
+
+												typeAnimated: true,
+												useBootstrap: false,
+												buttons: {
+													close: {
+														btnClass: 'btn-red',
+														boxWidth: '75%',
+														columnClass: 'medium',
+														keys: ['esc'],
+														text: "Cancel"
+													}
+												}
+											})
 										});
 
 								}).catch(function (error) {
@@ -1253,7 +1296,6 @@
 									useBootstrap: false
 								});
 							}
-//							 $ngConfirm('the user clicked ok');
 						}
 					},
 					close: {
