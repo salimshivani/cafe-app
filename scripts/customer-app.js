@@ -250,11 +250,12 @@
 							btnClass: 'btn-green',
 							text: "OK",
 							action: function () {
-								window.top.close();
+								return true;
 							}
 						}
 					}
 				});
+				window.top.close();
 			}).catch(function(error) {
 				// Error occurred during confirmation. The code might have expired or the
 				// password is too weak.
@@ -354,11 +355,12 @@
 						btnClass: 'btn-green',
 						text: "OK",
 						action: function () {
-							window.top.close();
+							return true;
 						}
 					}
 				}
 			});
+			window.top.close();
 
 			// TODO: If a continue URL is available, display a button which on
 			// click redirects the user back to the app via continueUrl with
