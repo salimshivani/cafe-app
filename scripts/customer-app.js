@@ -192,28 +192,6 @@
 
 				console.log(customerApp.auth);
 				handleVerifyEmail($ngConfirm, customerApp.auth, actionCode, continueUrl, lang);
-//				userManagement.user.email = customerApp.auth.currentUser.email;
-//				userManagement.user.isEmailVerified = customerApp.auth.currentUser.emailVerified;
-
-//				console.log(userManagement.user);
-
-				userManagement.isResetPassword = true;
-
-				userManagement.resetPassword = function () {
-					if (userManagement.password.length < 6) {
-						userManagement.errorMsg = "Minimum 6 characters required"
-					} else if (userManagement.password !== userManagement.confPassword) {
-						userManagement.passwordMatched = false;
-					} else {
-						handleResetPassword($ngConfirm, 
-																customerApp.auth, actionCode, continueUrl, lang, userManagement.password);
-					}
-				};
-//				userManagement.user.email = currentUser.email;
-				break;
-
-			case 'email':
-				console.log(window.location.href);
 				break;
 
 			default:
@@ -401,7 +379,6 @@
 						text: "OK",
 						action: function () {
 							window.top.close();
-							return true;
 						}
 					}
 				}
